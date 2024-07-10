@@ -24,7 +24,6 @@ namespace App_Chat.View
         public Chat(TcpClient tcpClient, TcpClient tcpClient1 ,User user)
         {
             InitializeComponent();
-
             this.your_account_name = user;
             this.tcpClient1 = tcpClient1;
             this.tcpClient = tcpClient;
@@ -41,18 +40,6 @@ namespace App_Chat.View
 
             string users = reader.ReadLine();
             user_list = users.Split('|');
-            Thread load_box_chat_thread = new Thread(load_box_chat);
-            load_box_chat_thread.Start();
-            load_box_chat_thread.IsBackground = true;
-
-            Thread load_show_users_thread = new Thread(load_users);
-            load_show_users_thread.Start();
-            load_show_users_thread.IsBackground = true;
-
-            isRunning = true;
-            Thread receiveThread = new Thread(receive);
-            receiveThread.Start();
-            receiveThread.IsBackground = true;
         }
         private Dictionary<BoxChat, FlowLayoutPanel> user_boardChat;
         private Dictionary<string, FlowLayoutPanel> receiver_boardChat;
@@ -164,6 +151,7 @@ namespace App_Chat.View
                     {
                         NewFriend newFriend = new NewFriend(tcpClient, your_account_name);
                         Users.Add(newFriend);
+                        newFriend.setLabel(item);
                         fpn_show_users.Controls.Add(newFriend);
                     }));
                 }
@@ -260,12 +248,45 @@ namespace App_Chat.View
                             }));
                         }
                     }
+                    else if (rs_from_server == "Add Friend")
+                    {
+                        string data_from_server = reader.ReadLine();
+                        User user = JsonConvert.DeserializeObject<User>(data_from_server);
+                        if (user_list.Contains(user.userID))
+                        {
+                            foreach (var item in Users)
+                            {
+                                string temp = item.get_user_id();
+                                if ( temp == user.userID)
+                                {
+                                    item.setButton("Chấp nhận");
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
             }
             catch
             {
 
             }
+        }
+        private void Chat_Load(object sender, EventArgs e)
+        {
+            CheckForIllegalCrossThreadCalls = false;
+            Thread load_box_chat_thread = new Thread(load_box_chat);
+            load_box_chat_thread.Start();
+            load_box_chat_thread.IsBackground = true;
+
+            Thread load_show_users_thread = new Thread(load_users);
+            load_show_users_thread.Start();
+            load_show_users_thread.IsBackground = true;
+
+            isRunning = true;
+            Thread receiveThread = new Thread(receive);
+            receiveThread.Start();
+            receiveThread.IsBackground = true;
         }
     }
 }

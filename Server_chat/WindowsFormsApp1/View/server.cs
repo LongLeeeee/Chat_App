@@ -234,6 +234,20 @@ namespace WindowsFormsApp1
                         string user_list = checkDB.getUSer();
                         writer.WriteLine(user_list);
                     }
+                    else if (rq_from_client == "Add Friend")
+                    {
+                        string data_sender = reader.ReadLine();
+                        string data_receiver = reader.ReadLine();
+                        User user = JsonConvert.DeserializeObject<User>(data_sender);
+                        User user1 = JsonConvert.DeserializeObject<User>(data_receiver);
+                        if (tcpclients.ContainsKey(user.userID))
+                        {
+                            StreamWriter writer1 = new StreamWriter(tcpclients[user1.userID].GetStream());
+                            writer1.AutoFlush = true;
+                            writer1.WriteLine("Add Friend");
+                            writer1.WriteLine(data_receiver);
+                        }
+                    }
                 }
                 catch
                 {
@@ -253,9 +267,10 @@ namespace WindowsFormsApp1
                 {
                     string rq_from_client = reader.ReadLine();
 
-                    if (rq_from_client == "Message")
+                    if (rq_from_client == "Add Friend")
                     {
-                        
+                        string data = reader.ReadLine();
+                        MessageBox.Show(data);
                     }
                     else if (rq_from_client == "List User")
                     {

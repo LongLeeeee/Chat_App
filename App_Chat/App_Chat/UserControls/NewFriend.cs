@@ -1,9 +1,11 @@
 ﻿using App_Chat.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -25,9 +27,15 @@ namespace App_Chat.UserControls
         }
         private TcpClient tcpClient;
         private User user;
+        StreamWriter writer;
+        StreamReader reader;
         public void setButton(string text)
         {
             btn_add_friend.Text = text;
+        }
+        public void setLabel(string text)
+        {
+            lb_user_id.Text = text;
         }
         public string get_user_id()
         {
@@ -35,8 +43,21 @@ namespace App_Chat.UserControls
         }
         private void btn_add_friend_Click(object sender, EventArgs e)
         {
+            reader = new StreamReader(tcpClient.GetStream());
+            writer = new StreamWriter(tcpClient.GetStream());
+            writer.AutoFlush = true;
             btn_cancel.Visible = true;
             btn_add_friend.Text = "Đã gửi";
+            writer.WriteLine("Add Friend");
+            User r = new User()
+            {
+                userID = lb_user_id.Text,
+                userName = lb_name.Text,
+            };
+            string _sender = JsonConvert.SerializeObject(user);
+            string _receiver = JsonConvert.SerializeObject(r);
+            writer.WriteLine(_sender);
+            writer.WriteLine(_receiver);
         }
 
         private void btn_cancel_Click(object sender, EventArgs e)
