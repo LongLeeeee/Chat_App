@@ -33,6 +33,10 @@ namespace App_Chat.UserControls
         {
             btn_add_friend.Text = text;
         }
+        public void setButton2(bool is_visible)
+        {
+            btn_cancel.Visible = is_visible;
+        }
         public void setLabel(string text)
         {
             lb_user_id.Text = text;
@@ -46,8 +50,8 @@ namespace App_Chat.UserControls
             reader = new StreamReader(tcpClient.GetStream());
             writer = new StreamWriter(tcpClient.GetStream());
             writer.AutoFlush = true;
-            btn_cancel.Visible = true;
-            btn_add_friend.Text = "Đã gửi";
+            //btn_cancel.Visible = true;
+            //btn_add_friend.Text = "Đã gửi";
             writer.WriteLine("Add Friend");
             User r = new User()
             {
@@ -62,8 +66,21 @@ namespace App_Chat.UserControls
 
         private void btn_cancel_Click(object sender, EventArgs e)
         {
-            btn_add_friend.Text = "Kết bạn";
-            btn_cancel.Visible = false;
+            //btn_add_friend.Text = "Kết bạn";
+            //btn_cancel.Visible = false;
+            reader = new StreamReader(tcpClient.GetStream());
+            writer = new StreamWriter(tcpClient.GetStream());
+            writer.AutoFlush = true;
+            writer.WriteLine("Cancel AddFriend");
+            User r = new User()
+            {
+                userID = lb_user_id.Text,
+                userName = lb_name.Text,
+            };
+            string _sender = JsonConvert.SerializeObject(user);
+            string _receiver = JsonConvert.SerializeObject(r);
+            writer.WriteLine(_sender);
+            writer.WriteLine(_receiver);
         }
     }
 }

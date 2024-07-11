@@ -248,6 +248,27 @@ namespace App_Chat.View
                             }));
                         }
                     }
+                    else if (rs_from_server == "Sended AddF")
+                    {
+                        string data_from_server = reader.ReadLine();
+                        User user = JsonConvert.DeserializeObject<User>(data_from_server);
+                        if (user_list.Contains(user.userID))
+                        {
+                            foreach (var item in Users)
+                            {
+                                string temp = item.get_user_id();
+                                if (temp == user.userID)
+                                {
+                                    item.setButton("Đã gửi");
+                                    Invoke(new Action(() =>
+                                    {
+                                        item.setButton2(true);
+                                    }));
+                                    break;
+                                }
+                            }
+                        }
+                    }
                     else if (rs_from_server == "Add Friend")
                     {
                         string data_from_server = reader.ReadLine();
@@ -257,9 +278,35 @@ namespace App_Chat.View
                             foreach (var item in Users)
                             {
                                 string temp = item.get_user_id();
-                                if ( temp == user.userID)
+                                if (temp == user.userID)
                                 {
-                                    item.setButton("Chấp nhận");
+                                    item.setButton("Chấp Nhận");
+                                    Invoke(new Action(() =>
+                                    {
+                                        item.setButton2(true);
+                                    }));
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    else if (rs_from_server == "Cancel AddFriend")
+                    {
+                        string data_from_server = reader.ReadLine();
+                        User user = JsonConvert.DeserializeObject<User>(data_from_server);
+                        MessageBox.Show(user_list.Contains(user.userID).ToString());
+                        if (user_list.Contains(user.userID))
+                        {
+                            foreach (var item in Users)
+                            {
+                                string temp = item.get_user_id();
+                                if (temp == user.userID)
+                                {
+                                    item.setButton("Kết bạn");
+                                    Invoke(new Action(() =>
+                                    {
+                                        item.setButton2(false);
+                                    }));
                                     break;
                                 }
                             }

@@ -240,12 +240,62 @@ namespace WindowsFormsApp1
                         string data_receiver = reader.ReadLine();
                         User user = JsonConvert.DeserializeObject<User>(data_sender);
                         User user1 = JsonConvert.DeserializeObject<User>(data_receiver);
-                        if (tcpclients.ContainsKey(user.userID))
+                        if (tcpclients.ContainsKey(user1.userID))
                         {
                             StreamWriter writer1 = new StreamWriter(tcpclients[user1.userID].GetStream());
                             writer1.AutoFlush = true;
                             writer1.WriteLine("Add Friend");
-                            writer1.WriteLine(data_receiver);
+                            writer1.WriteLine(data_sender);
+                            Invoke(new Action(() =>
+                            {
+                                richTextBox1.AppendText($"{ user.userID} vừa gửi lời mời kết bạn đên {user1.userID}\r\n");
+                            }));
+                        }
+                        else
+                        {
+                            bool success = false;
+                            Database update= new Database();
+                            update.connectToDB();
+                            update.add_Notification(user1, user, ref success);
+                            update.DisconnectToDB();
+                            if (success)
+                            {
+                                writer.WriteLine("Sended AddF");
+                                writer.WriteLine(data_receiver);
+                                Invoke(new Action(() =>
+                                {
+                                    richTextBox1.AppendText($"{user.userID} vừa gửi lời mời kết bạn đên {user1.userID}\r\n");
+                                }));
+                            }
+                        }
+                    }
+                    else if (rq_from_client == "Cancel AddFriend")
+                    {
+                        string data_sender = reader.ReadLine();
+                        string data_receiver = reader.ReadLine();
+                        User user = JsonConvert.DeserializeObject<User>(data_sender);
+                        User user1 = JsonConvert.DeserializeObject<User>(data_receiver);
+                        if (tcpclients.ContainsKey(user1.userID))
+                        {
+                            StreamWriter writer1 = new StreamWriter(tcpclients[user1.userID].GetStream());
+                            writer1.AutoFlush = true;
+                            writer1.WriteLine("Cancel AddFriend");
+                            writer1.WriteLine(data_sender);
+                            Invoke(new Action(() =>
+                            {
+                                richTextBox1.AppendText($"{user.userID} không chấp nhận lời mời kết bạn đên {user1.userID}\r\n");
+                            }));
+                            writer.WriteLine("Cancel AddFriend");
+                            writer.WriteLine(data_receiver);
+                        }
+                        else
+                        {
+                            Invoke(new Action(() =>
+                            {
+                                richTextBox1.AppendText($"{user.userID} không chấp nhận lời mời kết bạn đên {user1.userID}\r\n");
+                            }));
+                            writer.WriteLine("Cancel AddFriend");
+                            writer.WriteLine(data_receiver);
                         }
                     }
                 }
