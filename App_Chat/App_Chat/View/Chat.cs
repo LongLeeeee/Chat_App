@@ -147,13 +147,16 @@ namespace App_Chat.View
             {
                 if (!string.IsNullOrEmpty(item))
                 {
-                    Invoke(new Action(() =>
+                    if (item != your_account_name.userID)
                     {
-                        NewFriend newFriend = new NewFriend(tcpClient, your_account_name);
-                        Users.Add(newFriend);
-                        newFriend.setLabel(item);
-                        fpn_show_users.Controls.Add(newFriend);
-                    }));
+                        Invoke(new Action(() =>
+                        {
+                            NewFriend newFriend = new NewFriend(tcpClient, your_account_name);
+                            Users.Add(newFriend);
+                            newFriend.setLabel(item);
+                            fpn_show_users.Controls.Add(newFriend);
+                        }));
+                    }
                 }
             }
         }
@@ -161,7 +164,7 @@ namespace App_Chat.View
         {
             user_boardChat = new Dictionary<BoxChat, FlowLayoutPanel>();
             receiver_boardChat = new Dictionary<string, FlowLayoutPanel>();
-            foreach (var item in user_list)
+            /*foreach (var item in user_list)
             {
                 if (!string.IsNullOrEmpty(item))
                 {
@@ -178,7 +181,7 @@ namespace App_Chat.View
                         panel_box_chat.Controls.Add(boxChat);
                     }));
                 }
-            }
+            }*/
         }
         private void show_panel_click(object sender, EventArgs e)
         {
@@ -280,7 +283,7 @@ namespace App_Chat.View
                                 string temp = item.get_user_id();
                                 if (temp == user.userID)
                                 {
-                                    item.setButton("Chấp Nhận");
+                                    item.setButton("Chấp nhận");
                                     Invoke(new Action(() =>
                                     {
                                         item.setButton2(true);
@@ -294,7 +297,6 @@ namespace App_Chat.View
                     {
                         string data_from_server = reader.ReadLine();
                         User user = JsonConvert.DeserializeObject<User>(data_from_server);
-                        MessageBox.Show(user_list.Contains(user.userID).ToString());
                         if (user_list.Contains(user.userID))
                         {
                             foreach (var item in Users)
@@ -307,6 +309,39 @@ namespace App_Chat.View
                                     {
                                         item.setButton2(false);
                                     }));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else if (rs_from_server == "Accepted")
+                    {
+                        string data_from_server = reader.ReadLine();
+                        User user = JsonConvert.DeserializeObject<User>(data_from_server);
+                        MessageBox.Show(data_from_server);
+                        if (user_list.Contains(user.userID))
+                        {
+                            int i = 0;
+                            foreach (var item in Users)
+                            {
+                                string temp = item.get_user_id();
+                                if (temp == user.userID)
+                                {
+                                    Invoke(new Action(() =>
+                                    {
+                                        BoxChat boxChat = new BoxChat();
+                                        boxChat.Click += show_panel_click;
+                                        boxChat.setName(temp);
+
+                                        FlowLayoutPanel flowLayoutPanel = createFlowLayoutPanel();
+                                        user_boardChat.Add(boxChat, flowLayoutPanel);
+                                        receiver_boardChat.Add(temp, flowLayoutPanel);
+
+                                        panel_box_chat.Controls.Add(boxChat);
+
+                                        fpn_show_users.Controls.Remove(Users[i]);
+                                    }));
+                                    i++;
                                     break;
                                 }
                             }

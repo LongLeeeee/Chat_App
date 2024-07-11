@@ -121,5 +121,37 @@ namespace WindowsFormsApp1.Model
                 success = true;
             }
         }
+        public void Del_Notification(User sender, User receiver, ref bool success)
+        {
+            string query1 = $"delete from Notifications where USERID_RECEIVE = '{sender.userID}' and USERID_SEND = '{receiver.userID}'";
+            string query = $"delete from Notifications where USERID_RECEIVE = '{receiver.userID}' and USERID_SEND = '{sender.userID}'";
+            bool s = true;
+            sqlCommand = new SqlCommand(query1, sqlConnection);
+            sqlCommand.Parameters.AddWithValue("USERID_RECEIVE", sender.userID);
+            sqlCommand.Parameters.AddWithValue("USERID_SEND", receiver.userID);
+            sqlCommand.ExecuteNonQuery();
+            s = true;
+            if (!s)
+            {
+                DisconnectToDB();
+                connectToDB();
+                sqlCommand = new SqlCommand(query, sqlConnection);
+                sqlCommand.Parameters.AddWithValue("USERID_SEND", sender.userID);
+                sqlCommand.Parameters.AddWithValue("USERID_USERID_RECEIVESEND", receiver.userID);
+                sqlCommand.ExecuteNonQuery();
+            }
+            success = true;
+        }
+        public void Add_Friend_Table(User sender, User receiver, ref bool success)
+        {
+            DateTime dateTime = DateTime.Now;
+            string query = $"insert into Friends (USERID_1, USERID_2, SENDDATE) values ('{receiver.userID}', '{sender.userID}','{dateTime}')";
+            sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlCommand.Parameters.AddWithValue("USERID_1", receiver.userID);
+            sqlCommand.Parameters.AddWithValue("USERID_2", sender.userID);
+            sqlCommand.Parameters.AddWithValue("SENDDATE", dateTime);
+            sqlCommand.ExecuteNonQuery();
+            success = true;
+        }
     }
 }

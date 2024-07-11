@@ -50,9 +50,16 @@ namespace App_Chat.UserControls
             reader = new StreamReader(tcpClient.GetStream());
             writer = new StreamWriter(tcpClient.GetStream());
             writer.AutoFlush = true;
-            //btn_cancel.Visible = true;
-            //btn_add_friend.Text = "Đã gửi";
-            writer.WriteLine("Add Friend");
+            string text = "";
+            if (btn_add_friend.Text == "Kết bạn")
+            {
+                text = "Add Friend";
+            }
+            else if (btn_add_friend.Text == "Chấp nhận")
+            {
+                text = "Accepted";
+            }
+            writer.WriteLine(text);
             User r = new User()
             {
                 userID = lb_user_id.Text,
@@ -66,8 +73,6 @@ namespace App_Chat.UserControls
 
         private void btn_cancel_Click(object sender, EventArgs e)
         {
-            //btn_add_friend.Text = "Kết bạn";
-            //btn_cancel.Visible = false;
             reader = new StreamReader(tcpClient.GetStream());
             writer = new StreamWriter(tcpClient.GetStream());
             writer.AutoFlush = true;

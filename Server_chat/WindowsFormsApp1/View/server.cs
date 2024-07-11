@@ -250,6 +250,8 @@ namespace WindowsFormsApp1
                             {
                                 richTextBox1.AppendText($"{ user.userID} vừa gửi lời mời kết bạn đên {user1.userID}\r\n");
                             }));
+                            writer.WriteLine("Sended AddF");
+                            writer.WriteLine(data_receiver);
                         }
                         else
                         {
@@ -290,12 +292,69 @@ namespace WindowsFormsApp1
                         }
                         else
                         {
-                            Invoke(new Action(() =>
+                            Database del = new Database();
+                            bool is_success = false;
+                            del.connectToDB();
+                            del.Del_Notification(user1, user, ref is_success);
+                            del.DisconnectToDB();
+                            MessageBox.Show(is_success.ToString());
+                            if (is_success)
                             {
-                                richTextBox1.AppendText($"{user.userID} không chấp nhận lời mời kết bạn đên {user1.userID}\r\n");
-                            }));
-                            writer.WriteLine("Cancel AddFriend");
-                            writer.WriteLine(data_receiver);
+                                MessageBox.Show(is_success.ToString());
+                                Invoke(new Action(() =>
+                                {
+                                    richTextBox1.AppendText($"{user.userID} không chấp nhận lời mời kết bạn đên {user1.userID}\r\n");
+                                }));
+                                writer.WriteLine("Cancel AddFriend");
+                                writer.WriteLine(data_receiver);
+                            }
+                        }
+                    }
+                    else if (rq_from_client == "Accepted")
+                    {
+                        string data_sender = reader.ReadLine();
+                        string data_receiver = reader.ReadLine();
+                        User user = JsonConvert.DeserializeObject<User>(data_sender);
+                        User user1 = JsonConvert.DeserializeObject<User>(data_receiver);
+                        Database database = new Database();
+                        if (tcpclients.ContainsKey(user1.userID))
+                        {
+                            StreamWriter writer1 = new StreamWriter(tcpclients[user1.userID].GetStream());
+                            writer1.AutoFlush = true;
+                            writer1.WriteLine("Accepted");
+                            writer1.WriteLine(data_sender);
+
+                            bool is_success = false;
+                            database.connectToDB();
+                            database.Add_Friend_Table(user, user1, ref is_success);
+                            database.DisconnectToDB();
+
+                            if (is_success)
+                            {
+                                Invoke(new Action(() =>
+                                {
+                                    richTextBox1.AppendText($"{user.userID} chấp nhận lời mời kết bạn đên {user1.userID}\r\n");
+                                }));
+                                writer.WriteLine("Accepted");
+                                writer.WriteLine(data_receiver);
+                            }
+                        }
+                        else
+                        {
+                            bool is_success = false;
+                            database.connectToDB();
+                            database.Add_Friend_Table(user1, user, ref is_success);
+                            database.DisconnectToDB();
+                            MessageBox.Show(is_success.ToString());
+                            if (is_success)
+                            {
+                                Invoke(new Action(() =>
+                                {
+                                    richTextBox1.AppendText($"{user.userID} chấp nhận lời mời kết bạn đên {user1.userID}\r\n");
+                                }));
+                                writer.WriteLine("Accepted");
+                                writer.WriteLine(data_receiver);
+                            }
                         }
                     }
                 }
