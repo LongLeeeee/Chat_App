@@ -234,6 +234,32 @@ namespace WindowsFormsApp1
                         string user_list = checkDB.getUSer();
                         writer.WriteLine(user_list);
                     }
+                    else if (rq_from_client == "Friend List")
+                    {
+                        string[] friend_list = new string[100];
+                        checkDB.connectToDB();
+                        checkDB.get_friends(userID,ref friend_list);
+                        checkDB.DisconnectToDB();
+                        string encode_string = "";
+                        foreach (var item in friend_list)
+                        {
+                            encode_string += item + "|";
+                        }
+                        writer.WriteLine(encode_string);
+                    }
+                    else if (rq_from_client == "Notifications")
+                    {
+                        string[] notifications = new string[100];
+                        string data = "";
+                        checkDB.connectToDB();
+                        checkDB.get_notificaiton(userID, ref notifications);
+                        checkDB.DisconnectToDB();
+                        foreach (var item in notifications)
+                        {
+                            data+= item + "|";
+                        }
+                        writer.WriteLine(data);
+                    }
                     else if (rq_from_client == "Add Friend")
                     {
                         string data_sender = reader.ReadLine();

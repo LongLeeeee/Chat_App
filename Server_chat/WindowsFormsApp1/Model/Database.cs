@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -81,6 +82,52 @@ namespace WindowsFormsApp1.Model
                 temp += temp_userID + "|";
             }
             return temp;
+        }
+        public void get_friends(string userID, ref string[] list)
+        {
+            string query = $"select USERID_1, USERNAME from Friends, Users where Friends.USERID_2 = Users.USERID and USERID_2 = '{userID}'";
+            string query1 = $"select USERID_2, USERNAME from Friends, Users where Friends.USERID_1 = Users.USERID and USERID_1 = '{userID}'";
+            sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlreader = sqlCommand.ExecuteReader();
+            int i = 0;
+            while (sqlreader.Read())
+            {
+                string id = sqlreader["USERID_1"].ToString();
+                list[i] = id;
+                i++;
+            }
+            sqlConnection.Close();
+
+            connectToDB();
+            sqlCommand = new SqlCommand(query1, sqlConnection);
+            sqlreader = sqlCommand.ExecuteReader();
+            while (sqlreader.Read())
+            {
+                string id = sqlreader["USERID_2"].ToString();
+                list[i] = id;
+                i++;
+            }
+        }
+        public void get_notificaiton(string user_id, ref string[] list)
+        {
+            string query = $"select USERID_RECEIVE, USERID_SEND from Notifications where USERID_RECEIVE = '{user_id}' or USERID_SEND = '{user_id}'";
+            sqlCommand = new SqlCommand(query, sqlConnection);  
+            sqlreader = sqlCommand.ExecuteReader();
+            int i = 0;
+            while (sqlreader.Read())
+            {
+                string id1 = sqlreader["USERID_RECEIVE"].ToString();
+                string id2 = sqlreader["USERID_SEND"].ToString();
+                if (id1 == user_id)
+                {
+                    list[i] = id2;
+                }
+                else if (id2 == user_id)
+                {
+                    list[i] = id1;
+                }
+                i++;
+            }
         }
         public void add_Notification(User user1, User user2, ref bool success)
         {

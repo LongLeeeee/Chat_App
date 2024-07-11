@@ -31,7 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BoxChat));
             this.bunifuPictureBox1 = new Bunifu.UI.WinForms.BunifuPictureBox();
             this.lb_name = new Bunifu.UI.WinForms.BunifuLabel();
-            this.lb_latest_message = new Bunifu.UI.WinForms.BunifuLabel();
+            this.lb_user_id = new Bunifu.UI.WinForms.BunifuLabel();
             ((System.ComponentModel.ISupportInitialize)(this.bunifuPictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -55,6 +55,7 @@
             // 
             this.lb_name.AllowParentOverrides = false;
             this.lb_name.AutoEllipsis = false;
+            this.lb_name.Cursor = System.Windows.Forms.Cursors.Default;
             this.lb_name.CursorType = System.Windows.Forms.Cursors.Default;
             this.lb_name.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lb_name.Location = new System.Drawing.Point(84, 12);
@@ -66,27 +67,27 @@
             this.lb_name.TextAlignment = System.Drawing.ContentAlignment.TopLeft;
             this.lb_name.TextFormat = Bunifu.UI.WinForms.BunifuLabel.TextFormattingOptions.Default;
             // 
-            // lb_latest_message
+            // lb_user_id
             // 
-            this.lb_latest_message.AllowParentOverrides = false;
-            this.lb_latest_message.AutoEllipsis = false;
-            this.lb_latest_message.CursorType = null;
-            this.lb_latest_message.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb_latest_message.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.lb_latest_message.Location = new System.Drawing.Point(84, 38);
-            this.lb_latest_message.Name = "lb_latest_message";
-            this.lb_latest_message.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lb_latest_message.Size = new System.Drawing.Size(86, 20);
-            this.lb_latest_message.TabIndex = 2;
-            this.lb_latest_message.Text = "bunifuLabel2";
-            this.lb_latest_message.TextAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.lb_latest_message.TextFormat = Bunifu.UI.WinForms.BunifuLabel.TextFormattingOptions.Default;
+            this.lb_user_id.AllowParentOverrides = false;
+            this.lb_user_id.AutoEllipsis = false;
+            this.lb_user_id.CursorType = null;
+            this.lb_user_id.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lb_user_id.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.lb_user_id.Location = new System.Drawing.Point(84, 38);
+            this.lb_user_id.Name = "lb_user_id";
+            this.lb_user_id.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.lb_user_id.Size = new System.Drawing.Size(86, 20);
+            this.lb_user_id.TabIndex = 2;
+            this.lb_user_id.Text = "bunifuLabel2";
+            this.lb_user_id.TextAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.lb_user_id.TextFormat = Bunifu.UI.WinForms.BunifuLabel.TextFormattingOptions.Default;
             // 
             // BoxChat
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.lb_latest_message);
+            this.Controls.Add(this.lb_user_id);
             this.Controls.Add(this.lb_name);
             this.Controls.Add(this.bunifuPictureBox1);
             this.Name = "BoxChat";
@@ -101,6 +102,6 @@
 
         private Bunifu.UI.WinForms.BunifuPictureBox bunifuPictureBox1;
         private Bunifu.UI.WinForms.BunifuLabel lb_name;
-        private Bunifu.UI.WinForms.BunifuLabel lb_latest_message;
+        private Bunifu.UI.WinForms.BunifuLabel lb_user_id;
     }
 }

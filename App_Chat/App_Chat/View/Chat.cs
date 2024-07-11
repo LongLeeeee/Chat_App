@@ -40,6 +40,16 @@ namespace App_Chat.View
 
             string users = reader.ReadLine();
             user_list = users.Split('|');
+
+            writer.WriteLine("Friend List");
+
+            string friends = reader.ReadLine();
+            friend_list = friends.Split('|');
+
+            writer.WriteLine("Notifications");
+
+            string notificaitons = reader.ReadLine();
+            noti_list = notificaitons.Split('|');
         }
         private Dictionary<BoxChat, FlowLayoutPanel> user_boardChat;
         private Dictionary<string, FlowLayoutPanel> receiver_boardChat;
@@ -54,7 +64,9 @@ namespace App_Chat.View
         private User your_account_name;
         private bool isRunning = false;
 
-        string[] user_list;
+        private string[] user_list;
+        private string[] friend_list;
+        private string[] noti_list;
 
         private void btn_find_msg_Click(object sender, EventArgs e)
         {
@@ -147,15 +159,30 @@ namespace App_Chat.View
             {
                 if (!string.IsNullOrEmpty(item))
                 {
-                    if (item != your_account_name.userID)
+                    if (item != your_account_name.userID && !friend_list.Contains(item))
                     {
-                        Invoke(new Action(() =>
+                        if (noti_list.Contains(item))
                         {
-                            NewFriend newFriend = new NewFriend(tcpClient, your_account_name);
-                            Users.Add(newFriend);
-                            newFriend.setLabel(item);
-                            fpn_show_users.Controls.Add(newFriend);
-                        }));
+                            Invoke(new Action(() =>
+                            {
+                                NewFriend newFriend = new NewFriend(tcpClient, your_account_name);
+                                Users.Add(newFriend);
+                                newFriend.setLabel(item);
+                                fpn_show_users.Controls.Add(newFriend);
+                                newFriend.setButton("Chấp nhận");
+                                newFriend.setButton2();
+                            }));
+                        }
+                        else
+                        {
+                            Invoke(new Action(() =>
+                            {
+                                NewFriend newFriend = new NewFriend(tcpClient, your_account_name);
+                                Users.Add(newFriend);
+                                newFriend.setLabel(item);
+                                fpn_show_users.Controls.Add(newFriend);
+                            }));
+                        }
                     }
                 }
             }
@@ -164,7 +191,7 @@ namespace App_Chat.View
         {
             user_boardChat = new Dictionary<BoxChat, FlowLayoutPanel>();
             receiver_boardChat = new Dictionary<string, FlowLayoutPanel>();
-            /*foreach (var item in user_list)
+            foreach (var item in friend_list)
             {
                 if (!string.IsNullOrEmpty(item))
                 {
@@ -181,7 +208,7 @@ namespace App_Chat.View
                         panel_box_chat.Controls.Add(boxChat);
                     }));
                 }
-            }*/
+            }
         }
         private void show_panel_click(object sender, EventArgs e)
         {
@@ -190,6 +217,7 @@ namespace App_Chat.View
             {
                 user_boardChat[clicked_box_chat].Visible = true;
                 lb_remote_name.Text = clicked_box_chat.getName();
+                lb_user_id.Text = clicked_box_chat.get_user_id();
                 tb_enter_message.Clear();
             }
         }
