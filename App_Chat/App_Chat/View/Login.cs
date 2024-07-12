@@ -149,5 +149,15 @@ namespace App_Chat.View
             ForgotPassword forgotPassword = new ForgotPassword();
             forgotPassword.Show();
         }
+
+        private void label1_MouseEnter(object sender, EventArgs e)
+        {
+            label1.ForeColor = SystemColors.ControlDarkDark;
+        }
+
+        private void label1_MouseLeave(object sender, EventArgs e)
+        {
+            label1.ForeColor=SystemColors.ControlText;  
+        }
     }
 }

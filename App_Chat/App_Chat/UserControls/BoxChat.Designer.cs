@@ -87,11 +87,15 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.Controls.Add(this.lb_user_id);
             this.Controls.Add(this.lb_name);
             this.Controls.Add(this.bunifuPictureBox1);
+            this.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Name = "BoxChat";
             this.Size = new System.Drawing.Size(325, 71);
+            this.MouseEnter += new System.EventHandler(this.BoxChat_MouseEnter);
+            this.MouseLeave += new System.EventHandler(this.BoxChat_MouseLeave);
             ((System.ComponentModel.ISupportInitialize)(this.bunifuPictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

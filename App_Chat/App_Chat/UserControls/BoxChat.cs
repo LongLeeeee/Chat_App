@@ -32,5 +32,15 @@ namespace App_Chat
         {
             lb_user_id.Text = text;
         }
+
+        private void BoxChat_MouseEnter(object sender, EventArgs e)
+        {
+            this.BackColor = SystemColors.Control;
+        }
+
+        private void BoxChat_MouseLeave(object sender, EventArgs e)
+        {
+            this.BackColor = SystemColors.ControlLightLight;
+        }
     }
 }

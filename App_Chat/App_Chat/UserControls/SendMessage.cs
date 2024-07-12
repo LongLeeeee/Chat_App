@@ -16,9 +16,9 @@ namespace App_Chat.UserControls
         {
             InitializeComponent();
         }
-        public void setLabel(string content)
+        public void setLabel(string content, string userid)
         {
-            lb_send_message.Text = content;
+            lb_send_message.Text = content + " :" + userid ;
         }
     }
 }

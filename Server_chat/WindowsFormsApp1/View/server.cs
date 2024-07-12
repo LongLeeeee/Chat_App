@@ -189,6 +189,10 @@ namespace WindowsFormsApp1
                         }));
                         writer.WriteLine("Reset successfully");
                     }
+                    else if (rqFromClient == "Quit")
+                    {
+                        tcpClient.Close();
+                    }
                 }
                 catch
                 {
@@ -219,13 +223,21 @@ namespace WindowsFormsApp1
                                                 $"Nguoi nhan: {new_message.userReceive.userName} " +
                                                 $"Room: {new_message.dateSend}\r\n");
                         }));
-                        MessageBox.Show(tcpclients.ContainsKey(new_message.userReceive.userID).ToString());
                         if (tcpclients.ContainsKey(new_message.userReceive.userID))
                         {
                             StreamWriter receiver = new StreamWriter(tcpclients[new_message.userReceive.userID].GetStream());
                             receiver.AutoFlush = true;
                             receiver.WriteLine("Message");
                             receiver.WriteLine(message_from_client);
+                            checkDB.connectToDB();
+                            checkDB.save_message(new_message.userReceive, new_message.userSend, new_message.content);
+                            checkDB.DisconnectToDB();
+                        }
+                        else
+                        {
+                            checkDB.connectToDB();
+                            checkDB.save_message(new_message.userReceive, new_message.userSend, new_message.content);
+                            checkDB.DisconnectToDB();
                         }
                     }
                     else if (rq_from_client == "List User")
@@ -371,7 +383,6 @@ namespace WindowsFormsApp1
                             database.connectToDB();
                             database.Add_Friend_Table(user1, user, ref is_success);
                             database.DisconnectToDB();
-                            MessageBox.Show(is_success.ToString());
                             if (is_success)
                             {
                                 Invoke(new Action(() =>
@@ -382,6 +393,11 @@ namespace WindowsFormsApp1
                                 writer.WriteLine(data_receiver);
                             }
                         }
+                    }
+                    else if (rq_from_client == "Quit")
+                    {
+                        tcpclients.Remove(userID);
+                        client.Close();
                     }
                 }
                 catch
@@ -407,9 +423,10 @@ namespace WindowsFormsApp1
                         string data = reader.ReadLine();
                         MessageBox.Show(data);
                     }
-                    else if (rq_from_client == "List User")
+                    else if (rq_from_client == "Quit")
                     {
-                        
+                        tcpclients_2.Remove(userID);
+                        client.Close();
                     }
                 }
                 catch

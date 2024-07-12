@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -62,6 +63,41 @@ namespace WindowsFormsApp1.Model
             sqlCommand.Parameters.AddWithValue("EMAIL", user.email);
             sqlCommand.Parameters.AddWithValue("PWD", user.pwd);
             sqlCommand.ExecuteNonQuery();
+        }
+        public void save_message(User receiver, User sender, string content)
+        {
+            string ROOMKEY = "";
+            if (receiver.userID.CompareTo(sender.userID) > 0)
+            {
+                ROOMKEY = sender.userID+"_"+receiver.userID;
+            }
+            else if (receiver.userID.CompareTo(sender.userID) < 0)
+            {
+                ROOMKEY = receiver.userID+"_"+sender.userID;
+            }
+            DateTime dateTime = DateTime.Now;
+            string query = $"insert into Messages_Friend(ROOMKEY, USERID_RECEIVE, USERID_SEND, SENDDATE, CONTENT) values ('{ROOMKEY}','{receiver.userID}','{sender.userID}','{dateTime}','{content}')";
+            sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlCommand.Parameters.AddWithValue("ROOMKEY", ROOMKEY);
+            sqlCommand.Parameters.AddWithValue("USERID_RECEIVE", receiver.userID);
+            sqlCommand.Parameters.AddWithValue("USERID_SEND", sender.userID);
+            sqlCommand.Parameters.AddWithValue("SENDDATE", dateTime);
+            sqlCommand.Parameters.AddWithValue("CONTENT", content);
+            sqlCommand.ExecuteNonQuery();
+        }
+        public void get_messages(string userid_login, string another_userid)
+        {
+            string ROOMKEY = "";
+            if (userid_login.CompareTo(another_userid) > 0)
+            {
+                ROOMKEY = another_userid + "_" + userid_login;
+            }
+            else if (userid_login.CompareTo(another_userid) < 0)
+            {
+                ROOMKEY = userid_login + "_" + another_userid;
+            }
+            string query = $"select * from Messages_Friend where ROOMKEY = '{ROOMKEY}'";
+
         }
         public void updateData(User user)
         {

@@ -51,6 +51,8 @@ namespace App_Chat.View
             string notificaitons = reader.ReadLine();
             noti_list = notificaitons.Split('|');
         }
+        Thread receiveThread;
+
         private Dictionary<BoxChat, FlowLayoutPanel> user_boardChat;
         private Dictionary<string, FlowLayoutPanel> receiver_boardChat;
         private List<NewFriend> Users;
@@ -141,6 +143,41 @@ namespace App_Chat.View
                 panel6.Visible = true;
             }
         }
+        private void bunifuPictureBox2_MouseEnter(object sender, EventArgs e)
+        {
+            bunifuPictureBox2.BackColor = SystemColors.Control;
+        }
+        private void bunifuPictureBox2_MouseLeave(object sender, EventArgs e)
+        {
+            bunifuPictureBox2.BackColor= SystemColors.Window;
+        }
+        private void btn_display_box_chat_MouseEnter(object sender, EventArgs e)
+        {
+            btn_display_box_chat.BackColor = SystemColors.Control;
+        }
+        private void btn_display_box_chat_MouseLeave(object sender, EventArgs e)
+        {
+            btn_display_box_chat.BackColor = SystemColors.Window;
+        }
+        private void btn_display_list_user_MouseEnter(object sender, EventArgs e)
+        {
+            btn_display_list_user.BackColor = SystemColors.Control;
+        }
+
+        private void btn_display_list_user_MouseLeave(object sender, EventArgs e)
+        {
+            btn_display_list_user.BackColor= SystemColors.Window;
+        }
+
+        private void add_MouseEnter(object sender, EventArgs e)
+        {
+            add.BackColor = SystemColors.Control;
+        }
+
+        private void add_MouseLeave(object sender, EventArgs e)
+        {
+            add.BackColor= SystemColors.Control;
+        }
         private FlowLayoutPanel createFlowLayoutPanel()
         {
             FlowLayoutPanel flowLayoutPanel = new FlowLayoutPanel();
@@ -170,7 +207,7 @@ namespace App_Chat.View
                                 newFriend.setLabel(item);
                                 fpn_show_users.Controls.Add(newFriend);
                                 newFriend.setButton("Chấp nhận");
-                                newFriend.setButton2();
+                                newFriend.setButton2(true);
                             }));
                         }
                         else
@@ -215,10 +252,21 @@ namespace App_Chat.View
             BoxChat clicked_box_chat = (BoxChat)sender;
             if (user_boardChat.ContainsKey(clicked_box_chat))
             {
-                user_boardChat[clicked_box_chat].Visible = true;
-                lb_remote_name.Text = clicked_box_chat.getName();
-                lb_user_id.Text = clicked_box_chat.get_user_id();
-                tb_enter_message.Clear();
+                foreach (var item in user_boardChat)
+                {
+                    if (item.Key == clicked_box_chat)
+                    {
+                        panel7.Visible = true;
+                        item.Value.Visible = true;
+                        lb_remote_name.Text = clicked_box_chat.getName();
+                        lb_user_id.Text = clicked_box_chat.get_user_id();
+                        tb_enter_message.Clear();
+                    }
+                    else
+                    {
+                        item.Value.Visible = false;
+                    }
+                }
             }
         }
         private void btn_send_Click_1(object sender1, EventArgs e)
@@ -250,7 +298,7 @@ namespace App_Chat.View
                 if (receiver_boardChat.ContainsKey(receiver.userName))
                 {
                     SendMessage se = new SendMessage();
-                    se.setLabel(tb_enter_message.Text);
+                    se.setLabel(tb_enter_message.Text, your_account_name.userID);
                     receiver_boardChat[receiver.userName].Controls.Add(se);
                     tb_enter_message.Clear();
                 }
@@ -268,13 +316,12 @@ namespace App_Chat.View
                         string content_from_server = reader.ReadLine();
                         MessageFriend received_message = JsonConvert.DeserializeObject<MessageFriend>(content_from_server);
                         User sender = received_message.userSend;
-                        MessageBox.Show(receiver_boardChat.ContainsKey(sender.userID).ToString());
                         if (receiver_boardChat.ContainsKey(sender.userID))
                         {
                             Invoke(new Action(() =>
                             {
                                 ReceiveMessage re = new ReceiveMessage();
-                                re.setLabel(received_message.content);
+                                re.setLabel(received_message.content, sender.userID);
                                 receiver_boardChat[sender.userID].Controls.Add(re);
                             }));
                         }
@@ -346,7 +393,6 @@ namespace App_Chat.View
                     {
                         string data_from_server = reader.ReadLine();
                         User user = JsonConvert.DeserializeObject<User>(data_from_server);
-                        MessageBox.Show(data_from_server);
                         if (user_list.Contains(user.userID))
                         {
                             int i = 0;
@@ -394,9 +440,18 @@ namespace App_Chat.View
             load_show_users_thread.IsBackground = true;
 
             isRunning = true;
-            Thread receiveThread = new Thread(receive);
+            receiveThread = new Thread(receive);
             receiveThread.Start();
             receiveThread.IsBackground = true;
+        }
+
+        private void btn_exit_Click(object sender, EventArgs e)
+        {
+            writer.WriteLine("Quit");
+            writer_1.WriteLine("Quit");
+            tcpClient.Close();
+            tcpClient1.Close();
+            Application.Exit();
         }
     }
 }
