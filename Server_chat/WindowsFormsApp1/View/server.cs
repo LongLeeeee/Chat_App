@@ -250,7 +250,7 @@ namespace WindowsFormsApp1
                     {
                         string[] friend_list = new string[100];
                         checkDB.connectToDB();
-                        checkDB.get_friends(userID,ref friend_list);
+                        checkDB.get_friends(userID, ref friend_list);
                         checkDB.DisconnectToDB();
                         string encode_string = "";
                         foreach (var item in friend_list)
@@ -268,7 +268,23 @@ namespace WindowsFormsApp1
                         checkDB.DisconnectToDB();
                         foreach (var item in notifications)
                         {
-                            data+= item + "|";
+                            data += item + "|";
+                        }
+                        writer.WriteLine(data);
+                    }
+                    else if (rq_from_client == "Load Message")
+                    {
+                        string remote_user = reader.ReadLine();
+                        writer.WriteLine("Load Message");
+                        writer.WriteLine(remote_user);
+                        string data = "";
+                        checkDB.connectToDB();
+                        checkDB.get_messages(userID, remote_user, ref data);
+                        checkDB.DisconnectToDB();
+                        if (string.IsNullOrEmpty(data))
+                        {
+                            writer.WriteLine("Null");
+                            break;
                         }
                         writer.WriteLine(data);
                     }
@@ -286,7 +302,7 @@ namespace WindowsFormsApp1
                             writer1.WriteLine(data_sender);
                             Invoke(new Action(() =>
                             {
-                                richTextBox1.AppendText($"{ user.userID} vừa gửi lời mời kết bạn đên {user1.userID}\r\n");
+                                richTextBox1.AppendText($"{user.userID} vừa gửi lời mời kết bạn đên {user1.userID}\r\n");
                             }));
                             writer.WriteLine("Sended AddF");
                             writer.WriteLine(data_receiver);
@@ -294,7 +310,7 @@ namespace WindowsFormsApp1
                         else
                         {
                             bool success = false;
-                            Database update= new Database();
+                            Database update = new Database();
                             update.connectToDB();
                             update.add_Notification(user1, user, ref success);
                             update.DisconnectToDB();

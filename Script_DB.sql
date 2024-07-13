@@ -47,7 +47,7 @@ create table Messages_Group
 )
 create table Messages_Friend
 (
-	ROOMKEY varchar(100) primary key,
+	ROOMKEY varchar(100),
 	USERID_RECEIVE varchar(30),
 	USERID_SEND varchar(30),
 	SENDDATE smalldatetime,

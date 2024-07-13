@@ -85,7 +85,7 @@ namespace WindowsFormsApp1.Model
             sqlCommand.Parameters.AddWithValue("CONTENT", content);
             sqlCommand.ExecuteNonQuery();
         }
-        public void get_messages(string userid_login, string another_userid)
+        public void get_messages(string userid_login, string another_userid, ref string data)
         {
             string ROOMKEY = "";
             if (userid_login.CompareTo(another_userid) > 0)
@@ -96,8 +96,28 @@ namespace WindowsFormsApp1.Model
             {
                 ROOMKEY = userid_login + "_" + another_userid;
             }
-            string query = $"select * from Messages_Friend where ROOMKEY = '{ROOMKEY}'";
-
+            string query = $"select USERID_RECEIVE, USERID_SEND, CONTENT from Messages_Friend where ROOMKEY = '{ROOMKEY}'";
+            sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlreader = sqlCommand.ExecuteReader();
+            while (sqlreader.Read())
+            {
+                string temp = sqlreader["CONTENT"].ToString();
+                string user = sqlreader["USERID_SEND"].ToString();
+                string temp1 = "";
+                if (user == userid_login)
+                {
+                    temp1 = temp + " :" + user;
+                }
+                else
+                {
+                    temp1 = user + ": " + temp;
+                }
+                if (string.IsNullOrEmpty(temp1))
+                {
+                    return;
+                }
+                data += temp1 + "|";
+            }
         }
         public void updateData(User user)
         {

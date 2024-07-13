@@ -26,7 +26,7 @@ namespace App_Chat
         }
         public string get_user_id()
         {
-            return lb_user_id.Text;
+            return lb_name.Text;
         }
         public void set_user_id(string text)
         {

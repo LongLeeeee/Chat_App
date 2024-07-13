@@ -261,6 +261,8 @@ namespace App_Chat.View
                         lb_remote_name.Text = clicked_box_chat.getName();
                         lb_user_id.Text = clicked_box_chat.get_user_id();
                         tb_enter_message.Clear();
+                        writer.WriteLine("Load Message");
+                        writer.WriteLine(clicked_box_chat.get_user_id());
                     }
                     else
                     {
@@ -417,6 +419,43 @@ namespace App_Chat.View
                                     }));
                                     i++;
                                     break;
+                                }
+                            }
+                        }
+                    }
+                    else if (rs_from_server == "Load Message")
+                    {
+                        string user1 = reader.ReadLine();
+                        string data = "";
+                        data = reader.ReadLine();
+                        if (data == "Null")
+                        {
+                            break;
+                        }
+                        string[] messages = data.Split('|');
+                        foreach (string message in messages)
+                        {
+                            if (!string.IsNullOrEmpty(message))
+                            {
+                                string userid = message.Substring(message.IndexOf(":") + 1);
+                                string text = message.Substring(0, message.IndexOf(":"));
+                                if (userid == your_account_name.userID)
+                                {
+                                    Invoke(new Action(() =>
+                                    {
+                                        SendMessage se = new SendMessage();
+                                        se.setLabel(text, userid);
+                                        receiver_boardChat[user1].Controls.Add(se);
+                                    }));
+                                }
+                                else
+                                {
+                                    Invoke(new Action(() =>
+                                    {
+                                        ReceiveMessage se = new ReceiveMessage();
+                                        se.setLabel(text, userid);
+                                        receiver_boardChat[user1].Controls.Add(se);
+                                    }));
                                 }
                             }
                         }
