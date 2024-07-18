@@ -118,10 +118,6 @@ namespace App_Chat.View
                 panel2.Visible = false;
             }
         }
-        private void add_Click(object sender, EventArgs e)
-        {
-
-        }
         private void bunifuPictureBox2_Click_1(object sender, EventArgs e)
         {
             if (panel_personal_properties.Visible == true)
@@ -274,6 +270,11 @@ namespace App_Chat.View
                     }
                 }
             }
+        }
+        private void add_Click(object sender, EventArgs e)
+        {
+            CreateGroup createGroup = new CreateGroup(your_account_name.userID, writer, reader, friend_list);
+            createGroup.Show();
         }
         private void btn_send_Click_1(object sender1, EventArgs e)
         {
@@ -467,6 +468,14 @@ namespace App_Chat.View
                                 }
                             }
                         }
+                    }
+                    else if (rs_from_server == "CreatedGroupForUserCreate")
+                    {
+                        MessageBox.Show("Đã tạo thành công");
+                    }
+                    else if (rs_from_server == "Created Group")
+                    {
+                        MessageBox.Show("Đã được tạo thành công");
                     }
                 }
             }

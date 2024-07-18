@@ -256,5 +256,35 @@ namespace WindowsFormsApp1.Model
             sqlCommand.ExecuteNonQuery();
             success = true;
         }
+        public void Add_Group_Table(string group_name, ref bool is_exist, ref bool is_success, string user_id)
+        {
+            DateTime dateTime = DateTime.Now;
+            string query = $"select GROUPNAME from List_Group where GROUPNAME = '{group_name}'";
+            sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlreader = sqlCommand.ExecuteReader();
+            Group temp = new Group();
+            while (sqlreader.Read())
+            {
+                temp.groupName = sqlreader["GROUPNAME"].ToString();
+            }
+            MessageBox.Show(temp.groupName);
+            sqlConnection.Close();
+
+            connectToDB();
+            if (!string.IsNullOrEmpty(temp.groupName))
+            {
+                is_exist = true;
+            }
+            else
+            {
+                query = $"insert into List_Group (GROUPNAME,USERID_CREATION,CREATIONDATE) values ('{group_name}','{user_id}', '{dateTime}')";
+                sqlCommand = new SqlCommand (query, sqlConnection);
+                sqlCommand.Parameters.AddWithValue("GROUPNAME", group_name);
+                sqlCommand.Parameters.AddWithValue("USERID_CREATION", user_id);
+                sqlCommand.Parameters.AddWithValue("CREATIONDATE", dateTime);
+                sqlCommand.ExecuteNonQuery();
+                is_success = true;
+            }
+        }
     }
 }

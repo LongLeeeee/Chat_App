@@ -53,3 +53,5 @@ E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.csproj.CopyCompl
 E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.exe
 E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.pdb
 E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.View.ChangePassword.resources
+E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.UserControls.member.resources
+E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.View.CreateGroup.resources

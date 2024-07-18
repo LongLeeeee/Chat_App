@@ -437,6 +437,47 @@ namespace WindowsFormsApp1
                         checkDB.DisconnectToDB();
                         writer.WriteLine("Successfully_Close");
                     }
+                    else if (rq_from_client == "Create Group")
+                    {
+                        string group_name = reader.ReadLine();
+                        string user_created = reader.ReadLine();
+                        string member = reader.ReadLine();
+                        Invoke(new Action(() =>
+                        {
+                            richTextBox1.AppendText($"{user_created} đã yêu cầu tạo 1 group với tên {group_name}.\r\n");
+                        }));
+                        bool is_exist = false;
+                        bool is_success = false;   
+                        checkDB.connectToDB();
+                        checkDB.Add_Group_Table(group_name,ref is_exist, ref is_success, user_created);
+                        checkDB.DisconnectToDB();
+                        if (!is_exist && is_success)
+                        {
+                            Invoke(new Action(() =>
+                            {
+                                richTextBox1.AppendText($"{group_name} đã được tạo.\r\n");
+                            }));
+                            string[] receivers = member.Split('|');
+                            writer.WriteLine("CreatedGroupForUserCreate");
+                            writer.WriteLine(member);
+                            foreach (var item in receivers)
+                            {
+                                if (item != userID || tcpclients.ContainsKey(item))
+                                {
+                                    StreamWriter writer1 = new StreamWriter(tcpclients[item].GetStream());
+                                    writer1.WriteLine("Created Group");
+                                    writer1.WriteLine(member);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Invoke(new Action(() =>
+                            {
+                                richTextBox1.AppendText($"{group_name} tạo không thành công.\r\n");
+                            }));
+                        }
+                    }
                     else if (rq_from_client == "Quit")
                     {
                         tcpclients.Remove(userID);
