@@ -52,3 +52,4 @@ E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.csproj.CoreCompi
 E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.csproj.CopyComplete
 E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.exe
 E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.pdb
+E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.View.ChangePassword.resources

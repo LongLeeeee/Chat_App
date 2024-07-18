@@ -410,6 +410,33 @@ namespace WindowsFormsApp1
                             }
                         }
                     }
+                    else if (rq_from_client == "Change Pwd")
+                    {
+                        string data_user = reader.ReadLine();
+                        User user = JsonConvert.DeserializeObject<User>(data_user);  
+                        bool is_success = false;    
+                        checkDB.connectToDB();
+                        checkDB.Authetication(user, ref is_success);
+                        checkDB.DisconnectToDB();
+                        Thread.Sleep(1000);
+                        if (is_success)
+                        {
+                            writer.WriteLine("Successfully");
+                        }
+                        else
+                        {
+                            writer.WriteLine("Unsuccessfully");
+                        }
+                    }
+                    else if (rq_from_client == "Update Pwd")
+                    {
+                        string data = reader.ReadLine();
+                        User user = JsonConvert.DeserializeObject<User>(data);
+                        checkDB.connectToDB();
+                        checkDB.updateData(user);
+                        checkDB.DisconnectToDB();
+                        writer.WriteLine("Successfully_Close");
+                    }
                     else if (rq_from_client == "Quit")
                     {
                         tcpclients.Remove(userID);

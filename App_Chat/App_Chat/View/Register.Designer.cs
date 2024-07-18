@@ -544,6 +544,7 @@
             this.tb_pwd.TextPlaceholder = "Enter text";
             this.tb_pwd.UseSystemPasswordChar = false;
             this.tb_pwd.WordWrap = true;
+            this.tb_pwd.TextChanged += new System.EventHandler(this.tb_pwd_TextChanged);
             // 
             // btn_register
             // 

@@ -25,6 +25,7 @@ namespace App_Chat.View
         {
             InitializeComponent();
             this.your_account_name = user;
+            lb_name.Text = your_account_name.userName;
             this.tcpClient1 = tcpClient1;
             this.tcpClient = tcpClient;
 
@@ -56,6 +57,7 @@ namespace App_Chat.View
         private Dictionary<BoxChat, FlowLayoutPanel> user_boardChat;
         private Dictionary<string, FlowLayoutPanel> receiver_boardChat;
         private List<NewFriend> Users;
+        private List<BoxChat> boxchats;
         private List<string> box_chat = new List<string>();
         private TcpClient tcpClient;
         private TcpClient tcpClient1;
@@ -228,6 +230,7 @@ namespace App_Chat.View
         {
             user_boardChat = new Dictionary<BoxChat, FlowLayoutPanel>();
             receiver_boardChat = new Dictionary<string, FlowLayoutPanel>();
+            boxchats = new List<BoxChat>();
             foreach (var item in friend_list)
             {
                 if (!string.IsNullOrEmpty(item))
@@ -239,6 +242,7 @@ namespace App_Chat.View
                         boxChat.setName(item);
 
                         FlowLayoutPanel flowLayoutPanel = createFlowLayoutPanel();
+                        boxchats.Add(boxChat);
                         user_boardChat.Add(boxChat, flowLayoutPanel);
                         receiver_boardChat.Add(item, flowLayoutPanel);
 
@@ -433,6 +437,10 @@ namespace App_Chat.View
                             break;
                         }
                         string[] messages = data.Split('|');
+                        if (messages == null)
+                        {
+                            break;
+                        }
                         foreach (string message in messages)
                         {
                             if (!string.IsNullOrEmpty(message))
@@ -453,7 +461,7 @@ namespace App_Chat.View
                                     Invoke(new Action(() =>
                                     {
                                         ReceiveMessage se = new ReceiveMessage();
-                                        se.setLabel(text, userid);
+                                        se.setLabel(userid, text);
                                         receiver_boardChat[user1].Controls.Add(se);
                                     }));
                                 }
@@ -491,6 +499,78 @@ namespace App_Chat.View
             tcpClient.Close();
             tcpClient1.Close();
             Application.Exit();
+        }
+
+        private void btn_logout_Click(object sender, EventArgs e)
+        {
+            writer.WriteLine("Quit");
+            writer_1.WriteLine("Quit");
+            tcpClient.Close();
+            tcpClient1.Close();
+            Thread LGThread = new Thread(() => Application.Run(new Login()));
+            LGThread.ApartmentState = ApartmentState.STA;
+            LGThread.Start();
+            this.Close();
+        }
+
+        private void btn_change_pwd_Click(object sender, EventArgs e)
+        {
+            ChangePassword changePassword = new ChangePassword(tcpClient, your_account_name);
+            changePassword.ShowDialog();
+        }
+
+        private void tb_find_message_TextChange(object sender, EventArgs e)
+        {
+            if (receiver_boardChat.ContainsKey(lb_remote_name.Text.Trim()))
+            {
+                foreach(Control control in receiver_boardChat[lb_remote_name.Text].Controls)
+                {
+                    if (control is ReceiveMessage re && re.getLabel().Contains(tb_find_message.Text))
+                    {
+                        re.Visible = true;
+                    }
+                    else if (control is SendMessage se && se.getLabel().Contains(tb_find_message.Text))
+                    {
+                        se.Visible = true;
+                    }
+                    else
+                    {
+                        control.Visible = false;
+                    }
+                }
+            }
+        }
+
+        private void tb_enter_friend_TextChanged(object sender, EventArgs e)
+        {
+            foreach (var item in Users)
+            {
+                string temp = item.get_user_id();
+                if (temp.Contains(tb_enter_friend.Text.Trim()))
+                {
+                    item.Visible = true;
+                }
+                else
+                {
+                    item.Visible = false;
+                }
+            }
+        }
+
+        private void tb_enter_userid_TextChanged(object sender, EventArgs e)
+        {
+            foreach (var item in boxchats)
+            {
+                string temp = item.getName();
+                if (temp.Contains(tb_enter_userid.Text.Trim()))
+                {
+                    item.Visible = true;
+                }
+                else
+                {
+                    item.Visible = false;
+                }
+            }
         }
     }
 }

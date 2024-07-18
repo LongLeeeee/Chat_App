@@ -105,6 +105,12 @@
     <Compile Include="UserControls\SendMessage.Designer.cs">
       <DependentUpon>SendMessage.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\ChangePassword.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\ChangePassword.Designer.cs">
+      <DependentUpon>ChangePassword.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Chat.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -150,6 +156,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\SendMessage.resx">
       <DependentUpon>SendMessage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\ChangePassword.resx">
+      <DependentUpon>ChangePassword.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Chat.resx">
       <DependentUpon>Chat.cs</DependentUpon>

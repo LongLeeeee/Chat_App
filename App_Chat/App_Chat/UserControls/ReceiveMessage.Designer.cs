@@ -29,28 +29,26 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ReceiveMessage));
-            this.bunifuPanel1 = new Bunifu.UI.WinForms.BunifuPanel();
+            this.bunifuPanel2 = new Bunifu.UI.WinForms.BunifuPanel();
             this.lb_receive_message = new Bunifu.UI.WinForms.BunifuLabel();
-            this.bunifuPanel1.SuspendLayout();
+            this.bunifuPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
-            // bunifuPanel1
+            // bunifuPanel2
             // 
-            this.bunifuPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.bunifuPanel1.AutoSize = true;
-            this.bunifuPanel1.BackgroundColor = System.Drawing.Color.DodgerBlue;
-            this.bunifuPanel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("bunifuPanel1.BackgroundImage")));
-            this.bunifuPanel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.bunifuPanel1.BorderColor = System.Drawing.Color.Transparent;
-            this.bunifuPanel1.BorderRadius = 35;
-            this.bunifuPanel1.BorderThickness = 0;
-            this.bunifuPanel1.Controls.Add(this.lb_receive_message);
-            this.bunifuPanel1.Location = new System.Drawing.Point(46, 4);
-            this.bunifuPanel1.Margin = new System.Windows.Forms.Padding(0);
-            this.bunifuPanel1.Name = "bunifuPanel1";
-            this.bunifuPanel1.ShowBorders = true;
-            this.bunifuPanel1.Size = new System.Drawing.Size(120, 50);
-            this.bunifuPanel1.TabIndex = 2;
+            this.bunifuPanel2.AutoSize = true;
+            this.bunifuPanel2.BackgroundColor = System.Drawing.Color.LightGray;
+            this.bunifuPanel2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("bunifuPanel2.BackgroundImage")));
+            this.bunifuPanel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.bunifuPanel2.BorderColor = System.Drawing.Color.Transparent;
+            this.bunifuPanel2.BorderRadius = 35;
+            this.bunifuPanel2.BorderThickness = 0;
+            this.bunifuPanel2.Controls.Add(this.lb_receive_message);
+            this.bunifuPanel2.Location = new System.Drawing.Point(79, 4);
+            this.bunifuPanel2.Name = "bunifuPanel2";
+            this.bunifuPanel2.ShowBorders = true;
+            this.bunifuPanel2.Size = new System.Drawing.Size(123, 50);
+            this.bunifuPanel2.TabIndex = 3;
             // 
             // lb_receive_message
             // 
@@ -59,9 +57,8 @@
             this.lb_receive_message.Cursor = System.Windows.Forms.Cursors.Default;
             this.lb_receive_message.CursorType = System.Windows.Forms.Cursors.Default;
             this.lb_receive_message.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold);
-            this.lb_receive_message.ForeColor = System.Drawing.Color.White;
-            this.lb_receive_message.Location = new System.Drawing.Point(16, 15);
-            this.lb_receive_message.Margin = new System.Windows.Forms.Padding(15, 3, 15, 15);
+            this.lb_receive_message.Location = new System.Drawing.Point(15, 16);
+            this.lb_receive_message.Margin = new System.Windows.Forms.Padding(0, 3, 18, 14);
             this.lb_receive_message.Name = "lb_receive_message";
             this.lb_receive_message.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.lb_receive_message.Size = new System.Drawing.Size(87, 20);
@@ -74,11 +71,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.bunifuPanel1);
+            this.Controls.Add(this.bunifuPanel2);
             this.Name = "ReceiveMessage";
             this.Size = new System.Drawing.Size(1000, 59);
-            this.bunifuPanel1.ResumeLayout(false);
-            this.bunifuPanel1.PerformLayout();
+            this.bunifuPanel2.ResumeLayout(false);
+            this.bunifuPanel2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -86,7 +83,7 @@
 
         #endregion
 
-        private Bunifu.UI.WinForms.BunifuPanel bunifuPanel1;
+        private Bunifu.UI.WinForms.BunifuPanel bunifuPanel2;
         private Bunifu.UI.WinForms.BunifuLabel lb_receive_message;
     }
 }

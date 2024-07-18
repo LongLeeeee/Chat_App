@@ -99,7 +99,7 @@ namespace App_Chat.View
                 ConnectToServer(ref this.tcpClient_1,ref this.reader_1,ref this.writer_1);
                 if (!this.tcpClient_1.Connected)
                 {
-                    MessageBox.Show("Đăng nhập thất bại! Xin vui lòng đăng nhập lại.");
+                    MessageBox.Show(".Đăng nhập thất bại! Xin vui lòng đăng nhập lại");
                     return;
                 }
                 User thread2_user = register_user;
@@ -122,7 +122,7 @@ namespace App_Chat.View
                 }
                 else
                 {
-                    MessageBox.Show("Đăng nhập thất bại! Xin vui lòng đăng nhập lại.");
+                    MessageBox.Show(".Đăng nhập thất bại! Xin vui lòng đăng nhập lại");
                     return;
                 }
             }
@@ -177,27 +177,32 @@ namespace App_Chat.View
 
         private void tb_email_TextChanged(object sender, EventArgs e)
         {
+           
+        }
+
+        private void tb_pwd_TextChanged(object sender, EventArgs e)
+        {
             lb_warning1.Visible = true;
             string password = tb_pwd.Text;
 
             if (password.Length < 8)
             {
-                lb_warning1.Text = "Mật khẩu cần ít nhất 8 ký tự.";
+                lb_warning1.Text = ".Mật khẩu cần ít nhất 8 ký tự";
                 return;
             }
             else if (!password.Any(char.IsUpper))
             {
-                lb_warning1.Text = "Mật khẩu cần ít nhất một ký tự hoa.";
+                lb_warning1.Text = ".Mật khẩu cần ít nhất một ký tự hoa";
                 return;
             }
             else if (!password.Any(char.IsLower))
             {
-                lb_warning1.Text = "Mật khẩu cần ít nhất một ký tự thường.";
+                lb_warning1.Text = ".Mật khẩu cần ít nhất một ký tự thường";
                 return;
             }
             else if (!password.Any(char.IsDigit))
             {
-                lb_warning1.Text = "Mật khẩu cần ít nhất một số.";
+                lb_warning1.Text = ".Mật khẩu cần ít nhất một số";
                 return;
             }
             else

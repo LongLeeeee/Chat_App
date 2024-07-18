@@ -20,5 +20,9 @@ namespace App_Chat.UserControls
         {
             lb_receive_message.Text = userid + ": " + content;
         }
+        public string getLabel()
+        {
+            return lb_receive_message.Text;
+        }
     }
 }
