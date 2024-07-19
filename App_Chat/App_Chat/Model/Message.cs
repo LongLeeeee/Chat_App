@@ -15,7 +15,7 @@ namespace App_Chat.Model
     public class MessageGroup : Message
     {
         public string groupName { get; set; }
-        public List<User> receiverList { get; set; }
+        public List<string> receiver_id_list { get; set; }
     }
     public class MessageFriend : Message
     {

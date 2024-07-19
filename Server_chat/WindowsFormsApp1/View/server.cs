@@ -240,6 +240,29 @@ namespace WindowsFormsApp1
                             checkDB.DisconnectToDB();
                         }
                     }
+                    else if (rq_from_client.CompareTo("Message For Group")==0)
+                    {
+                        string message_from_client = reader.ReadLine();
+                        MessageBox.Show(message_from_client);
+                        MessageGroup new_message = JsonConvert.DeserializeObject<MessageGroup>(message_from_client);
+                        Invoke(new Action(() =>
+                        {
+                            richTextBox1.AppendText($"Nguoi gui: {new_message.userSend.userName}," +
+                                                $" Noi dung: {new_message.content}, " +
+                                                $"Nhom: {new_message.groupName}, " +
+                                                $"Room: {new_message.dateSend}\r\n");
+                        }));
+                        foreach (var item in new_message.receiver_id_list)
+                        {
+                            if (tcpclients.ContainsKey(item) && item != userID)
+                            {
+                                StreamWriter writer1 = new StreamWriter(tcpclients[item].GetStream());
+                                writer1.AutoFlush = true;
+                                writer1.WriteLine("Message For Group");
+                                writer1.WriteLine(message_from_client);
+                            }
+                        }
+                    }
                     else if (rq_from_client == "List User")
                     {
                         checkDB.connectToDB();
@@ -439,34 +462,34 @@ namespace WindowsFormsApp1
                     }
                     else if (rq_from_client == "Create Group")
                     {
-                        string group_name = reader.ReadLine();
-                        string user_created = reader.ReadLine();
-                        string member = reader.ReadLine();
+                        string group_data = reader.ReadLine();
+                        Group new_group = JsonConvert.DeserializeObject<Group>(group_data);
                         Invoke(new Action(() =>
                         {
-                            richTextBox1.AppendText($"{user_created} đã yêu cầu tạo 1 group với tên {group_name}.\r\n");
+                            richTextBox1.AppendText($"{new_group.creator.userID} đã yêu cầu tạo 1 group với tên {new_group.groupName}.\r\n");
                         }));
                         bool is_exist = false;
                         bool is_success = false;   
                         checkDB.connectToDB();
-                        checkDB.Add_Group_Table(group_name,ref is_exist, ref is_success, user_created);
+                        checkDB.Add_Group_Table(ref is_exist, ref is_success, new_group);
                         checkDB.DisconnectToDB();
                         if (!is_exist && is_success)
                         {
                             Invoke(new Action(() =>
                             {
-                                richTextBox1.AppendText($"{group_name} đã được tạo.\r\n");
+                                richTextBox1.AppendText($"{new_group.groupName} đã được tạo.\r\n");
                             }));
-                            string[] receivers = member.Split('|');
+
                             writer.WriteLine("CreatedGroupForUserCreate");
-                            writer.WriteLine(member);
-                            foreach (var item in receivers)
+                            writer.WriteLine(group_data);
+                            foreach (var item in new_group.members_userid)
                             {
-                                if (item != userID || tcpclients.ContainsKey(item))
+                                if (item != userID && tcpclients.ContainsKey(item))
                                 {
                                     StreamWriter writer1 = new StreamWriter(tcpclients[item].GetStream());
+                                    writer1.AutoFlush = true;
                                     writer1.WriteLine("Created Group");
-                                    writer1.WriteLine(member);
+                                    writer1.WriteLine(group_data);
                                 }
                             }
                         }
@@ -474,7 +497,7 @@ namespace WindowsFormsApp1
                         {
                             Invoke(new Action(() =>
                             {
-                                richTextBox1.AppendText($"{group_name} tạo không thành công.\r\n");
+                                richTextBox1.AppendText($"{new_group.groupName} tạo không thành công.\r\n");
                             }));
                         }
                     }

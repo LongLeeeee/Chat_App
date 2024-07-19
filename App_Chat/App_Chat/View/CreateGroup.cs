@@ -1,5 +1,7 @@
-﻿using App_Chat.UserControls;
+﻿using App_Chat.Model;
+using App_Chat.UserControls;
 using Bunifu.UI.WinForms;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,13 +17,13 @@ namespace App_Chat.View
 {
     public partial class CreateGroup : Form
     {
-        public CreateGroup(string userid, StreamWriter writer, StreamReader reader, string[] friend_list)
+        public CreateGroup(User creator, StreamWriter writer, StreamReader reader, string[] friend_list)
         {
             InitializeComponent();
             this.writer = writer;
             this.reader = reader;
             this.friend_list = friend_list;
-            this.userid = userid;
+            this.creator = creator;
         }
         private StreamWriter writer;
         private StreamReader reader;
@@ -29,7 +31,7 @@ namespace App_Chat.View
         private List<member> selected_users;
         private List<member> list;
         Dictionary<string, BunifuPictureBox> pairs;
-        private string userid;
+        private User creator;
         private member create_member(string user_id)
         {
             member new_member = new member();
@@ -92,15 +94,21 @@ namespace App_Chat.View
         }
         private void btn_create_group_Click(object sender, EventArgs e)
         {
-            writer.WriteLine("Create Group");
-            writer.WriteLine(tb_enter_group_name.Text.Trim());
-            writer.WriteLine(this.userid);
-            string members = this.userid;
+            List<string> members = new List<string>();
             for (int i = 0; i < selected_users.Count; i++)
             {
-                members += "|" + selected_users[i].get_user_id();
+                members.Add(selected_users[i].get_user_id());
             }
-            writer.WriteLine(members);
+            members.Add(this.creator.userID);
+            Group new_group = new Group()
+            {
+                groupName = tb_enter_group_name.Text.Trim(),
+                creator = this.creator,
+                members_userid = members,
+            }; 
+            string group_data = JsonConvert.SerializeObject(new_group);
+            writer.WriteLine("Create Group");
+            writer.WriteLine(group_data);
             this.Close();
         }
     }

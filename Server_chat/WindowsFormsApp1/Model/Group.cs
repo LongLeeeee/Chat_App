@@ -11,5 +11,6 @@ namespace WindowsFormsApp1.Model
         public string groupName { get; set; }
         public User creator { get; set; }
         public DateTime creationDate { get; set; }
+        public List<string> members_userid { get; set; }
     }
 }

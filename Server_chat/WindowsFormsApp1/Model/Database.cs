@@ -1,11 +1,13 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Remoting.Contexts;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -256,10 +258,10 @@ namespace WindowsFormsApp1.Model
             sqlCommand.ExecuteNonQuery();
             success = true;
         }
-        public void Add_Group_Table(string group_name, ref bool is_exist, ref bool is_success, string user_id)
+        public void Add_Group_Table(ref bool is_exist, ref bool is_success, Group new_group)
         {
             DateTime dateTime = DateTime.Now;
-            string query = $"select GROUPNAME from List_Group where GROUPNAME = '{group_name}'";
+            string query = $"select GROUPNAME from List_Group where GROUPNAME = '{new_group.groupName}'";
             sqlCommand = new SqlCommand(query, sqlConnection);
             sqlreader = sqlCommand.ExecuteReader();
             Group temp = new Group();
@@ -267,23 +269,51 @@ namespace WindowsFormsApp1.Model
             {
                 temp.groupName = sqlreader["GROUPNAME"].ToString();
             }
-            MessageBox.Show(temp.groupName);
             sqlConnection.Close();
 
-            connectToDB();
             if (!string.IsNullOrEmpty(temp.groupName))
             {
                 is_exist = true;
             }
             else
             {
-                query = $"insert into List_Group (GROUPNAME,USERID_CREATION,CREATIONDATE) values ('{group_name}','{user_id}', '{dateTime}')";
+                connectToDB();
+                query = $"insert into List_Group (GROUPNAME,USERID_CREATION,CREATIONDATE) values ('{new_group.groupName}','{new_group.creator.userID}', '{dateTime}')";
                 sqlCommand = new SqlCommand (query, sqlConnection);
-                sqlCommand.Parameters.AddWithValue("GROUPNAME", group_name);
-                sqlCommand.Parameters.AddWithValue("USERID_CREATION", user_id);
+                sqlCommand.Parameters.AddWithValue("GROUPNAME", new_group.groupName);
+                sqlCommand.Parameters.AddWithValue("USERID_CREATION", new_group.creator.userID);
                 sqlCommand.Parameters.AddWithValue("CREATIONDATE", dateTime);
                 sqlCommand.ExecuteNonQuery();
                 is_success = true;
+                sqlConnection.Close();
+
+                foreach (var item in new_group.members_userid)
+                {
+                    connectToDB();
+                    query = $"insert into List_User_A_Group (GROUPNAME,USERID) values ('{new_group.groupName}','{item}')";
+                    sqlCommand = new SqlCommand(query, sqlConnection);
+                    sqlCommand.Parameters.AddWithValue("GROUPNAME", new_group.groupName);
+                    sqlCommand.Parameters.AddWithValue("USERID", item);
+                    sqlCommand.ExecuteNonQuery();
+                    sqlConnection.Close();
+                }
+
+                /*Thread thread = new Thread(() => Add_List_User_A_Group_Table(new_group));
+                thread.Start();
+                thread.IsBackground = true;*/
+            }
+        }
+        private void Add_List_User_A_Group_Table(Group new_group)
+        {
+            foreach (var item in new_group.members_userid)
+            {
+                connectToDB();
+                string query = $"insert into List_User_A_Group (GROUPNAME,USERID) values ('{new_group.groupName}','{item}')";
+                sqlCommand = new SqlCommand(query, sqlConnection);
+                sqlCommand.Parameters.AddWithValue("GROUPNAME", new_group.groupName);
+                sqlCommand.Parameters.AddWithValue("USERID", item);
+                sqlCommand.ExecuteNonQuery();
+                sqlConnection.Close();
             }
         }
     }

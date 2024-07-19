@@ -51,11 +51,14 @@ namespace App_Chat.View
 
             string notificaitons = reader.ReadLine();
             noti_list = notificaitons.Split('|');
+
+            groups_members = new Dictionary<string, Group>();
         }
         Thread receiveThread;
 
         private Dictionary<BoxChat, FlowLayoutPanel> user_boardChat;
         private Dictionary<string, FlowLayoutPanel> receiver_boardChat;
+        private Dictionary<string,Group> groups_members; 
         private List<NewFriend> Users;
         private List<BoxChat> boxchats;
         private List<string> box_chat = new List<string>();
@@ -273,40 +276,68 @@ namespace App_Chat.View
         }
         private void add_Click(object sender, EventArgs e)
         {
-            CreateGroup createGroup = new CreateGroup(your_account_name.userID, writer, reader, friend_list);
+            CreateGroup createGroup = new CreateGroup(your_account_name, writer, reader, friend_list);
             createGroup.Show();
         }
         private void btn_send_Click_1(object sender1, EventArgs e)
         {
-            writer = new StreamWriter(tcpClient.GetStream());
-            User sender = new User()
+            if (!groups_members.ContainsKey(lb_remote_name.Text))
             {
-                userID = your_account_name.userID,
-                userName = your_account_name.userName,
-            };
-            User receiver = new User()
-            {
-                userID = lb_remote_name.Text,
-                userName = lb_remote_name.Text,
-            };
-            if (user_list.Contains(lb_remote_name.Text))
-            {
-                MessageFriend new_message = new MessageFriend()
+                User sender = new User()
                 {
-                    userSend = sender,
-                    content = tb_enter_message.Text,
-                    dateSend = DateTime.Now,
-                    userReceive = receiver,
+                    userID = your_account_name.userID,
+                    userName = your_account_name.userName,
                 };
-                string messString = JsonConvert.SerializeObject(new_message);
-                writer.WriteLine("Message");
-                writer.WriteLine(messString);
-                writer.Flush();
-                if (receiver_boardChat.ContainsKey(receiver.userName))
+                User receiver = new User()
+                {
+                    userID = lb_remote_name.Text,
+                    userName = lb_remote_name.Text,
+                };
+                if (user_list.Contains(lb_remote_name.Text))
+                {
+                    MessageFriend new_message = new MessageFriend()
+                    {
+                        userSend = sender,
+                        content = tb_enter_message.Text,
+                        dateSend = DateTime.Now,
+                        userReceive = receiver,
+                    };
+                    string messString = JsonConvert.SerializeObject(new_message);
+                    writer.WriteLine("Message");
+                    writer.WriteLine(messString);
+                    if (receiver_boardChat.ContainsKey(receiver.userName))
+                    {
+                        SendMessage se = new SendMessage();
+                        se.setLabel(tb_enter_message.Text, your_account_name.userID);
+                        receiver_boardChat[receiver.userName].Controls.Add(se);
+                        tb_enter_message.Clear();
+                    }
+                }
+            }
+            else
+            {
+                User sender = new User()
+                {
+                    userID = your_account_name.userID,
+                    userName = your_account_name.userName,
+                };
+                MessageGroup messageGroup = new MessageGroup()
+                {
+                    groupName = lb_remote_name.Text,
+                    content = tb_enter_message.Text,
+                    userSend = sender,
+                    dateSend = DateTime.Now,
+                    receiver_id_list = groups_members[lb_remote_name.Text].members_userid,
+                };
+                string data = JsonConvert.SerializeObject(messageGroup);
+                writer.WriteLine("Message For Group");
+                writer.WriteLine(data);
+                MessageBox.Show(data);
+                if (receiver_boardChat.ContainsKey(messageGroup.groupName))
                 {
                     SendMessage se = new SendMessage();
                     se.setLabel(tb_enter_message.Text, your_account_name.userID);
-                    receiver_boardChat[receiver.userName].Controls.Add(se);
+                    receiver_boardChat[messageGroup.groupName].Controls.Add(se);
                     tb_enter_message.Clear();
                 }
             }
@@ -471,11 +502,43 @@ namespace App_Chat.View
                     }
                     else if (rs_from_server == "CreatedGroupForUserCreate")
                     {
-                        MessageBox.Show("Đã tạo thành công");
+                        string group_data = reader.ReadLine();
+                        Invoke(new Action(() =>
+                        {
+                            Group created_group = JsonConvert.DeserializeObject<Group>(group_data);
+                            groups_members.Add(created_group.groupName,created_group);
+
+                            FlowLayoutPanel flowLayoutPanel = createFlowLayoutPanel();
+                            BoxChat boxChat = new BoxChat();
+                            boxChat.Click += show_panel_click;
+                            boxChat.setName(created_group.groupName);
+
+                            boxchats.Add(boxChat);
+                            user_boardChat.Add(boxChat, flowLayoutPanel);
+                            receiver_boardChat.Add(created_group.groupName, flowLayoutPanel);
+
+                            panel_box_chat.Controls.Add(boxChat);
+                        }));
                     }
                     else if (rs_from_server == "Created Group")
                     {
-                        MessageBox.Show("Đã được tạo thành công");
+                        string group_data = reader.ReadLine();
+                        Invoke(new Action(() =>
+                        {
+                            Group created_group = JsonConvert.DeserializeObject<Group>(group_data);
+                            groups_members.Add(created_group.groupName, created_group);
+
+                            FlowLayoutPanel flowLayoutPanel = createFlowLayoutPanel();
+                            BoxChat boxChat = new BoxChat();
+                            boxChat.Click += show_panel_click;
+                            boxChat.setName(created_group.groupName);
+
+                            boxchats.Add(boxChat);
+                            user_boardChat.Add(boxChat, flowLayoutPanel);
+                            receiver_boardChat.Add(created_group.groupName, flowLayoutPanel);
+
+                            panel_box_chat.Controls.Add(boxChat);
+                        }));
                     }
                 }
             }
