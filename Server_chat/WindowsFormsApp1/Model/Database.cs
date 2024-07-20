@@ -87,6 +87,16 @@ namespace WindowsFormsApp1.Model
             sqlCommand.Parameters.AddWithValue("CONTENT", content);
             sqlCommand.ExecuteNonQuery();
         }
+        public void save_message_group(MessageGroup messageGroup)
+        {
+            string query = $"insert into Messages_Group (GROUPNAME, CONTENT, SENDDATE, USERID_SEND) values ('{messageGroup.groupName}','{messageGroup.content}','{messageGroup.dateSend}','{messageGroup.userSend.userID}')";
+            sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlCommand.Parameters.AddWithValue("GROUPNAME", messageGroup.groupName);
+            sqlCommand.Parameters.AddWithValue("CONTENT", messageGroup.content);
+            sqlCommand.Parameters.AddWithValue("SENDDATE", messageGroup.dateSend);
+            sqlCommand.Parameters.AddWithValue("USERID_SEND", messageGroup.userSend.userID);
+            sqlCommand.ExecuteNonQuery();
+        }
         public void get_messages(string userid_login, string another_userid, ref string data)
         {
             string ROOMKEY = "";
@@ -121,6 +131,31 @@ namespace WindowsFormsApp1.Model
                 data += temp1 + "|";
             }
         }
+        public void get_messages_group(ref string data, string group_name, string sender)
+        {
+            string query = $"select USERID_SEND, CONTENT from Messages_Group where GROUPNAME = '{group_name}'";
+            sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlreader = sqlCommand.ExecuteReader();
+            while (sqlreader.Read())
+            {
+                string temp = sqlreader["CONTENT"].ToString();
+                string user = sqlreader["USERID_SEND"].ToString();
+                string temp1 = "";
+                if (user == sender)
+                {
+                    temp1 = temp + " :" + user;
+                }
+                else
+                {
+                    temp1 = user + ": " + temp;
+                }
+                if (string.IsNullOrEmpty(temp1))
+                {
+                    return;
+                }
+                data += temp1 + "|";
+            }
+        }
         public void updateData(User user)
         {
             string query = $"update Users set PWD = '{user.pwd}' where USERID = '{user.userID}'";
@@ -140,6 +175,41 @@ namespace WindowsFormsApp1.Model
                 temp += temp_userID + "|";
             }
             return temp;
+        }
+        public void get_infor_group(string userid, ref List<Group> groupname_members)
+        {
+            connectToDB();
+            List<string> group_names = new List<string>();
+            string query = $"select GROUPNAME from List_User_A_Group where USERID = '{userid}' ";
+            sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlreader = sqlCommand.ExecuteReader();
+            while (sqlreader.Read())
+            {
+                string temp = sqlreader["GROUPNAME"].ToString();
+                group_names.Add(temp);
+            }
+            sqlConnection.Close();
+
+            foreach (var item in group_names)
+            {
+                connectToDB();
+                List<string>temp1= new List<string>();
+                query = $"select * from List_Group, List_User_A_Group where List_Group.GROUPNAME = List_User_A_Group.GROUPNAME and List_Group.GROUPNAME = '{item}'";
+                sqlCommand = new SqlCommand(query, sqlConnection);
+                sqlreader = sqlCommand.ExecuteReader();
+                Group group = new Group();
+                while (sqlreader.Read())
+                {
+                    group = new Group();
+                    group.groupName = sqlreader["GROUPNAME"].ToString();
+                    //group.creator.userID = sqlreader["USERID_CREATION"].ToString();
+                    string temp = sqlreader["USERID"].ToString();
+                    temp1.Add(temp);
+                }
+                group.members_userid = temp1;
+                groupname_members.Add(group);
+                sqlConnection.Close();
+            }
         }
         public void get_friends(string userID, ref string[] list)
         {
@@ -287,20 +357,9 @@ namespace WindowsFormsApp1.Model
                 is_success = true;
                 sqlConnection.Close();
 
-                foreach (var item in new_group.members_userid)
-                {
-                    connectToDB();
-                    query = $"insert into List_User_A_Group (GROUPNAME,USERID) values ('{new_group.groupName}','{item}')";
-                    sqlCommand = new SqlCommand(query, sqlConnection);
-                    sqlCommand.Parameters.AddWithValue("GROUPNAME", new_group.groupName);
-                    sqlCommand.Parameters.AddWithValue("USERID", item);
-                    sqlCommand.ExecuteNonQuery();
-                    sqlConnection.Close();
-                }
-
-                /*Thread thread = new Thread(() => Add_List_User_A_Group_Table(new_group));
+                Thread thread = new Thread(() => Add_List_User_A_Group_Table(new_group));
                 thread.Start();
-                thread.IsBackground = true;*/
+                thread.IsBackground = true;
             }
         }
         private void Add_List_User_A_Group_Table(Group new_group)

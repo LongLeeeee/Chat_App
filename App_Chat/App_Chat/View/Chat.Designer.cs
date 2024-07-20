@@ -96,11 +96,11 @@
             this.lb_remote_name = new Bunifu.UI.WinForms.BunifuLabel();
             this.bunifuPictureBox3 = new Bunifu.UI.WinForms.BunifuPictureBox();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.lb_name = new Bunifu.UI.WinForms.BunifuLabel();
             this.bunifuPictureBox1 = new Bunifu.UI.WinForms.BunifuPictureBox();
             this.btn_change_name = new Bunifu.UI.WinForms.BunifuButton.BunifuButton();
             this.btn_change_pwd = new Bunifu.UI.WinForms.BunifuButton.BunifuButton();
             this.panel_personal_properties = new System.Windows.Forms.Panel();
-            this.lb_name = new Bunifu.UI.WinForms.BunifuLabel();
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -1122,9 +1122,9 @@
             // 
             this.panel14.Controls.Add(this.btn_send);
             this.panel14.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel14.Location = new System.Drawing.Point(126, 0);
+            this.panel14.Location = new System.Drawing.Point(109, 0);
             this.panel14.Name = "panel14";
-            this.panel14.Size = new System.Drawing.Size(60, 98);
+            this.panel14.Size = new System.Drawing.Size(77, 98);
             this.panel14.TabIndex = 8;
             // 
             // btn_send
@@ -1532,6 +1532,22 @@
             this.panel3.Size = new System.Drawing.Size(265, 145);
             this.panel3.TabIndex = 0;
             // 
+            // lb_name
+            // 
+            this.lb_name.AllowParentOverrides = false;
+            this.lb_name.AutoEllipsis = false;
+            this.lb_name.Cursor = System.Windows.Forms.Cursors.Default;
+            this.lb_name.CursorType = System.Windows.Forms.Cursors.Default;
+            this.lb_name.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lb_name.Location = new System.Drawing.Point(102, 95);
+            this.lb_name.Name = "lb_name";
+            this.lb_name.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.lb_name.Size = new System.Drawing.Size(50, 25);
+            this.lb_name.TabIndex = 1;
+            this.lb_name.Text = "Name";
+            this.lb_name.TextAlignment = System.Drawing.ContentAlignment.TopLeft;
+            this.lb_name.TextFormat = Bunifu.UI.WinForms.BunifuLabel.TextFormattingOptions.Default;
+            // 
             // bunifuPictureBox1
             // 
             this.bunifuPictureBox1.AllowFocused = false;
@@ -1743,22 +1759,6 @@
             this.panel_personal_properties.Size = new System.Drawing.Size(265, 649);
             this.panel_personal_properties.TabIndex = 1;
             this.panel_personal_properties.Visible = false;
-            // 
-            // lb_name
-            // 
-            this.lb_name.AllowParentOverrides = false;
-            this.lb_name.AutoEllipsis = false;
-            this.lb_name.Cursor = System.Windows.Forms.Cursors.Default;
-            this.lb_name.CursorType = System.Windows.Forms.Cursors.Default;
-            this.lb_name.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb_name.Location = new System.Drawing.Point(102, 95);
-            this.lb_name.Name = "lb_name";
-            this.lb_name.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lb_name.Size = new System.Drawing.Size(50, 25);
-            this.lb_name.TabIndex = 1;
-            this.lb_name.Text = "Name";
-            this.lb_name.TextAlignment = System.Drawing.ContentAlignment.TopLeft;
-            this.lb_name.TextFormat = Bunifu.UI.WinForms.BunifuLabel.TextFormattingOptions.Default;
             // 
             // Chat
             // 

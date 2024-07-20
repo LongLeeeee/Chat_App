@@ -240,21 +240,20 @@ namespace WindowsFormsApp1
                             checkDB.DisconnectToDB();
                         }
                     }
-                    else if (rq_from_client.CompareTo("Message For Group")==0)
+                    else if (rq_from_client == "Message For Group")
                     {
                         string message_from_client = reader.ReadLine();
-                        MessageBox.Show(message_from_client);
                         MessageGroup new_message = JsonConvert.DeserializeObject<MessageGroup>(message_from_client);
                         Invoke(new Action(() =>
                         {
-                            richTextBox1.AppendText($"Nguoi gui: {new_message.userSend.userName}," +
+                            richTextBox1.AppendText($"Nguoi gui: {new_message.userSend.userID}," +
                                                 $" Noi dung: {new_message.content}, " +
                                                 $"Nhom: {new_message.groupName}, " +
                                                 $"Room: {new_message.dateSend}\r\n");
                         }));
                         foreach (var item in new_message.receiver_id_list)
                         {
-                            if (tcpclients.ContainsKey(item) && item != userID)
+                            if (item != userID && tcpclients.ContainsKey(item))
                             {
                                 StreamWriter writer1 = new StreamWriter(tcpclients[item].GetStream());
                                 writer1.AutoFlush = true;
@@ -262,6 +261,9 @@ namespace WindowsFormsApp1
                                 writer1.WriteLine(message_from_client);
                             }
                         }
+                        checkDB.connectToDB();
+                        checkDB.save_message_group(new_message);
+                        checkDB.DisconnectToDB();
                     }
                     else if (rq_from_client == "List User")
                     {
@@ -309,6 +311,29 @@ namespace WindowsFormsApp1
                             writer.WriteLine("Null");
                             break;
                         }
+                        writer.WriteLine(data);
+                    }
+                    else if (rq_from_client == "Load Message Group")
+                    {
+                        string group_name = reader.ReadLine();
+                        writer.WriteLine("Load Message Group");
+                        writer.WriteLine(group_name);
+                        string data = "";
+                        checkDB.connectToDB();
+                        checkDB.get_messages_group(ref data, group_name,userID);
+                        checkDB.DisconnectToDB();
+                        if (string.IsNullOrEmpty(data))
+                        {
+                            writer.WriteLine("Null");
+                            break;
+                        }
+                        writer.WriteLine(data);
+                    }
+                    else if (rq_from_client == "Load Group")
+                    {
+                        List<Group> groupname_members = new List<Group>(); 
+                        checkDB.get_infor_group(userID,ref groupname_members);
+                        string data = JsonConvert.SerializeObject(groupname_members);
                         writer.WriteLine(data);
                     }
                     else if (rq_from_client == "Add Friend")

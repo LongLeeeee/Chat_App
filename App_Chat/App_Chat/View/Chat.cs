@@ -52,6 +52,11 @@ namespace App_Chat.View
             string notificaitons = reader.ReadLine();
             noti_list = notificaitons.Split('|');
 
+            writer.WriteLine("Load Group");
+
+            string data = reader.ReadLine();
+            groups = JsonConvert.DeserializeObject<List<Group>>(data);
+
             groups_members = new Dictionary<string, Group>();
         }
         Thread receiveThread;
@@ -74,6 +79,7 @@ namespace App_Chat.View
         private string[] user_list;
         private string[] friend_list;
         private string[] noti_list;
+        List<Group> groups;
 
         private void btn_find_msg_Click(object sender, EventArgs e)
         {
@@ -225,11 +231,32 @@ namespace App_Chat.View
                 }
             }
         }
+        private void load_groups()
+        {
+            foreach (var item in groups)
+            {
+                if (item != null)
+                {
+                    Invoke(new Action(() =>
+                    {
+                        BoxChat boxChat = new BoxChat();
+                        boxChat.Click += show_panel_click;
+                        boxChat.setName(item.groupName);
+
+                        FlowLayoutPanel flowLayoutPanel = createFlowLayoutPanel();
+                        boxchats.Add(boxChat);
+                        user_boardChat.Add(boxChat, flowLayoutPanel);
+                        receiver_boardChat.Add(item.groupName, flowLayoutPanel);
+
+                        panel_box_chat.Controls.Add(boxChat);
+
+                        groups_members.Add(item.groupName, item);
+                    }));
+                }
+            }
+        }
         private void load_box_chat()
         {
-            user_boardChat = new Dictionary<BoxChat, FlowLayoutPanel>();
-            receiver_boardChat = new Dictionary<string, FlowLayoutPanel>();
-            boxchats = new List<BoxChat>();
             foreach (var item in friend_list)
             {
                 if (!string.IsNullOrEmpty(item))
@@ -257,14 +284,26 @@ namespace App_Chat.View
             {
                 foreach (var item in user_boardChat)
                 {
-                    if (item.Key == clicked_box_chat)
+                    if (item.Key == clicked_box_chat && friend_list.Contains(item.Key.get_user_id()))
                     {
                         panel7.Visible = true;
                         item.Value.Visible = true;
                         lb_remote_name.Text = clicked_box_chat.getName();
                         lb_user_id.Text = clicked_box_chat.get_user_id();
                         tb_enter_message.Clear();
+                        user_boardChat[clicked_box_chat].Controls.Clear();
                         writer.WriteLine("Load Message");
+                        writer.WriteLine(clicked_box_chat.get_user_id());
+                    }
+                    else if (item.Key == clicked_box_chat && !friend_list.Contains(item.Key.get_user_id()))
+                    {
+                        panel7.Visible = true;
+                        item.Value.Visible = true;
+                        lb_remote_name.Text = clicked_box_chat.getName();
+                        lb_user_id.Text = clicked_box_chat.get_user_id();
+                        tb_enter_message.Clear();
+                        user_boardChat[clicked_box_chat].Controls.Clear();
+                        writer.WriteLine("Load Message Group");
                         writer.WriteLine(clicked_box_chat.get_user_id());
                     }
                     else
@@ -332,7 +371,6 @@ namespace App_Chat.View
                 string data = JsonConvert.SerializeObject(messageGroup);
                 writer.WriteLine("Message For Group");
                 writer.WriteLine(data);
-                MessageBox.Show(data);
                 if (receiver_boardChat.ContainsKey(messageGroup.groupName))
                 {
                     SendMessage se = new SendMessage();
@@ -361,6 +399,21 @@ namespace App_Chat.View
                                 ReceiveMessage re = new ReceiveMessage();
                                 re.setLabel(received_message.content, sender.userID);
                                 receiver_boardChat[sender.userID].Controls.Add(re);
+                            }));
+                        }
+                    }
+                    else if (rs_from_server.CompareTo("Message For Group") == 0)
+                    {
+                        string content_from_server = reader.ReadLine();
+                        MessageGroup received_message = JsonConvert.DeserializeObject<MessageGroup>(content_from_server);
+                        User sender = received_message.userSend;
+                        if (receiver_boardChat.ContainsKey(received_message.groupName))
+                        {
+                            Invoke(new Action(() =>
+                            {
+                                ReceiveMessage re = new ReceiveMessage();
+                                re.setLabel(received_message.content, sender.userID);
+                                receiver_boardChat[received_message.groupName].Controls.Add(re);
                             }));
                         }
                     }
@@ -500,6 +553,47 @@ namespace App_Chat.View
                             }
                         }
                     }
+                    else if (rs_from_server == "Load Message Group")
+                    {
+                        string group_name = reader.ReadLine();
+                        string data = "";
+                        data = reader.ReadLine();
+                        if (data == "Null")
+                        {
+                            break;
+                        }
+                        string[] messages = data.Split('|');
+                        if (messages == null)
+                        {
+                            break;
+                        }
+                        foreach (string message in messages)
+                        {
+                            if (!string.IsNullOrEmpty(message))
+                            {
+                                string userid = message.Substring(message.IndexOf(":") + 1);
+                                string text = message.Substring(0, message.IndexOf(":"));
+                                if (userid == your_account_name.userID)
+                                {
+                                    Invoke(new Action(() =>
+                                    {
+                                        SendMessage se = new SendMessage();
+                                        se.setLabel(text, userid);
+                                        receiver_boardChat[group_name].Controls.Add(se);
+                                    }));
+                                }
+                                else
+                                {
+                                    Invoke(new Action(() =>
+                                    {
+                                        ReceiveMessage se = new ReceiveMessage();
+                                        se.setLabel(userid, text);
+                                        receiver_boardChat[group_name].Controls.Add(se);
+                                    }));
+                                }
+                            }
+                        }
+                    }
                     else if (rs_from_server == "CreatedGroupForUserCreate")
                     {
                         string group_data = reader.ReadLine();
@@ -549,6 +643,10 @@ namespace App_Chat.View
         }
         private void Chat_Load(object sender, EventArgs e)
         {
+            user_boardChat = new Dictionary<BoxChat, FlowLayoutPanel>();
+            receiver_boardChat = new Dictionary<string, FlowLayoutPanel>();
+            boxchats = new List<BoxChat>();
+
             CheckForIllegalCrossThreadCalls = false;
             Thread load_box_chat_thread = new Thread(load_box_chat);
             load_box_chat_thread.Start();
@@ -557,6 +655,10 @@ namespace App_Chat.View
             Thread load_show_users_thread = new Thread(load_users);
             load_show_users_thread.Start();
             load_show_users_thread.IsBackground = true;
+
+            Thread load_show_groups_thread = new Thread(load_groups);
+            load_show_groups_thread.Start();
+            load_show_groups_thread.IsBackground = true;
 
             isRunning = true;
             receiveThread = new Thread(receive);
