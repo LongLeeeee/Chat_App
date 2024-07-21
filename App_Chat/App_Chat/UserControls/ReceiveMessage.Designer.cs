@@ -57,7 +57,7 @@
             this.lb_receive_message.Cursor = System.Windows.Forms.Cursors.Default;
             this.lb_receive_message.CursorType = System.Windows.Forms.Cursors.Default;
             this.lb_receive_message.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold);
-            this.lb_receive_message.Location = new System.Drawing.Point(15, 16);
+            this.lb_receive_message.Location = new System.Drawing.Point(17, 14);
             this.lb_receive_message.Margin = new System.Windows.Forms.Padding(0, 3, 18, 14);
             this.lb_receive_message.Name = "lb_receive_message";
             this.lb_receive_message.RightToLeft = System.Windows.Forms.RightToLeft.No;

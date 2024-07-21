@@ -562,6 +562,33 @@ namespace WindowsFormsApp1
                             writer1.WriteLine(icon_name);
                         }
                     }
+                    else if (rq_from_client == "File")
+                    {
+                        string sender = reader.ReadLine();
+                        string receiver = reader.ReadLine();
+                        string file_name = reader.ReadLine();
+                        long file_size = Int32.Parse(reader.ReadLine());
+
+                        string file_path = Path.Combine("Resources\\", file_name);
+                        byte[] buffer = new byte[52428800];
+                        int bytesRead;
+
+                        long bytesReceived = 0;
+
+                        NetworkStream networkStream = client.GetStream();
+                        FileStream fileStream = new FileStream(file_path, FileMode.Create, FileAccess.Write);
+                        while (bytesReceived < file_size && (bytesRead = networkStream.Read(buffer, 0, buffer.Length)) > 0)
+                        {
+                            fileStream.Write(buffer, 0, bytesRead);
+                            bytesReceived += bytesRead;
+                        }
+                        Invoke(new Action(() =>
+                        {
+                            richTextBox1.AppendText(sender + " vừa gửi 1 file: " + file_name + " đến " + receiver + ".\r\n");
+
+                        }));
+
+                    }
                     else if (rq_from_client == "Quit")
                     {
                         tcpclients.Remove(userID);

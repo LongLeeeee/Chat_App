@@ -20,6 +20,10 @@ namespace App_Chat.UserControls
         {
             lb_send_message.Text = content + " :" + userid ;
         }
+        public void set_filename(string filename)
+        {
+            lb_send_message.Text = filename;
+        }
         public string getLabel()
         {
             return lb_send_message.Text;

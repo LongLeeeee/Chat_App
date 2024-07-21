@@ -1450,16 +1450,16 @@
             this.icon35.AllowZoomingOnFocus = false;
             this.icon35.BackColor = System.Drawing.Color.WhiteSmoke;
             this.icon35.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.icon35.ErrorImage = ((System.Drawing.Image)(resources.GetObject("icon35.ErrorImage")));
+            this.icon35.ErrorImage = null;
             this.icon35.FadeWhenInactive = false;
             this.icon35.Flip = Bunifu.UI.WinForms.BunifuImageButton.FlipOrientation.Normal;
-            this.icon35.Image = ((System.Drawing.Image)(resources.GetObject("icon35.Image")));
+            this.icon35.Image = null;
             this.icon35.ImageActive = null;
             this.icon35.ImageLocation = null;
             this.icon35.ImageMargin = 1;
             this.icon35.ImageSize = new System.Drawing.Size(29, 29);
             this.icon35.ImageZoomSize = new System.Drawing.Size(30, 30);
-            this.icon35.InitialImage = ((System.Drawing.Image)(resources.GetObject("icon35.InitialImage")));
+            this.icon35.InitialImage = null;
             this.icon35.Location = new System.Drawing.Point(214, 191);
             this.icon35.Margin = new System.Windows.Forms.Padding(3, 3, 3, 10);
             this.icon35.Name = "icon35";
@@ -1552,7 +1552,6 @@
             // 
             // icon23
             // 
-            this.icon23.Click += ClickIcon;
             this.icon23.ActiveImage = null;
             this.icon23.AllowAnimations = true;
             this.icon23.AllowBuffering = false;
@@ -1585,10 +1584,10 @@
             this.icon23.WaitOnLoad = false;
             this.icon23.Zoom = 1;
             this.icon23.ZoomSpeed = 10;
+            this.icon23.Click += ClickIcon;
             // 
             // icon30
             // 
-            this.icon30.Click += ClickIcon;
             this.icon30.ActiveImage = null;
             this.icon30.AllowAnimations = true;
             this.icon30.AllowBuffering = false;
@@ -1621,6 +1620,7 @@
             this.icon30.WaitOnLoad = false;
             this.icon30.Zoom = 1;
             this.icon30.ZoomSpeed = 10;
+            this.icon30.Click += ClickIcon;
             // 
             // icon28
             // 
@@ -1660,7 +1660,6 @@
             // 
             // icon22
             // 
-            this.icon22.Click += ClickIcon;
             this.icon22.ActiveImage = null;
             this.icon22.AllowAnimations = true;
             this.icon22.AllowBuffering = false;
@@ -1693,6 +1692,7 @@
             this.icon22.WaitOnLoad = false;
             this.icon22.Zoom = 1;
             this.icon22.ZoomSpeed = 10;
+            this.icon22.Click += ClickIcon;
             // 
             // icon33
             // 
@@ -1732,7 +1732,6 @@
             // 
             // icon27
             // 
-            this.icon27.Click += ClickIcon;
             this.icon27.ActiveImage = null;
             this.icon27.AllowAnimations = true;
             this.icon27.AllowBuffering = false;
@@ -1765,6 +1764,7 @@
             this.icon27.WaitOnLoad = false;
             this.icon27.Zoom = 1;
             this.icon27.ZoomSpeed = 10;
+            this.icon27.Click += ClickIcon;
             // 
             // icon21
             // 
@@ -1804,7 +1804,6 @@
             // 
             // icon32
             // 
-            this.icon32.Click += ClickIcon;
             this.icon32.ActiveImage = null;
             this.icon32.AllowAnimations = true;
             this.icon32.AllowBuffering = false;
@@ -1837,6 +1836,7 @@
             this.icon32.WaitOnLoad = false;
             this.icon32.Zoom = 1;
             this.icon32.ZoomSpeed = 10;
+            this.icon32.Click += ClickIcon;
             // 
             // icon26
             // 
@@ -1876,7 +1876,6 @@
             // 
             // icon31
             // 
-            this.icon31.Click += ClickIcon;
             this.icon31.ActiveImage = null;
             this.icon31.AllowAnimations = true;
             this.icon31.AllowBuffering = false;
@@ -1909,6 +1908,7 @@
             this.icon31.WaitOnLoad = false;
             this.icon31.Zoom = 1;
             this.icon31.ZoomSpeed = 10;
+            this.icon31.Click += ClickIcon;
             // 
             // icon25
             // 
@@ -1948,7 +1948,6 @@
             // 
             // icon20
             // 
-            this.icon20.Click += ClickIcon;
             this.icon20.ActiveImage = null;
             this.icon20.AllowAnimations = true;
             this.icon20.AllowBuffering = false;
@@ -1981,6 +1980,7 @@
             this.icon20.WaitOnLoad = false;
             this.icon20.Zoom = 1;
             this.icon20.ZoomSpeed = 10;
+            this.icon20.Click += ClickIcon;
             // 
             // icon19
             // 
@@ -2020,7 +2020,6 @@
             // 
             // icon18
             // 
-            this.icon18.Click += ClickIcon;
             this.icon18.ActiveImage = null;
             this.icon18.AllowAnimations = true;
             this.icon18.AllowBuffering = false;
@@ -2053,6 +2052,7 @@
             this.icon18.WaitOnLoad = false;
             this.icon18.Zoom = 1;
             this.icon18.ZoomSpeed = 10;
+            this.icon18.Click += ClickIcon;
             // 
             // icon12
             // 
@@ -2092,7 +2092,6 @@
             // 
             // icon17
             // 
-            this.icon17.Click += ClickIcon;
             this.icon17.ActiveImage = null;
             this.icon17.AllowAnimations = true;
             this.icon17.AllowBuffering = false;
@@ -2125,6 +2124,7 @@
             this.icon17.WaitOnLoad = false;
             this.icon17.Zoom = 1;
             this.icon17.ZoomSpeed = 10;
+            this.icon17.Click += ClickIcon;
             // 
             // icon11
             // 
@@ -2164,7 +2164,6 @@
             // 
             // icon16
             // 
-            this.icon16.Click += ClickIcon;
             this.icon16.ActiveImage = null;
             this.icon16.AllowAnimations = true;
             this.icon16.AllowBuffering = false;
@@ -2197,6 +2196,7 @@
             this.icon16.WaitOnLoad = false;
             this.icon16.Zoom = 1;
             this.icon16.ZoomSpeed = 10;
+            this.icon16.Click += ClickIcon;
             // 
             // icon6
             // 
@@ -2236,7 +2236,6 @@
             // 
             // icon10
             // 
-            this.icon10.Click += ClickIcon;
             this.icon10.ActiveImage = null;
             this.icon10.AllowAnimations = true;
             this.icon10.AllowBuffering = false;
@@ -2269,6 +2268,7 @@
             this.icon10.WaitOnLoad = false;
             this.icon10.Zoom = 1;
             this.icon10.ZoomSpeed = 10;
+            this.icon10.Click += ClickIcon;
             // 
             // icon15
             // 
@@ -2308,7 +2308,6 @@
             // 
             // icon5
             // 
-            this.icon5.Click += ClickIcon;
             this.icon5.ActiveImage = null;
             this.icon5.AllowAnimations = true;
             this.icon5.AllowBuffering = false;
@@ -2341,6 +2340,7 @@
             this.icon5.WaitOnLoad = false;
             this.icon5.Zoom = 1;
             this.icon5.ZoomSpeed = 10;
+            this.icon5.Click += ClickIcon;
             // 
             // icon9
             // 
@@ -2380,7 +2380,6 @@
             // 
             // icon14
             // 
-            this.icon14.Click += ClickIcon;
             this.icon14.ActiveImage = null;
             this.icon14.AllowAnimations = true;
             this.icon14.AllowBuffering = false;
@@ -2413,6 +2412,7 @@
             this.icon14.WaitOnLoad = false;
             this.icon14.Zoom = 1;
             this.icon14.ZoomSpeed = 10;
+            this.icon14.Click += ClickIcon;
             // 
             // icon4
             // 
@@ -2452,7 +2452,6 @@
             // 
             // icon8
             // 
-            this.icon8.Click += ClickIcon;
             this.icon8.ActiveImage = null;
             this.icon8.AllowAnimations = true;
             this.icon8.AllowBuffering = false;
@@ -2485,10 +2484,10 @@
             this.icon8.WaitOnLoad = false;
             this.icon8.Zoom = 1;
             this.icon8.ZoomSpeed = 10;
+            this.icon8.Click += ClickIcon;
             // 
             // icon13
             // 
-            this.icon13.Click += ClickIcon;
             this.icon13.ActiveImage = null;
             this.icon13.AllowAnimations = true;
             this.icon13.AllowBuffering = false;
@@ -2521,6 +2520,7 @@
             this.icon13.WaitOnLoad = false;
             this.icon13.Zoom = 1;
             this.icon13.ZoomSpeed = 10;
+            this.icon13.Click += ClickIcon;
             // 
             // icon3
             // 
@@ -2560,7 +2560,6 @@
             // 
             // icon7
             // 
-            this.icon7.Click += ClickIcon;
             this.icon7.ActiveImage = null;
             this.icon7.AllowAnimations = true;
             this.icon7.AllowBuffering = false;
@@ -2593,6 +2592,7 @@
             this.icon7.WaitOnLoad = false;
             this.icon7.Zoom = 1;
             this.icon7.ZoomSpeed = 10;
+            this.icon7.Click += ClickIcon;
             // 
             // icon2
             // 
@@ -2632,7 +2632,6 @@
             // 
             // icon1
             // 
-            this.icon1.Click += ClickIcon;
             this.icon1.ActiveImage = null;
             this.icon1.AllowAnimations = true;
             this.icon1.AllowBuffering = false;
@@ -2665,6 +2664,7 @@
             this.icon1.WaitOnLoad = false;
             this.icon1.Zoom = 1;
             this.icon1.ZoomSpeed = 10;
+            this.icon1.Click += ClickIcon;
             // 
             // panel18
             // 
@@ -2744,6 +2744,7 @@
             this.bunifuImageButton6.WaitOnLoad = false;
             this.bunifuImageButton6.Zoom = 0;
             this.bunifuImageButton6.ZoomSpeed = 10;
+            this.bunifuImageButton6.Click += new System.EventHandler(this.bunifuImageButton6_Click);
             // 
             // panel8
             // 

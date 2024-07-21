@@ -927,5 +927,47 @@ namespace App_Chat.View
                 writer.WriteLine(name);
             }
         }
+
+        private void bunifuImageButton6_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filepath = openFileDialog.FileName;
+                if (receiver_boardChat.ContainsKey(lb_remote_name.Text))
+                {
+                    try
+                    {
+                        FileInfo fileInfo = new FileInfo(filepath);
+                        string file_name = fileInfo.Name;
+                        long file_size = fileInfo.Length;
+
+                        SendMessage sendMessage = new SendMessage();
+                        sendMessage.set_filename(file_name);
+                        receiver_boardChat[lb_remote_name.Text].Controls.Add(sendMessage);
+
+                        writer.WriteLine("File");
+                        writer.WriteLine(your_account_name.userID);
+                        writer.WriteLine(lb_remote_name.Text);
+                        writer.WriteLine(file_name);
+                        writer.WriteLine(file_size.ToString());
+
+                        byte[] buffer = new byte[52428800];
+                        int byteReads;
+                        NetworkStream networkStream = tcpClient.GetStream();
+
+                        FileStream fileStream = new FileStream(filepath, FileMode.Open, FileAccess.Read);
+                        while ((byteReads = fileStream.Read(buffer, 0, buffer.Length)) > 0)
+                        {
+                            networkStream.Write(buffer, 0, byteReads);
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                }
+            }
+        }
     }
 }
