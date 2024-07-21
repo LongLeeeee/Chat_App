@@ -87,6 +87,18 @@
     <Compile Include="Model\User.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserControls\Receive_Icon.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\Receive_Icon.Designer.cs">
+      <DependentUpon>Receive_Icon.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Send_Icon.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\Send_Icon.Designer.cs">
+      <DependentUpon>Send_Icon.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\member.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -172,6 +184,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="UserControls\Receive_Icon.resx">
+      <DependentUpon>Receive_Icon.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Send_Icon.resx">
+      <DependentUpon>Send_Icon.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserControls\member.resx">
       <DependentUpon>member.cs</DependentUpon>
     </EmbeddedResource>

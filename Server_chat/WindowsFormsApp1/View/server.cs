@@ -301,32 +301,20 @@ namespace WindowsFormsApp1
                     {
                         string remote_user = reader.ReadLine();
                         writer.WriteLine("Load Message");
-                        writer.WriteLine(remote_user);
                         string data = "";
                         checkDB.connectToDB();
                         checkDB.get_messages(userID, remote_user, ref data);
                         checkDB.DisconnectToDB();
-                        if (string.IsNullOrEmpty(data))
-                        {
-                            writer.WriteLine("Null");
-                            break;
-                        }
                         writer.WriteLine(data);
                     }
                     else if (rq_from_client == "Load Message Group")
                     {
                         string group_name = reader.ReadLine();
                         writer.WriteLine("Load Message Group");
-                        writer.WriteLine(group_name);
                         string data = "";
                         checkDB.connectToDB();
                         checkDB.get_messages_group(ref data, group_name,userID);
                         checkDB.DisconnectToDB();
-                        if (string.IsNullOrEmpty(data))
-                        {
-                            writer.WriteLine("Null");
-                            break;
-                        }
                         writer.WriteLine(data);
                     }
                     else if (rq_from_client == "Load Group")
@@ -557,6 +545,21 @@ namespace WindowsFormsApp1
                                     writer1.WriteLine(data);
                                 }
                             }
+                        }
+                    }
+                    else if (rq_from_client == "Icon")
+                    {
+                        string sender = reader.ReadLine();
+                        string receiver = reader.ReadLine();
+                        string icon_name = reader.ReadLine();
+
+                        if (tcpclients.ContainsKey(receiver))
+                        {
+                            StreamWriter writer1 = new StreamWriter(tcpclients[receiver].GetStream());
+                            writer1.AutoFlush = true;
+                            writer1.WriteLine("Icon");
+                            writer1.WriteLine(sender);
+                            writer1.WriteLine(icon_name);
                         }
                     }
                     else if (rq_from_client == "Quit")

@@ -253,11 +253,41 @@ namespace App_Chat.View
                         receiver_boardChat.Add(item.groupName, flowLayoutPanel);
 
                         panel_box_chat.Controls.Add(boxChat);
-
-                        groups_members.Add(item.groupName, item);
                     }));
+                    Thread thread = new Thread(() => load_message_group(item));
+                    thread.Start();
                 }
             }
+        }
+        private void load_message_group(Group item)
+        {
+            writer.WriteLine("Load Message Group");
+            writer.WriteLine(item.groupName);
+
+            string data = "";
+            data = reader.ReadLine();
+            string[] messages = data.Split('|');
+            foreach (string message in messages)
+            {
+                if (!string.IsNullOrEmpty(message))
+                {
+                    string userid = message.Substring(message.IndexOf(":") + 1);
+                    string text = message.Substring(0, message.IndexOf(":"));
+                    if (userid == your_account_name.userID)
+                    {
+                        SendMessage se = new SendMessage();
+                        se.setLabel(text, userid);
+                        receiver_boardChat[item.groupName].Controls.Add(se);
+                    }
+                    else
+                    {
+                        ReceiveMessage se = new ReceiveMessage();
+                        se.setLabel(userid, text);
+                        receiver_boardChat[item.groupName].Controls.Add(se);
+                    }
+                }
+            }
+            groups_members.Add(item.groupName, item);
         }
         private void load_box_chat()
         {
@@ -275,9 +305,45 @@ namespace App_Chat.View
                         boxchats.Add(boxChat);
                         user_boardChat.Add(boxChat, flowLayoutPanel);
                         receiver_boardChat.Add(item, flowLayoutPanel);
-
                         panel_box_chat.Controls.Add(boxChat);
                     }));
+                    Thread thread = new Thread(() => load_message_friend(item));
+                    thread.Start();
+                }
+            }
+        }
+        private void load_message_friend(string item)
+        {
+            writer.WriteLine("Load Message");
+            writer.WriteLine(item);
+
+            string data = "";
+            data = reader.ReadLine();
+            string[] messages = data.Split('|');
+            foreach (string message in messages)
+            {
+                if (!string.IsNullOrEmpty(message))
+                {
+                    string userid = message.Substring(message.IndexOf(":") + 1);
+                    string text = message.Substring(0, message.IndexOf(":"));
+                    if (userid == your_account_name.userID)
+                    {
+                        Invoke(new Action(() =>
+                        {
+                            SendMessage se = new SendMessage();
+                            se.setLabel(text, userid);
+                            receiver_boardChat[item].Controls.Add(se);
+                        }));
+                    }
+                    else
+                    {
+                        Invoke(new Action(() =>
+                        {
+                            ReceiveMessage se = new ReceiveMessage();
+                            se.setLabel(userid, text);
+                            receiver_boardChat[item].Controls.Add(se);
+                        }));
+                    }
                 }
             }
         }
@@ -292,26 +358,22 @@ namespace App_Chat.View
                     if (item.Key == clicked_box_chat && friend_list.Contains(item.Key.get_user_id()))
                     {
                         panel7.Visible = true;
+                        panel17.Visible = false;
                         item.Value.Visible = true;
                         panel21.Visible = true;
                         lb_remote_name.Text = clicked_box_chat.getName();
                         lb_user_id.Text = clicked_box_chat.get_user_id();
                         tb_enter_message.Clear();
-                        //user_boardChat[clicked_box_chat].Controls.Clear();
-                        writer.WriteLine("Load Message");
-                        writer.WriteLine(clicked_box_chat.get_user_id());
                     }
                     else if (item.Key == clicked_box_chat && !friend_list.Contains(item.Key.get_user_id()))
                     {
                         panel7.Visible = true;
+                        panel17.Visible = false;
                         item.Value.Visible = true;
                         panel21.Visible = true;
                         lb_remote_name.Text = clicked_box_chat.getName();
                         lb_user_id.Text = clicked_box_chat.get_user_id();
                         tb_enter_message.Clear();
-                        //user_boardChat[clicked_box_chat].Controls.Clear();
-                        writer.WriteLine("Load Message Group");
-                        writer.WriteLine(clicked_box_chat.get_user_id());
                     }
                     else
                     {
@@ -519,88 +581,6 @@ namespace App_Chat.View
                             }
                         }
                     }
-                    else if (rs_from_server == "Load Message")
-                    {
-                        string user1 = reader.ReadLine();
-                        string data = "";
-                        data = reader.ReadLine();
-                        if (data == "Null")
-                        {
-                            break;
-                        }
-                        string[] messages = data.Split('|');
-                        if (messages == null)
-                        {
-                            break;
-                        }
-                        foreach (string message in messages)
-                        {
-                            if (!string.IsNullOrEmpty(message))
-                            {
-                                string userid = message.Substring(message.IndexOf(":") + 1);
-                                string text = message.Substring(0, message.IndexOf(":"));
-                                if (userid == your_account_name.userID)
-                                {
-                                    Invoke(new Action(() =>
-                                    {
-                                        SendMessage se = new SendMessage();
-                                        se.setLabel(text, userid);
-                                        receiver_boardChat[user1].Controls.Add(se);
-                                    }));
-                                }
-                                else
-                                {
-                                    Invoke(new Action(() =>
-                                    {
-                                        ReceiveMessage se = new ReceiveMessage();
-                                        se.setLabel(userid, text);
-                                        receiver_boardChat[user1].Controls.Add(se);
-                                    }));
-                                }
-                            }
-                        }
-                    }
-                    else if (rs_from_server == "Load Message Group")
-                    {
-                        string group_name = reader.ReadLine();
-                        string data = "";
-                        data = reader.ReadLine();
-                        if (data == "Null")
-                        {
-                            break;
-                        }
-                        string[] messages = data.Split('|');
-                        if (messages == null)
-                        {
-                            break;
-                        }
-                        foreach (string message in messages)
-                        {
-                            if (!string.IsNullOrEmpty(message))
-                            {
-                                string userid = message.Substring(message.IndexOf(":") + 1);
-                                string text = message.Substring(0, message.IndexOf(":"));
-                                if (userid == your_account_name.userID)
-                                {
-                                    Invoke(new Action(() =>
-                                    {
-                                        SendMessage se = new SendMessage();
-                                        se.setLabel(text, userid);
-                                        receiver_boardChat[group_name].Controls.Add(se);
-                                    }));
-                                }
-                                else
-                                {
-                                    Invoke(new Action(() =>
-                                    {
-                                        ReceiveMessage se = new ReceiveMessage();
-                                        se.setLabel(userid, text);
-                                        receiver_boardChat[group_name].Controls.Add(se);
-                                    }));
-                                }
-                            }
-                        }
-                    }
                     else if (rs_from_server == "CreatedGroupForUserCreate")
                     {
                         string group_data = reader.ReadLine();
@@ -673,6 +653,22 @@ namespace App_Chat.View
                                     receiver_boardChat[messageImageForFriend.userSend.userID].Controls.Add(receiveImage);
                                 }));
                             }
+                        }
+                    }
+                    else if (rs_from_server == "Icon")
+                    {
+                        string sender = reader.ReadLine();
+                        string icon_name = reader.ReadLine();
+                        if (receiver_boardChat.ContainsKey(sender))
+                        {
+                            Invoke(new Action(() =>
+                            {
+
+                                Receive_Icon receive_Icon = new Receive_Icon();
+                                Image icon = Image.FromFile(icon_name);
+                                receive_Icon.set_icon(icon);
+                                receiver_boardChat[sender].Controls.Add(receive_Icon);
+                            }));
                         }
                     }
                 }
@@ -894,9 +890,7 @@ namespace App_Chat.View
             {
                 using (MemoryStream ms = new MemoryStream())
                 {
-                    // Lưu hình ảnh vào MemoryStream dưới dạng JPEG
                     image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                    // Chuyển đổi sang chuỗi base64
                     byte[] imageBytes = ms.ToArray();
                     string base64String = Convert.ToBase64String(imageBytes);
                     return base64String;
@@ -906,6 +900,31 @@ namespace App_Chat.View
             {
                 Console.WriteLine("Lỗi: " + ex.Message);
                 return null;
+            }
+        }
+        private void ClickIcon(object sender, EventArgs e)
+        {
+            BunifuImageButton bt = (BunifuImageButton)sender;
+            SendIcon(bt.Tag.ToString());
+            panel19.Visible = false;
+        }
+        private void SendIcon(string name)
+        {
+            if (receiver_boardChat.ContainsKey(lb_remote_name.Text))
+            {
+                Image icon = Image.FromFile(name);
+
+                Send_Icon sendIcon = new Send_Icon();
+                sendIcon.set_icon(icon);
+                Invoke(new Action(() =>
+                {
+                    receiver_boardChat[lb_remote_name.Text].Controls.Add(sendIcon);
+                }));
+
+                writer.WriteLine("Icon");
+                writer.WriteLine(your_account_name.userID);
+                writer.WriteLine(lb_remote_name.Text);
+                writer.WriteLine(name);
             }
         }
     }

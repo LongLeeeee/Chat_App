@@ -57,3 +57,5 @@ E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.UserControls.mem
 E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.View.CreateGroup.resources
 E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.UserControls.ReceiveImage.resources
 E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.UserControls.SendImage.resources
+E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.UserControls.Receive_Icon.resources
+E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.UserControls.Send_Icon.resources
