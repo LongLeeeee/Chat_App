@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace App_Chat.View
 {
@@ -25,7 +26,8 @@ namespace App_Chat.View
         {
             InitializeComponent();
             this.your_account_name = user;
-            lb_name.Text = your_account_name.userName;
+            lb_name.Text = your_account_name.userID;
+            your_account_name.pwd = null;
             this.tcpClient1 = tcpClient1;
             this.tcpClient = tcpClient;
 
@@ -59,6 +61,7 @@ namespace App_Chat.View
 
             groups_members = new Dictionary<string, Group>();
         }
+        static AutoResetEvent autoResetEvent = new AutoResetEvent(false);
         Thread receiveThread;
 
         private Dictionary<BoxChat, FlowLayoutPanel> user_boardChat;
@@ -193,7 +196,7 @@ namespace App_Chat.View
             flowLayoutPanel.AllowDrop = true;
             flowLayoutPanel.Dock = DockStyle.Fill;
             flowLayoutPanel.Visible = false;
-            panel15.Controls.Add(flowLayoutPanel);
+            panel21.Controls.Add(flowLayoutPanel);
             return flowLayoutPanel;
         }
         private void load_users()
@@ -233,6 +236,7 @@ namespace App_Chat.View
         }
         private void load_groups()
         {
+            if (groups == null) { return; }
             foreach (var item in groups)
             {
                 if (item != null)
@@ -282,16 +286,18 @@ namespace App_Chat.View
             BoxChat clicked_box_chat = (BoxChat)sender;
             if (user_boardChat.ContainsKey(clicked_box_chat))
             {
+                panel13.Visible = true;
                 foreach (var item in user_boardChat)
                 {
                     if (item.Key == clicked_box_chat && friend_list.Contains(item.Key.get_user_id()))
                     {
                         panel7.Visible = true;
                         item.Value.Visible = true;
+                        panel21.Visible = true;
                         lb_remote_name.Text = clicked_box_chat.getName();
                         lb_user_id.Text = clicked_box_chat.get_user_id();
                         tb_enter_message.Clear();
-                        user_boardChat[clicked_box_chat].Controls.Clear();
+                        //user_boardChat[clicked_box_chat].Controls.Clear();
                         writer.WriteLine("Load Message");
                         writer.WriteLine(clicked_box_chat.get_user_id());
                     }
@@ -299,10 +305,11 @@ namespace App_Chat.View
                     {
                         panel7.Visible = true;
                         item.Value.Visible = true;
+                        panel21.Visible = true;
                         lb_remote_name.Text = clicked_box_chat.getName();
                         lb_user_id.Text = clicked_box_chat.get_user_id();
                         tb_enter_message.Clear();
-                        user_boardChat[clicked_box_chat].Controls.Clear();
+                        //user_boardChat[clicked_box_chat].Controls.Clear();
                         writer.WriteLine("Load Message Group");
                         writer.WriteLine(clicked_box_chat.get_user_id());
                     }
@@ -600,7 +607,7 @@ namespace App_Chat.View
                         Invoke(new Action(() =>
                         {
                             Group created_group = JsonConvert.DeserializeObject<Group>(group_data);
-                            groups_members.Add(created_group.groupName,created_group);
+                            groups_members.Add(created_group.groupName, created_group);
 
                             FlowLayoutPanel flowLayoutPanel = createFlowLayoutPanel();
                             BoxChat boxChat = new BoxChat();
@@ -634,11 +641,62 @@ namespace App_Chat.View
                             panel_box_chat.Controls.Add(boxChat);
                         }));
                     }
+                    else if (rs_from_server == "Image")
+                    {
+                        string receiver = reader.ReadLine();
+                        string data = reader.ReadLine();
+                        if (groups_members.ContainsKey(receiver))
+                        {
+                            MessageImageForGroup messageImageForGroup = JsonConvert.DeserializeObject<MessageImageForGroup>(data);
+                            Invoke(new Action(() =>
+                            {
+                                Image temp_image = StringToImage(messageImageForGroup.content);
+                                ReceiveImage receiveImage = new ReceiveImage();
+                                receiveImage.set_image(temp_image);
+                                receiveImage.set_label_name(messageImageForGroup.userSend.userID);
+
+                                receiver_boardChat[receiver].Controls.Add(receiveImage);
+                            }));
+                        }
+                        else
+                        {
+                            MessageImageForFriend messageImageForFriend = JsonConvert.DeserializeObject<MessageImageForFriend>(data);
+                            if (receiver_boardChat.ContainsKey(messageImageForFriend.userSend.userID))
+                            {
+                                Invoke(new Action(() =>
+                                {
+                                    Image temp_image = StringToImage(messageImageForFriend.content);
+                                    ReceiveImage receiveImage = new ReceiveImage();
+                                    receiveImage.set_image(temp_image);
+                                    receiveImage.set_label_name(messageImageForFriend.userSend.userID);
+
+                                    receiver_boardChat[messageImageForFriend.userSend.userID].Controls.Add(receiveImage);
+                                }));
+                            }
+                        }
+                    }
                 }
             }
             catch
             {
 
+            }
+        }
+        private Image StringToImage(string data)
+        {
+            try
+            {
+                byte[] imageBytes = Convert.FromBase64String(data);
+                using (MemoryStream ms = new MemoryStream(imageBytes))
+                {
+                    Image image = Image.FromStream(ms);
+                    return image;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi: " + ex.Message);
+                return null;
             }
         }
         private void Chat_Load(object sender, EventArgs e)
@@ -744,6 +802,110 @@ namespace App_Chat.View
                 {
                     item.Visible = false;
                 }
+            }
+        }
+
+        private void attachment_Click(object sender, EventArgs e)
+        {
+            if (panel17.Visible)
+            {
+                panel17.Visible = false;
+            }
+            else
+            {
+                panel17.Visible = true;
+            }
+        }
+
+        private void SendImage_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            {
+                openFileDialog.Filter = "Image Files (*.jpg, *.jpeg, *.png, *.bmp)|*.jpg;*.jpeg;*.png;*.bmp";
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    if (receiver_boardChat.ContainsKey(lb_remote_name.Text))
+                    {
+                        SendImage sendImage = new SendImage();
+                        PictureBox pictureBox = new PictureBox();
+                        pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+
+                        pictureBox.Image = Image.FromFile(openFileDialog.FileName);
+                        string path = openFileDialog.FileName;
+                        string filename = Path.GetFileName(path);
+                        sendImage.set_picturebox(pictureBox.Image);
+                        sendImage.set_label_name(your_account_name.userID);
+                        Invoke(new Action(() =>
+                        {
+                            receiver_boardChat[lb_remote_name.Text].Controls.Add(sendImage);
+                        }));
+                        try
+                        {
+                            string imageData = ImageToBase64String(sendImage.get_picturebox());
+                            writer.AutoFlush = true;
+                            User receiver = new User()
+                            {
+                                userName = lb_remote_name.Text,
+                            };
+                            if (friend_list.Contains(lb_remote_name.Text))
+                            {
+                                MessageImageForFriend message = new MessageImageForFriend()
+                                {
+                                    content = imageData,
+                                    userSend = your_account_name,
+                                    dateSend = DateTime.Now,
+                                    filename = filename,
+                                    userReceive = receiver,
+                                };
+                                string data = JsonConvert.SerializeObject(message);
+                                writer.WriteLine("Image");
+                                writer.WriteLine(lb_remote_name.Text);
+                                writer.WriteLine(data);
+                            }
+                            else if (groups_members.ContainsKey(lb_remote_name.Text))
+                            {
+                                MessageImageForGroup message = new MessageImageForGroup()
+                                {
+                                    content = imageData,
+                                    userSend = your_account_name,
+                                    dateSend = DateTime.Now,
+                                    filename = filename,
+                                    groupName = lb_remote_name.Text,
+                                    receiver_id_list = groups_members[lb_remote_name.Text].members_userid,
+                                };
+                                string data = JsonConvert.SerializeObject(message);
+                                writer.WriteLine("Image");
+                                writer.WriteLine(lb_remote_name.Text);
+                                writer.WriteLine(data);
+                            }
+                            
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+                    }
+                }
+            }
+        }
+        private string ImageToBase64String(Image image)
+        {
+            try
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    // Lưu hình ảnh vào MemoryStream dưới dạng JPEG
+                    image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    // Chuyển đổi sang chuỗi base64
+                    byte[] imageBytes = ms.ToArray();
+                    string base64String = Convert.ToBase64String(imageBytes);
+                    return base64String;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi: " + ex.Message);
+                return null;
             }
         }
     }

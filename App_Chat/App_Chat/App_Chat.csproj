@@ -99,11 +99,23 @@
     <Compile Include="UserControls\NewFriend.Designer.cs">
       <DependentUpon>NewFriend.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\ReceiveImage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ReceiveImage.Designer.cs">
+      <DependentUpon>ReceiveImage.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\ReceiveMessage.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UserControls\ReceiveMessage.Designer.cs">
       <DependentUpon>ReceiveMessage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\SendImage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\SendImage.Designer.cs">
+      <DependentUpon>SendImage.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\SendMessage.cs">
       <SubType>UserControl</SubType>
@@ -166,8 +178,14 @@
     <EmbeddedResource Include="UserControls\NewFriend.resx">
       <DependentUpon>NewFriend.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ReceiveImage.resx">
+      <DependentUpon>ReceiveImage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserControls\ReceiveMessage.resx">
       <DependentUpon>ReceiveMessage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\SendImage.resx">
+      <DependentUpon>SendImage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\SendMessage.resx">
       <DependentUpon>SendMessage.cs</DependentUpon>

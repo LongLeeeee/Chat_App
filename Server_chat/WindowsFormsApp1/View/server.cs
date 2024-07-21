@@ -526,6 +526,39 @@ namespace WindowsFormsApp1
                             }));
                         }
                     }
+                    else if (rq_from_client == "Image")
+                    {
+                        string receiver = reader.ReadLine();
+                        string data = reader.ReadLine();
+                        Invoke(new Action(() =>
+                        {
+                            richTextBox1.AppendText($"{userID} đã gửi 1 ảnh đến {receiver}\r\n");
+                        }));
+                        if (tcpclients.ContainsKey(receiver))
+                        {
+                            MessageImageForFriend message = JsonConvert.DeserializeObject<MessageImageForFriend>(data);
+                            StreamWriter writer1 = new StreamWriter(tcpclients[receiver].GetStream());
+                            writer1.AutoFlush = true;
+                            writer1.WriteLine("Image");
+                            writer1.WriteLine(receiver);
+                            writer1.WriteLine(data);
+                        }
+                        else
+                        {
+                            MessageImageForGroup message = JsonConvert.DeserializeObject<MessageImageForGroup>(data);
+                            foreach (var item in message.receiver_id_list)
+                            {
+                                if (item != userID)
+                                {
+                                    StreamWriter writer1 = new StreamWriter(tcpclients[item].GetStream());
+                                    writer1.AutoFlush = true;
+                                    writer1.WriteLine("Image");
+                                    writer1.WriteLine(receiver);
+                                    writer1.WriteLine(data);
+                                }
+                            }
+                        }
+                    }
                     else if (rq_from_client == "Quit")
                     {
                         tcpclients.Remove(userID);

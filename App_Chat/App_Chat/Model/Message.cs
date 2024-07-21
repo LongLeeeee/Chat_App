@@ -21,4 +21,12 @@ namespace App_Chat.Model
     {
         public User userReceive { get; set; }
     }
+    public class MessageImageForFriend : MessageFriend
+    {
+        public string filename { get; set;}
+    }
+    public class MessageImageForGroup : MessageGroup
+    {
+        public string filename { get; set; }
+    }
 }

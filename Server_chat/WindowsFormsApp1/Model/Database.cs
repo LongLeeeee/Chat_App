@@ -136,24 +136,31 @@ namespace WindowsFormsApp1.Model
             string query = $"select USERID_SEND, CONTENT from Messages_Group where GROUPNAME = '{group_name}'";
             sqlCommand = new SqlCommand(query, sqlConnection);
             sqlreader = sqlCommand.ExecuteReader();
-            while (sqlreader.Read())
+            if (!sqlreader.Read())
             {
-                string temp = sqlreader["CONTENT"].ToString();
-                string user = sqlreader["USERID_SEND"].ToString();
-                string temp1 = "";
-                if (user == sender)
+                return;
+            }
+            else
+            {
+                while (sqlreader.Read())
                 {
-                    temp1 = temp + " :" + user;
+                    string temp = sqlreader["CONTENT"].ToString();
+                    string user = sqlreader["USERID_SEND"].ToString();
+                    string temp1 = "";
+                    if (user == sender)
+                    {
+                        temp1 = temp + " :" + user;
+                    }
+                    else
+                    {
+                        temp1 = user + ": " + temp;
+                    }
+                    if (string.IsNullOrEmpty(temp1))
+                    {
+                        return;
+                    }
+                    data += temp1 + "|";
                 }
-                else
-                {
-                    temp1 = user + ": " + temp;
-                }
-                if (string.IsNullOrEmpty(temp1))
-                {
-                    return;
-                }
-                data += temp1 + "|";
             }
         }
         public void updateData(User user)
@@ -202,7 +209,6 @@ namespace WindowsFormsApp1.Model
                 {
                     group = new Group();
                     group.groupName = sqlreader["GROUPNAME"].ToString();
-                    //group.creator.userID = sqlreader["USERID_CREATION"].ToString();
                     string temp = sqlreader["USERID"].ToString();
                     temp1.Add(temp);
                 }

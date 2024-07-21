@@ -55,3 +55,5 @@ E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.pdb
 E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.View.ChangePassword.resources
 E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.UserControls.member.resources
 E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.View.CreateGroup.resources
+E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.UserControls.ReceiveImage.resources
+E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.UserControls.SendImage.resources
