@@ -29,4 +29,14 @@ namespace WindowsFormsApp1.Model
     {
         public string filename { get; set; }
     }
+    public class MessageFileForFriend : MessageFriend
+    {
+        public string filename { get; set; }
+        public long fileSize { get; set; }
+    }
+    public class MessageFileForGroup : MessageGroup
+    {
+        public string filename { get; set; }
+        public long fileSize { get; set; }
+    }
 }

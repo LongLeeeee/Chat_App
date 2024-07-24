@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using WindowsFormsApp1.Model;
 using Newtonsoft.Json;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using System.Net.NetworkInformation;
 
 namespace WindowsFormsApp1
 {
@@ -564,30 +565,88 @@ namespace WindowsFormsApp1
                     }
                     else if (rq_from_client == "File")
                     {
-                        string sender = reader.ReadLine();
+                        string data = reader.ReadLine();
                         string receiver = reader.ReadLine();
-                        string file_name = reader.ReadLine();
-                        long file_size = Int32.Parse(reader.ReadLine());
+                        checkDB.connectToDB();
+                        if (tcpclients.ContainsKey(receiver)) {
 
-                        string file_path = Path.Combine("Resources\\", file_name);
-                        byte[] buffer = new byte[52428800];
-                        int bytesRead;
+                            MessageFileForFriend messageFileForFriend = JsonConvert.DeserializeObject<MessageFileForFriend>(data);
 
-                        long bytesReceived = 0;
+                            string file_path = Path.Combine("Resources\\", messageFileForFriend.filename);
+                            byte[] buffer = new byte[52428800];
+                            int bytesRead;
 
-                        NetworkStream networkStream = client.GetStream();
-                        FileStream fileStream = new FileStream(file_path, FileMode.Create, FileAccess.Write);
-                        while (bytesReceived < file_size && (bytesRead = networkStream.Read(buffer, 0, buffer.Length)) > 0)
-                        {
-                            fileStream.Write(buffer, 0, bytesRead);
-                            bytesReceived += bytesRead;
+                            long bytesReceived = 0;
+
+                            NetworkStream networkStream = client.GetStream();
+                            FileStream fileStream = new FileStream(file_path, FileMode.Create, FileAccess.Write);
+                            while (bytesReceived < messageFileForFriend.fileSize && (bytesRead = networkStream.Read(buffer, 0, buffer.Length)) > 0)
+                            {
+                                fileStream.Write(buffer, 0, bytesRead);
+                                bytesReceived += bytesRead;
+                            }
+                            fileStream.Close();
+                            Invoke(new Action(() =>
+                            {
+                                richTextBox1.AppendText(messageFileForFriend.userSend.userID + " vừa gửi 1 file: " + messageFileForFriend.filename + " đến " + messageFileForFriend.userReceive.userID + ".\r\n");
+                            }));
+                            NetworkStream networkStream1 = tcpclients[receiver].GetStream();   
+                            StreamWriter writer1 = new StreamWriter(tcpclients[receiver].GetStream());
+                            writer1.AutoFlush = true;
+                            writer1.WriteLine("File");
+                            writer1.WriteLine(data);
+                            writer1.WriteLine(receiver); 
+                            FileStream ft = new FileStream(file_path, FileMode.Open, FileAccess.Read);
+                            while ((bytesRead = ft.Read(buffer, 0, buffer.Length)) > 0)
+                            {
+                                networkStream1.Write(buffer, 0, bytesRead);
+                            }
+                            fileStream.Close();
                         }
-                        Invoke(new Action(() =>
+                        else if (!tcpclients.ContainsKey(receiver))
                         {
-                            richTextBox1.AppendText(sender + " vừa gửi 1 file: " + file_name + " đến " + receiver + ".\r\n");
 
-                        }));
+                        }
+                        else
+                        {
+                            MessageFileForGroup messageFileForGroup = JsonConvert.DeserializeObject<MessageFileForGroup>(data);
+                            string file_path = Path.Combine("Resources\\", messageFileForGroup.filename);
+                            byte[] buffer = new byte[52428800];
+                            int bytesRead;
 
+                            long bytesReceived = 0;
+
+                            NetworkStream networkStream = client.GetStream();
+                            FileStream fileStream = new FileStream(file_path, FileMode.Create, FileAccess.Write);
+                            while (bytesReceived < messageFileForGroup.fileSize && (bytesRead = networkStream.Read(buffer, 0, buffer.Length)) > 0)
+                            {
+                                fileStream.Write(buffer, 0, bytesRead);
+                                bytesReceived += bytesRead;
+                            }
+                            fileStream.Close();
+                            Invoke(new Action(() =>
+                            {
+                                richTextBox1.AppendText(messageFileForGroup.userSend.userID + " vừa gửi 1 file: " + messageFileForGroup.filename + " đến " + messageFileForGroup.groupName + ".\r\n");
+                            }));
+                            foreach (var item in messageFileForGroup.receiver_id_list)
+                            {
+                                if (tcpclients.ContainsKey(item) && item != userID)
+                                {
+                                    NetworkStream networkStream1 = tcpclients[item].GetStream();
+                                    StreamWriter writer1 = new StreamWriter(tcpclients[item].GetStream());
+                                    writer1.AutoFlush = true;
+                                    writer1.WriteLine("File");
+                                    writer1.WriteLine(data);
+                                    writer1.WriteLine(messageFileForGroup.groupName);
+                                    FileStream ft = new FileStream(file_path, FileMode.Open, FileAccess.Read);
+                                    while ((bytesRead = ft.Read(buffer, 0, buffer.Length)) > 0)
+                                    {
+                                        networkStream1.Write(buffer, 0, bytesRead);
+                                    }
+                                    fileStream.Close();
+                                }
+                            }
+                        }
                     }
                     else if (rq_from_client == "Quit")
                     {

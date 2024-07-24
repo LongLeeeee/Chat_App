@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.WebRequestMethods;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace App_Chat.View
@@ -671,6 +672,66 @@ namespace App_Chat.View
                             }));
                         }
                     }
+                    else if (rs_from_server == "File")
+                    {
+                        string data = reader.ReadLine();
+                        string receiver = reader.ReadLine().Trim();
+                        NetworkStream networkStream = tcpClient.GetStream();
+                        if (!groups_members.ContainsKey(receiver))
+                        {
+                            MessageFileForFriend messageFileForFriend = JsonConvert.DeserializeObject<MessageFileForFriend>(data);
+                            string filePath = Path.Combine("Resources\\", messageFileForFriend.filename);
+                            byte[] buffer = new byte[52428800];
+                            int bytesRead;
+                            long bytesReceived = 0;
+
+                            FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+                            while ((bytesReceived < messageFileForFriend.fileSize) &&
+                                   (bytesRead = networkStream.Read(buffer, 0, buffer.Length)) > 0)
+                            {
+                                fileStream.Write(buffer, 0, bytesRead);
+                                bytesReceived += bytesRead;
+                            }
+                            fileStream.Close();
+
+                            if (receiver_boardChat.ContainsKey(messageFileForFriend.userSend.userID))
+                            {
+                                Invoke(new Action(() =>
+                                {
+                                    ReceiveMessage receiveMessage = new ReceiveMessage();
+                                    receiveMessage.set_filename(messageFileForFriend.filename,messageFileForFriend.userSend.userID);
+                                    receiver_boardChat[messageFileForFriend.userSend.userID].Controls.Add(receiveMessage);
+                                }));
+                            }
+                        }
+                        else
+                        {
+                            MessageFileForGroup messageFileForGroup = JsonConvert.DeserializeObject<MessageFileForGroup>(data);
+                            string filePath = Path.Combine("Resources\\", messageFileForGroup.filename);
+                            byte[] buffer = new byte[52428800];
+                            int bytesRead;
+                            long bytesReceived = 0;
+
+                            FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+                            while ((bytesReceived < messageFileForGroup.fileSize) &&
+                                   (bytesRead = networkStream.Read(buffer, 0, buffer.Length)) > 0)
+                            {
+                                fileStream.Write(buffer, 0, bytesRead);
+                                bytesReceived += bytesRead;
+                            }
+                            fileStream.Close();
+
+                            if (receiver_boardChat.ContainsKey(messageFileForGroup.groupName))
+                            {
+                                Invoke(new Action(() =>
+                                {
+                                    ReceiveMessage receiveMessage = new ReceiveMessage();
+                                    receiveMessage.set_filename(messageFileForGroup.filename,messageFileForGroup.userSend.userID);
+                                    receiver_boardChat[messageFileForGroup.groupName].Controls.Add(receiveMessage);
+                                }));
+                            }
+                        }
+                    }
                 }
             }
             catch
@@ -938,28 +999,82 @@ namespace App_Chat.View
                 {
                     try
                     {
-                        FileInfo fileInfo = new FileInfo(filepath);
-                        string file_name = fileInfo.Name;
-                        long file_size = fileInfo.Length;
+                        if (friend_list.Contains(lb_remote_name.Text)) {
 
-                        SendMessage sendMessage = new SendMessage();
-                        sendMessage.set_filename(file_name);
-                        receiver_boardChat[lb_remote_name.Text].Controls.Add(sendMessage);
+                            FileInfo fileInfo = new FileInfo(filepath);
+                            string file_name = fileInfo.Name;
+                            long file_size = fileInfo.Length;
 
-                        writer.WriteLine("File");
-                        writer.WriteLine(your_account_name.userID);
-                        writer.WriteLine(lb_remote_name.Text);
-                        writer.WriteLine(file_name);
-                        writer.WriteLine(file_size.ToString());
+                            User receiver = new User()
+                            {
+                                userName = lb_remote_name.Text,
+                                userID = lb_remote_name.Text,
+                            };
+                            MessageFileForFriend messageFileForFriend = new MessageFileForFriend()
+                            {
+                                userSend = your_account_name,
+                                userReceive = receiver,
+                                filename = file_name,
+                                fileSize = file_size,
+                            };
+                            string data = JsonConvert.SerializeObject(messageFileForFriend);
 
-                        byte[] buffer = new byte[52428800];
-                        int byteReads;
-                        NetworkStream networkStream = tcpClient.GetStream();
+                            SendMessage sendMessage = new SendMessage();
+                            sendMessage.set_filename(messageFileForFriend.filename, messageFileForFriend.filename);
+                            receiver_boardChat[messageFileForFriend.userReceive.userID].Controls.Add(sendMessage);
 
-                        FileStream fileStream = new FileStream(filepath, FileMode.Open, FileAccess.Read);
-                        while ((byteReads = fileStream.Read(buffer, 0, buffer.Length)) > 0)
+                            writer.WriteLine("File");
+                            writer.WriteLine(data);
+                            writer.WriteLine(lb_remote_name.Text);
+
+                            byte[] buffer = new byte[52428800];
+                            int byteReads;
+                            NetworkStream networkStream = tcpClient.GetStream();
+
+                            FileStream fileStream = new FileStream(filepath, FileMode.Open, FileAccess.Read);
+                            while ((byteReads = fileStream.Read(buffer, 0, buffer.Length)) > 0)
+                            {
+                                networkStream.Write(buffer, 0, byteReads);
+                            }
+                        }
+                        else
                         {
-                            networkStream.Write(buffer, 0, byteReads);
+                            FileInfo fileInfo = new FileInfo(filepath);
+                            string file_name = fileInfo.Name;
+                            long file_size = fileInfo.Length;
+
+                            User receiver = new User()
+                            {
+                                userName = lb_remote_name.Text,
+                                userID = lb_remote_name.Text,
+                            };
+                            MessageFileForGroup messageFileForGroup = new MessageFileForGroup()
+                            {
+                                userSend = your_account_name,
+                                receiver_id_list = groups_members[lb_remote_name.Text].members_userid,
+                                filename = file_name,
+                                fileSize = file_size,
+                                groupName = lb_remote_name.Text,
+                            };
+                            string data = JsonConvert.SerializeObject(messageFileForGroup);
+
+                            SendMessage sendMessage = new SendMessage();
+                            sendMessage.set_filename(messageFileForGroup.filename, messageFileForGroup.filename);
+                            receiver_boardChat[messageFileForGroup.groupName].Controls.Add(sendMessage);
+
+                            writer.WriteLine("File");
+                            writer.WriteLine(data);
+                            writer.WriteLine(messageFileForGroup.groupName);
+
+                            byte[] buffer = new byte[52428800];
+                            int byteReads;
+                            NetworkStream networkStream = tcpClient.GetStream();
+
+                            FileStream fileStream = new FileStream(filepath, FileMode.Open, FileAccess.Read);
+                            while ((byteReads = fileStream.Read(buffer, 0, buffer.Length)) > 0)
+                            {
+                                networkStream.Write(buffer, 0, byteReads);
+                            }
                         }
                     }
                     catch

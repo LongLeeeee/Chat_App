@@ -1,0 +1,3 @@
+Link server: https://github.com/LongLeeeee/server2.git
+Link app: https://github.com/LongLeeeee/app2.git
+Link bảng đánh giá công việc: https://docs.google.com/spreadsheets/d/1yCzjUiKzKZjGhcpmUbruU1zhhj07BRku7m1w8IZWpP4/edit?usp=sharing

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using App_Chat.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -20,9 +21,9 @@ namespace App_Chat.UserControls
         {
             lb_send_message.Text = content + " :" + userid ;
         }
-        public void set_filename(string filename)
+        public void set_filename(string filename, string userid)
         {
-            lb_send_message.Text = filename;
+            lb_send_message.Text = filename + " :" + userid;
         }
         public string getLabel()
         {
