@@ -114,7 +114,7 @@ namespace App_Chat.View
                     {
                         if (tcpClient.Connected && tcpClient_1.Connected)
                         {
-                            Chat chat = new Chat(tcpClient, tcpClient_1, register_user);
+                            Chat chat = new Chat(tcpClient, tcpClient_1, register_user, "");
                             chat.Show();
                             this.Hide();
                         }

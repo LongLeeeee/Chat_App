@@ -88,9 +88,15 @@ namespace WindowsFormsApp1
                         checkDB.DisconnectToDB();
                         if (success)
                         {
+                            string avatar = "";
                             tcpclients.Add(login_user_data.userID, tcpClient);
+                            checkDB.get_data_user(ref login_user_data);
+                            checkDB.get_avatar(login_user_data, ref avatar);
                             string response = "Login successfully";
                             writer.WriteLine(response);
+                            login_data_from_client = JsonConvert.SerializeObject(login_user_data);
+                            writer.WriteLine(login_data_from_client);
+                            writer.WriteLine(avatar);
                             Invoke(new Action(() =>
                             {
                                 richTextBox1.AppendText(login_user_data.userID + " vừa đăng nhập.\r\n");
@@ -647,6 +653,36 @@ namespace WindowsFormsApp1
                                 }
                             }
                         }
+                    }
+                    else if (rq_from_client == "Change Username")
+                    {
+                        string data = reader.ReadLine();
+                        User user_request = JsonConvert.DeserializeObject<User>(data);
+                        bool is_success = false;
+                        checkDB.connectToDB();
+                        checkDB.Authetication(user_request, ref is_success);
+                        checkDB.DisconnectToDB();
+                        if (is_success)
+                        {
+                            checkDB.connectToDB();
+                            checkDB.update_Username(user_request);
+                            checkDB.DisconnectToDB();
+
+                            writer.WriteLine("Change Username");
+                            writer.WriteLine("Changed Username Successfully");
+                            writer.WriteLine(user_request.userName);
+                        }
+                        else
+                        {
+                            writer.WriteLine("Change Username");
+                            writer.WriteLine("Error");
+                        }
+                    }
+                    else if (rq_from_client == "Set Avatar")
+                    {
+                        string avatar_data = reader.ReadLine();
+                        checkDB.set_avatar(userID, avatar_data);
+                        writer.WriteLine("Updated Avatar");
                     }
                     else if (rq_from_client == "Quit")
                     {

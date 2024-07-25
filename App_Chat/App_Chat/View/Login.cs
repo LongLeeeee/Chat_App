@@ -95,6 +95,10 @@ namespace App_Chat.View
             // đọc phản hồi từ server
 
             string rs_from_server = reader.ReadLine();
+            string data = reader.ReadLine();
+            string avatar = reader.ReadLine();
+
+            login_user = JsonConvert.DeserializeObject<User>(data);
             if (rs_from_server.CompareTo("Login successfully") == 0)
             {
                 ConnectToServer(ref this.tcpClient_1, ref this.reader_1, ref this.writer_1);
@@ -115,7 +119,7 @@ namespace App_Chat.View
                     {
                         if (tcpClient.Connected && tcpClient_1.Connected)
                         {
-                            Chat chat = new Chat(tcpClient, tcpClient_1, login_user);
+                            Chat chat = new Chat(tcpClient, tcpClient_1, login_user, avatar);
                             chat.Show();
                             this.Hide();
                         }

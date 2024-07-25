@@ -52,6 +52,7 @@
             Bunifu.UI.WinForms.BunifuTextBox.StateProperties stateProperties16 = new Bunifu.UI.WinForms.BunifuTextBox.StateProperties();
             Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges borderEdges6 = new Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges();
             Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges borderEdges7 = new Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges();
+            Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges borderEdges8 = new Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges();
             this.btn_display_box_chat = new Bunifu.UI.WinForms.BunifuImageButton();
             this.btn_display_list_user = new Bunifu.UI.WinForms.BunifuImageButton();
             this.add = new Bunifu.UI.WinForms.BunifuImageButton();
@@ -144,6 +145,7 @@
             this.btn_change_name = new Bunifu.UI.WinForms.BunifuButton.BunifuButton();
             this.btn_change_pwd = new Bunifu.UI.WinForms.BunifuButton.BunifuButton();
             this.panel_personal_properties = new System.Windows.Forms.Panel();
+            this.btn_change_avatar = new Bunifu.UI.WinForms.BunifuButton.BunifuButton();
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -338,7 +340,7 @@
             this.btn_exit.IdleIconLeftImage = null;
             this.btn_exit.IdleIconRightImage = null;
             this.btn_exit.IndicateFocus = false;
-            this.btn_exit.Location = new System.Drawing.Point(0, 298);
+            this.btn_exit.Location = new System.Drawing.Point(0, 349);
             this.btn_exit.Name = "btn_exit";
             this.btn_exit.OnDisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(191)))), ((int)(((byte)(191)))));
             this.btn_exit.OnDisabledState.BorderRadius = 1;
@@ -429,7 +431,7 @@
             this.btn_logout.IdleIconLeftImage = null;
             this.btn_logout.IdleIconRightImage = null;
             this.btn_logout.IndicateFocus = false;
-            this.btn_logout.Location = new System.Drawing.Point(0, 247);
+            this.btn_logout.Location = new System.Drawing.Point(0, 298);
             this.btn_logout.Name = "btn_logout";
             this.btn_logout.OnDisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(191)))), ((int)(((byte)(191)))));
             this.btn_logout.OnDisabledState.BorderRadius = 1;
@@ -1347,6 +1349,7 @@
             this.tb_enter_message.TextPlaceholder = "Enter text";
             this.tb_enter_message.UseSystemPasswordChar = false;
             this.tb_enter_message.WordWrap = true;
+            this.tb_enter_message.TextChanged += new System.EventHandler(this.tb_enter_message_TextChanged);
             // 
             // panel17
             // 
@@ -1438,7 +1441,6 @@
             this.icon24.WaitOnLoad = false;
             this.icon24.Zoom = 1;
             this.icon24.ZoomSpeed = 10;
-            this.icon24.Click += ClickIcon;
             // 
             // icon35
             // 
@@ -1475,7 +1477,6 @@
             this.icon35.WaitOnLoad = false;
             this.icon35.Zoom = 1;
             this.icon35.ZoomSpeed = 10;
-            this.icon35.Click += ClickIcon;
             // 
             // icon34
             // 
@@ -1512,7 +1513,6 @@
             this.icon34.WaitOnLoad = false;
             this.icon34.Zoom = 1;
             this.icon34.ZoomSpeed = 10;
-            this.icon34.Click += ClickIcon;
             // 
             // icon29
             // 
@@ -1548,7 +1548,6 @@
             this.icon29.WaitOnLoad = false;
             this.icon29.Zoom = 1;
             this.icon29.ZoomSpeed = 10;
-            this.icon29.Click += ClickIcon;
             // 
             // icon23
             // 
@@ -1584,7 +1583,6 @@
             this.icon23.WaitOnLoad = false;
             this.icon23.Zoom = 1;
             this.icon23.ZoomSpeed = 10;
-            this.icon23.Click += ClickIcon;
             // 
             // icon30
             // 
@@ -1620,7 +1618,6 @@
             this.icon30.WaitOnLoad = false;
             this.icon30.Zoom = 1;
             this.icon30.ZoomSpeed = 10;
-            this.icon30.Click += ClickIcon;
             // 
             // icon28
             // 
@@ -1656,7 +1653,6 @@
             this.icon28.WaitOnLoad = false;
             this.icon28.Zoom = 1;
             this.icon28.ZoomSpeed = 10;
-            this.icon28.Click += ClickIcon;
             // 
             // icon22
             // 
@@ -1692,7 +1688,6 @@
             this.icon22.WaitOnLoad = false;
             this.icon22.Zoom = 1;
             this.icon22.ZoomSpeed = 10;
-            this.icon22.Click += ClickIcon;
             // 
             // icon33
             // 
@@ -1728,7 +1723,6 @@
             this.icon33.WaitOnLoad = false;
             this.icon33.Zoom = 1;
             this.icon33.ZoomSpeed = 10;
-            this.icon33.Click += ClickIcon;
             // 
             // icon27
             // 
@@ -1764,7 +1758,6 @@
             this.icon27.WaitOnLoad = false;
             this.icon27.Zoom = 1;
             this.icon27.ZoomSpeed = 10;
-            this.icon27.Click += ClickIcon;
             // 
             // icon21
             // 
@@ -1800,7 +1793,6 @@
             this.icon21.WaitOnLoad = false;
             this.icon21.Zoom = 1;
             this.icon21.ZoomSpeed = 10;
-            this.icon21.Click += ClickIcon;
             // 
             // icon32
             // 
@@ -1836,7 +1828,6 @@
             this.icon32.WaitOnLoad = false;
             this.icon32.Zoom = 1;
             this.icon32.ZoomSpeed = 10;
-            this.icon32.Click += ClickIcon;
             // 
             // icon26
             // 
@@ -1872,7 +1863,6 @@
             this.icon26.WaitOnLoad = false;
             this.icon26.Zoom = 1;
             this.icon26.ZoomSpeed = 10;
-            this.icon26.Click += ClickIcon;
             // 
             // icon31
             // 
@@ -1908,7 +1898,6 @@
             this.icon31.WaitOnLoad = false;
             this.icon31.Zoom = 1;
             this.icon31.ZoomSpeed = 10;
-            this.icon31.Click += ClickIcon;
             // 
             // icon25
             // 
@@ -1944,7 +1933,6 @@
             this.icon25.WaitOnLoad = false;
             this.icon25.Zoom = 1;
             this.icon25.ZoomSpeed = 10;
-            this.icon25.Click += ClickIcon;
             // 
             // icon20
             // 
@@ -1980,7 +1968,6 @@
             this.icon20.WaitOnLoad = false;
             this.icon20.Zoom = 1;
             this.icon20.ZoomSpeed = 10;
-            this.icon20.Click += ClickIcon;
             // 
             // icon19
             // 
@@ -2016,7 +2003,6 @@
             this.icon19.WaitOnLoad = false;
             this.icon19.Zoom = 1;
             this.icon19.ZoomSpeed = 10;
-            this.icon19.Click += ClickIcon;
             // 
             // icon18
             // 
@@ -2052,7 +2038,6 @@
             this.icon18.WaitOnLoad = false;
             this.icon18.Zoom = 1;
             this.icon18.ZoomSpeed = 10;
-            this.icon18.Click += ClickIcon;
             // 
             // icon12
             // 
@@ -2088,7 +2073,6 @@
             this.icon12.WaitOnLoad = false;
             this.icon12.Zoom = 1;
             this.icon12.ZoomSpeed = 10;
-            this.icon12.Click += ClickIcon;
             // 
             // icon17
             // 
@@ -2124,7 +2108,6 @@
             this.icon17.WaitOnLoad = false;
             this.icon17.Zoom = 1;
             this.icon17.ZoomSpeed = 10;
-            this.icon17.Click += ClickIcon;
             // 
             // icon11
             // 
@@ -2160,7 +2143,6 @@
             this.icon11.WaitOnLoad = false;
             this.icon11.Zoom = 1;
             this.icon11.ZoomSpeed = 10;
-            this.icon11.Click += ClickIcon;
             // 
             // icon16
             // 
@@ -2196,7 +2178,6 @@
             this.icon16.WaitOnLoad = false;
             this.icon16.Zoom = 1;
             this.icon16.ZoomSpeed = 10;
-            this.icon16.Click += ClickIcon;
             // 
             // icon6
             // 
@@ -2232,7 +2213,6 @@
             this.icon6.WaitOnLoad = false;
             this.icon6.Zoom = 1;
             this.icon6.ZoomSpeed = 10;
-            this.icon6.Click += ClickIcon;
             // 
             // icon10
             // 
@@ -2268,7 +2248,6 @@
             this.icon10.WaitOnLoad = false;
             this.icon10.Zoom = 1;
             this.icon10.ZoomSpeed = 10;
-            this.icon10.Click += ClickIcon;
             // 
             // icon15
             // 
@@ -2304,7 +2283,6 @@
             this.icon15.WaitOnLoad = false;
             this.icon15.Zoom = 1;
             this.icon15.ZoomSpeed = 10;
-            this.icon15.Click += ClickIcon;
             // 
             // icon5
             // 
@@ -2340,7 +2318,6 @@
             this.icon5.WaitOnLoad = false;
             this.icon5.Zoom = 1;
             this.icon5.ZoomSpeed = 10;
-            this.icon5.Click += ClickIcon;
             // 
             // icon9
             // 
@@ -2376,7 +2353,6 @@
             this.icon9.WaitOnLoad = false;
             this.icon9.Zoom = 1;
             this.icon9.ZoomSpeed = 10;
-            this.icon9.Click += ClickIcon;
             // 
             // icon14
             // 
@@ -2412,7 +2388,6 @@
             this.icon14.WaitOnLoad = false;
             this.icon14.Zoom = 1;
             this.icon14.ZoomSpeed = 10;
-            this.icon14.Click += ClickIcon;
             // 
             // icon4
             // 
@@ -2448,7 +2423,6 @@
             this.icon4.WaitOnLoad = false;
             this.icon4.Zoom = 1;
             this.icon4.ZoomSpeed = 10;
-            this.icon4.Click += ClickIcon;
             // 
             // icon8
             // 
@@ -2484,7 +2458,6 @@
             this.icon8.WaitOnLoad = false;
             this.icon8.Zoom = 1;
             this.icon8.ZoomSpeed = 10;
-            this.icon8.Click += ClickIcon;
             // 
             // icon13
             // 
@@ -2520,7 +2493,6 @@
             this.icon13.WaitOnLoad = false;
             this.icon13.Zoom = 1;
             this.icon13.ZoomSpeed = 10;
-            this.icon13.Click += ClickIcon;
             // 
             // icon3
             // 
@@ -2556,7 +2528,6 @@
             this.icon3.WaitOnLoad = false;
             this.icon3.Zoom = 1;
             this.icon3.ZoomSpeed = 10;
-            this.icon3.Click += ClickIcon;
             // 
             // icon7
             // 
@@ -2592,7 +2563,6 @@
             this.icon7.WaitOnLoad = false;
             this.icon7.Zoom = 1;
             this.icon7.ZoomSpeed = 10;
-            this.icon7.Click += ClickIcon;
             // 
             // icon2
             // 
@@ -2628,7 +2598,6 @@
             this.icon2.WaitOnLoad = false;
             this.icon2.Zoom = 1;
             this.icon2.ZoomSpeed = 10;
-            this.icon2.Click += ClickIcon;
             // 
             // icon1
             // 
@@ -2664,7 +2633,6 @@
             this.icon1.WaitOnLoad = false;
             this.icon1.Zoom = 1;
             this.icon1.ZoomSpeed = 10;
-            this.icon1.Click += ClickIcon;
             // 
             // panel18
             // 
@@ -3042,11 +3010,12 @@
             // lb_name
             // 
             this.lb_name.AllowParentOverrides = false;
+            this.lb_name.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lb_name.AutoEllipsis = false;
             this.lb_name.Cursor = System.Windows.Forms.Cursors.Default;
             this.lb_name.CursorType = System.Windows.Forms.Cursors.Default;
             this.lb_name.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb_name.Location = new System.Drawing.Point(102, 95);
+            this.lb_name.Location = new System.Drawing.Point(115, 59);
             this.lb_name.Name = "lb_name";
             this.lb_name.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.lb_name.Size = new System.Drawing.Size(50, 25);
@@ -3063,7 +3032,7 @@
             this.bunifuPictureBox1.BorderRadius = 34;
             this.bunifuPictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("bunifuPictureBox1.Image")));
             this.bunifuPictureBox1.IsCircle = true;
-            this.bunifuPictureBox1.Location = new System.Drawing.Point(95, 19);
+            this.bunifuPictureBox1.Location = new System.Drawing.Point(29, 36);
             this.bunifuPictureBox1.Name = "bunifuPictureBox1";
             this.bunifuPictureBox1.Size = new System.Drawing.Size(68, 68);
             this.bunifuPictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -3119,7 +3088,7 @@
             this.btn_change_name.IdleIconLeftImage = null;
             this.btn_change_name.IdleIconRightImage = null;
             this.btn_change_name.IndicateFocus = false;
-            this.btn_change_name.Location = new System.Drawing.Point(0, 145);
+            this.btn_change_name.Location = new System.Drawing.Point(0, 196);
             this.btn_change_name.Name = "btn_change_name";
             this.btn_change_name.OnDisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(191)))), ((int)(((byte)(191)))));
             this.btn_change_name.OnDisabledState.BorderRadius = 1;
@@ -3160,6 +3129,7 @@
             this.btn_change_name.TextMarginLeft = 0;
             this.btn_change_name.TextPadding = new System.Windows.Forms.Padding(0);
             this.btn_change_name.UseDefaultRadiusAndThickness = true;
+            this.btn_change_name.Click += new System.EventHandler(this.btn_change_name_Click);
             // 
             // btn_change_pwd
             // 
@@ -3209,7 +3179,7 @@
             this.btn_change_pwd.IdleIconLeftImage = null;
             this.btn_change_pwd.IdleIconRightImage = null;
             this.btn_change_pwd.IndicateFocus = false;
-            this.btn_change_pwd.Location = new System.Drawing.Point(0, 196);
+            this.btn_change_pwd.Location = new System.Drawing.Point(0, 247);
             this.btn_change_pwd.Name = "btn_change_pwd";
             this.btn_change_pwd.OnDisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(191)))), ((int)(((byte)(191)))));
             this.btn_change_pwd.OnDisabledState.BorderRadius = 1;
@@ -3259,6 +3229,7 @@
             this.panel_personal_properties.Controls.Add(this.btn_logout);
             this.panel_personal_properties.Controls.Add(this.btn_change_pwd);
             this.panel_personal_properties.Controls.Add(this.btn_change_name);
+            this.panel_personal_properties.Controls.Add(this.btn_change_avatar);
             this.panel_personal_properties.Controls.Add(this.panel3);
             this.panel_personal_properties.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel_personal_properties.Location = new System.Drawing.Point(75, 0);
@@ -3266,6 +3237,97 @@
             this.panel_personal_properties.Size = new System.Drawing.Size(265, 649);
             this.panel_personal_properties.TabIndex = 1;
             this.panel_personal_properties.Visible = false;
+            // 
+            // btn_change_avatar
+            // 
+            this.btn_change_avatar.AllowAnimations = true;
+            this.btn_change_avatar.AllowMouseEffects = true;
+            this.btn_change_avatar.AllowToggling = false;
+            this.btn_change_avatar.AnimationSpeed = 200;
+            this.btn_change_avatar.AutoGenerateColors = false;
+            this.btn_change_avatar.AutoRoundBorders = false;
+            this.btn_change_avatar.AutoSizeLeftIcon = true;
+            this.btn_change_avatar.AutoSizeRightIcon = true;
+            this.btn_change_avatar.BackColor = System.Drawing.Color.Transparent;
+            this.btn_change_avatar.BackColor1 = System.Drawing.Color.DeepSkyBlue;
+            this.btn_change_avatar.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_change_avatar.BackgroundImage")));
+            this.btn_change_avatar.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
+            this.btn_change_avatar.ButtonText = "Đổi ảnh đại diện";
+            this.btn_change_avatar.ButtonTextMarginLeft = 0;
+            this.btn_change_avatar.ColorContrastOnClick = 45;
+            this.btn_change_avatar.ColorContrastOnHover = 45;
+            this.btn_change_avatar.Cursor = System.Windows.Forms.Cursors.Hand;
+            borderEdges8.BottomLeft = true;
+            borderEdges8.BottomRight = true;
+            borderEdges8.TopLeft = true;
+            borderEdges8.TopRight = true;
+            this.btn_change_avatar.CustomizableEdges = borderEdges8;
+            this.btn_change_avatar.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.btn_change_avatar.DisabledBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(191)))), ((int)(((byte)(191)))));
+            this.btn_change_avatar.DisabledFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.btn_change_avatar.DisabledForecolor = System.Drawing.Color.FromArgb(((int)(((byte)(168)))), ((int)(((byte)(160)))), ((int)(((byte)(168)))));
+            this.btn_change_avatar.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btn_change_avatar.FocusState = Bunifu.UI.WinForms.BunifuButton.BunifuButton.ButtonStates.Pressed;
+            this.btn_change_avatar.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_change_avatar.ForeColor = System.Drawing.Color.White;
+            this.btn_change_avatar.IconLeftAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btn_change_avatar.IconLeftCursor = System.Windows.Forms.Cursors.Default;
+            this.btn_change_avatar.IconLeftPadding = new System.Windows.Forms.Padding(11, 3, 3, 3);
+            this.btn_change_avatar.IconMarginLeft = 11;
+            this.btn_change_avatar.IconPadding = 10;
+            this.btn_change_avatar.IconRightAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btn_change_avatar.IconRightCursor = System.Windows.Forms.Cursors.Default;
+            this.btn_change_avatar.IconRightPadding = new System.Windows.Forms.Padding(3, 3, 7, 3);
+            this.btn_change_avatar.IconSize = 25;
+            this.btn_change_avatar.IdleBorderColor = System.Drawing.Color.DodgerBlue;
+            this.btn_change_avatar.IdleBorderRadius = 1;
+            this.btn_change_avatar.IdleBorderThickness = 1;
+            this.btn_change_avatar.IdleFillColor = System.Drawing.Color.DeepSkyBlue;
+            this.btn_change_avatar.IdleIconLeftImage = null;
+            this.btn_change_avatar.IdleIconRightImage = null;
+            this.btn_change_avatar.IndicateFocus = false;
+            this.btn_change_avatar.Location = new System.Drawing.Point(0, 145);
+            this.btn_change_avatar.Name = "btn_change_avatar";
+            this.btn_change_avatar.OnDisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(191)))), ((int)(((byte)(191)))));
+            this.btn_change_avatar.OnDisabledState.BorderRadius = 1;
+            this.btn_change_avatar.OnDisabledState.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
+            this.btn_change_avatar.OnDisabledState.BorderThickness = 1;
+            this.btn_change_avatar.OnDisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.btn_change_avatar.OnDisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(168)))), ((int)(((byte)(160)))), ((int)(((byte)(168)))));
+            this.btn_change_avatar.OnDisabledState.IconLeftImage = null;
+            this.btn_change_avatar.OnDisabledState.IconRightImage = null;
+            this.btn_change_avatar.onHoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(105)))), ((int)(((byte)(181)))), ((int)(((byte)(255)))));
+            this.btn_change_avatar.onHoverState.BorderRadius = 1;
+            this.btn_change_avatar.onHoverState.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
+            this.btn_change_avatar.onHoverState.BorderThickness = 1;
+            this.btn_change_avatar.onHoverState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(105)))), ((int)(((byte)(181)))), ((int)(((byte)(255)))));
+            this.btn_change_avatar.onHoverState.ForeColor = System.Drawing.Color.White;
+            this.btn_change_avatar.onHoverState.IconLeftImage = null;
+            this.btn_change_avatar.onHoverState.IconRightImage = null;
+            this.btn_change_avatar.OnIdleState.BorderColor = System.Drawing.Color.DodgerBlue;
+            this.btn_change_avatar.OnIdleState.BorderRadius = 1;
+            this.btn_change_avatar.OnIdleState.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
+            this.btn_change_avatar.OnIdleState.BorderThickness = 1;
+            this.btn_change_avatar.OnIdleState.FillColor = System.Drawing.Color.DeepSkyBlue;
+            this.btn_change_avatar.OnIdleState.ForeColor = System.Drawing.Color.White;
+            this.btn_change_avatar.OnIdleState.IconLeftImage = null;
+            this.btn_change_avatar.OnIdleState.IconRightImage = null;
+            this.btn_change_avatar.OnPressedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(96)))), ((int)(((byte)(144)))));
+            this.btn_change_avatar.OnPressedState.BorderRadius = 1;
+            this.btn_change_avatar.OnPressedState.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
+            this.btn_change_avatar.OnPressedState.BorderThickness = 1;
+            this.btn_change_avatar.OnPressedState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(96)))), ((int)(((byte)(144)))));
+            this.btn_change_avatar.OnPressedState.ForeColor = System.Drawing.Color.White;
+            this.btn_change_avatar.OnPressedState.IconLeftImage = null;
+            this.btn_change_avatar.OnPressedState.IconRightImage = null;
+            this.btn_change_avatar.Size = new System.Drawing.Size(265, 51);
+            this.btn_change_avatar.TabIndex = 5;
+            this.btn_change_avatar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btn_change_avatar.TextAlignment = System.Windows.Forms.HorizontalAlignment.Center;
+            this.btn_change_avatar.TextMarginLeft = 0;
+            this.btn_change_avatar.TextPadding = new System.Windows.Forms.Padding(0);
+            this.btn_change_avatar.UseDefaultRadiusAndThickness = true;
+            this.btn_change_avatar.Click += new System.EventHandler(this.btn_change_avatar_Click);
             // 
             // Chat
             // 
@@ -3410,5 +3472,6 @@
         private Bunifu.UI.WinForms.BunifuTextBox tb_enter_message;
         private System.Windows.Forms.Panel panel21;
         private Bunifu.UI.WinForms.BunifuImageButton icon4;
+        private Bunifu.UI.WinForms.BunifuButton.BunifuButton btn_change_avatar;
     }
 }

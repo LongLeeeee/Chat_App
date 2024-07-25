@@ -23,12 +23,16 @@ namespace App_Chat.View
 {
     public partial class Chat : Form
     {
-        public Chat(TcpClient tcpClient, TcpClient tcpClient1 ,User user)
+        public Chat(TcpClient tcpClient, TcpClient tcpClient1 ,User user, string avatar)
         {
             InitializeComponent();
             this.your_account_name = user;
-            lb_name.Text = your_account_name.userID;
-            your_account_name.pwd = null;
+            lb_name.Text = your_account_name.userName;
+            if (!string.IsNullOrEmpty(avatar))
+            {
+                bunifuPictureBox1.Image = StringToImage(avatar);
+                bunifuPictureBox2.Image = bunifuPictureBox1.Image;
+            }
             this.tcpClient1 = tcpClient1;
             this.tcpClient = tcpClient;
 
@@ -84,6 +88,7 @@ namespace App_Chat.View
         private string[] friend_list;
         private string[] noti_list;
         List<Group> groups;
+        Image new_avatar;
 
         private void btn_find_msg_Click(object sender, EventArgs e)
         {
@@ -732,6 +737,24 @@ namespace App_Chat.View
                             }
                         }
                     }
+                    else if (rs_from_server == "Change Username")
+                    {
+                        string result = reader.ReadLine();
+                        if (result == "Changed Username Successfully")
+                        {
+                            string new_username = reader.ReadLine(); 
+                            lb_name.Text = new_username;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Error");
+                        }
+                    }
+                    else if (rs_from_server == "Updated Avatar")
+                    {
+                        bunifuPictureBox1.Image = new_avatar;
+                        bunifuPictureBox2.Image = new_avatar;
+                    }
                 }
             }
             catch
@@ -1082,6 +1105,43 @@ namespace App_Chat.View
 
                     }
                 }
+            }
+        }
+
+        private void btn_change_name_Click(object sender, EventArgs e)
+        {
+            ChangeName changeName = new ChangeName(your_account_name, writer,bunifuPictureBox1.Image);
+            changeName.Show();
+        }
+
+        private void btn_change_avatar_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image Files (*.jpg, *.jpeg, *.png, *.bmp)|*.jpg;*.jpeg;*.png;*.bmp";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                new_avatar = Image.FromFile(openFileDialog.FileName);
+                string avatar_data = ImageToBase64String(new_avatar);
+
+                writer.WriteLine("Set Avatar");
+                writer.WriteLine(avatar_data);
+            }
+        }
+        private void tb_enter_message_TextChanged(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(tb_enter_message.Text))
+            {
+                Invoke(new Action(() =>
+                {
+                    btn_send.Enabled = false;
+                }));
+            }
+            else
+            {
+                Invoke(new Action(() =>
+                {
+                    btn_send.Enabled = true;
+                }));
             }
         }
     }

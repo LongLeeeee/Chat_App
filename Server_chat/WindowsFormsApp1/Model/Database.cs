@@ -56,6 +56,43 @@ namespace WindowsFormsApp1.Model
                 }
             }
         }
+        public void get_data_user(ref User user)
+        {
+            connectToDB();
+            string query = $"select * from Users where USERID = '{user.userID}'";
+            sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlreader = sqlCommand.ExecuteReader();
+            while (sqlreader.Read())
+            {
+                //user.userID = sqlreader["USERID"].ToString();
+                user.userName = sqlreader["USERNAME"].ToString();
+                user.email = sqlreader["EMAIL"].ToString();
+                //user.pwd = sqlreader["PWD"].ToString();
+            }
+            sqlConnection.Close();
+        }
+        public void get_avatar(User user, ref string data)
+        {
+            connectToDB();
+            string query = $"select avatar from Avatar where USERID = '{user.userID}'";
+            sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlreader = sqlCommand.ExecuteReader();
+            while (sqlreader.Read())
+            {
+                data = sqlreader["avatar"].ToString().Trim();
+            }
+            sqlConnection.Close();
+        }
+        public void set_avatar(string userid, string data)
+        {
+            connectToDB();
+            string query = $"insert into Avatar(USERID, avatar) values ('{userid}','{data}')";
+            sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlCommand.Parameters.AddWithValue("USERID", userid);
+            sqlCommand.Parameters.AddWithValue("avata", data);
+            sqlCommand.ExecuteNonQuery();
+            sqlConnection.Close();
+        }
         public void saveData(User user)
         {
             string query = $"insert into Users(USERID,USERNAME,EMAIL,PWD) values ('{user.userID}','{user.userName}','{user.email}','{user.pwd}')";
@@ -168,6 +205,13 @@ namespace WindowsFormsApp1.Model
             string query = $"update Users set PWD = '{user.pwd}' where USERID = '{user.userID}'";
             sqlCommand = new SqlCommand(query, sqlConnection);
             sqlCommand.Parameters.AddWithValue("PWD", user.pwd);
+            sqlCommand.ExecuteNonQuery();
+        }
+        public void update_Username(User user)
+        {
+            string query = $"update Users set USERNAME = '{user.userName}' where USERID = '{user.userID}'";
+            sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlCommand.Parameters.AddWithValue("USERNAME", user.userName);
             sqlCommand.ExecuteNonQuery();
         }
         public string getUSer()

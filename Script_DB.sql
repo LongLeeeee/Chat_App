@@ -53,3 +53,8 @@ create table Messages_Friend
 	SENDDATE smalldatetime,
 	CONTENT varchar(8000),
 )
+create table Avatar
+(
+	USERID varchar(30) references Users(USERID),
+	avatar varchar(max),
+)

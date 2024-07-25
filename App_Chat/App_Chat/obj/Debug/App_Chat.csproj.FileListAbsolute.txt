@@ -59,3 +59,4 @@ E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.UserControls.Rec
 E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.UserControls.SendImage.resources
 E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.UserControls.Receive_Icon.resources
 E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.UserControls.Send_Icon.resources
+E:\LTMCB\App_Chat\Chat_App\App_Chat\App_Chat\obj\Debug\App_Chat.View.ChangeName.resources
