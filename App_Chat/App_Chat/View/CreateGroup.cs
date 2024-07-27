@@ -17,7 +17,7 @@ namespace App_Chat.View
 {
     public partial class CreateGroup : Form
     {
-        public CreateGroup(User creator, StreamWriter writer, StreamReader reader, string[] friend_list)
+        public CreateGroup(User creator, StreamWriter writer, StreamReader reader, List<String> friend_list)
         {
             InitializeComponent();
             this.writer = writer;
@@ -27,7 +27,7 @@ namespace App_Chat.View
         }
         private StreamWriter writer;
         private StreamReader reader;
-        private string[] friend_list;
+        private List<string> friend_list;
         private List<member> selected_users;
         private List<member> list;
         Dictionary<string, BunifuPictureBox> pairs;

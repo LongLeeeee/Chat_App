@@ -275,34 +275,24 @@ namespace WindowsFormsApp1
                     else if (rq_from_client == "List User")
                     {
                         checkDB.connectToDB();
-                        string user_list = checkDB.getUSer();
-                        writer.WriteLine(user_list);
+                        List<string> user_list = checkDB.getUSer();
+                        writer.WriteLine(JsonConvert.SerializeObject(user_list));
                     }
                     else if (rq_from_client == "Friend List")
                     {
-                        string[] friend_list = new string[100];
+                        List<string> friend_list = new List<string>();
                         checkDB.connectToDB();
                         checkDB.get_friends(userID, ref friend_list);
                         checkDB.DisconnectToDB();
-                        string encode_string = "";
-                        foreach (var item in friend_list)
-                        {
-                            encode_string += item + "|";
-                        }
-                        writer.WriteLine(encode_string);
+                        writer.WriteLine(JsonConvert.SerializeObject(friend_list));
                     }
                     else if (rq_from_client == "Notifications")
                     {
-                        string[] notifications = new string[100];
-                        string data = "";
+                        List<string> notifications = new List<string>();
                         checkDB.connectToDB();
                         checkDB.get_notificaiton(userID, ref notifications);
                         checkDB.DisconnectToDB();
-                        foreach (var item in notifications)
-                        {
-                            data += item + "|";
-                        }
-                        writer.WriteLine(data);
+                        writer.WriteLine(JsonConvert.SerializeObject(notifications));
                     }
                     else if (rq_from_client == "Load Message")
                     {
@@ -707,11 +697,71 @@ namespace WindowsFormsApp1
                 try
                 {
                     string rq_from_client = reader.ReadLine();
-
-                    if (rq_from_client == "Add Friend")
+                    if (rq_from_client == "Incomming Call")
                     {
-                        string data = reader.ReadLine();
-                        MessageBox.Show(data);
+                        string userid = reader.ReadLine();
+                        Invoke(new Action(() =>
+                        {
+                            richTextBox1.AppendText(userID + " đang gọi đến " + userid + ".\r\n");
+                        }));
+                        if (tcpclients_2.ContainsKey(userid))
+                        {
+                            StreamWriter writer1 = new StreamWriter(tcpclients_2[userid].GetStream());
+                            writer1.WriteLine("Incomming Call");
+                            writer1.WriteLine(userID);
+                            writer1.Flush();
+                        }
+                        else
+                        {
+                            Invoke(new Action(() =>
+                            {
+                                richTextBox1.AppendText(userid + " không bắt máy.\r\n");
+                            }));
+                        }
+                    }
+                    else if (rq_from_client == "Pick up")
+                    {
+                        string userid = reader.ReadLine();
+
+                        Invoke(new Action(() =>
+                        {
+                            richTextBox1.AppendText(userID + " vừa nghe cuộc gọi của " + userid + ".\r\n");
+                        }));
+                        StreamWriter writer1 = new StreamWriter(tcpclients_2[userid].GetStream());
+                        writer1.WriteLine("Pick up");
+                        writer1.Flush();
+                    }
+                    else if (rq_from_client == "Sender hang up")
+                    {
+                        string userid = reader.ReadLine();
+                        Invoke(new Action(() =>
+                        {
+                            richTextBox1.AppendText(userID + " vừa tắt.\r\n");
+                        }));
+                        if (tcpclients_2.ContainsKey(userid))
+                        {
+                            StreamWriter writer1 = new StreamWriter(tcpclients_2[userid].GetStream());
+                            writer1.AutoFlush = true;
+                            writer1.WriteLine("Sender hang up");
+                        }
+                        else
+                        {
+                            Invoke(new Action(() =>
+                            {
+                                richTextBox1.AppendText(userID + " tắt máy.\r\n");
+                            }));
+                        }
+                    }
+                    else if (rq_from_client == "Receiver hang up")
+                    {
+                        string userid = reader.ReadLine();
+                        Invoke(new Action(() =>
+                        {
+                            richTextBox1.AppendText(userID + " vừa tắt.\r\n");
+                        }));
+                        StreamWriter writer1 = new StreamWriter(tcpclients_2[userid].GetStream());
+                        writer1.AutoFlush = true;
+                        writer1.WriteLine("Receiver hang up");
                     }
                     else if (rq_from_client == "Quit")
                     {

@@ -214,18 +214,18 @@ namespace WindowsFormsApp1.Model
             sqlCommand.Parameters.AddWithValue("USERNAME", user.userName);
             sqlCommand.ExecuteNonQuery();
         }
-        public string getUSer()
+        public List<string> getUSer()
         {
-            string temp = "";
+            List<string> data = new List<string>();
             string query = $"select USERID from Users";
             sqlCommand = new SqlCommand(query, sqlConnection);
             sqlreader = sqlCommand.ExecuteReader();
             while (sqlreader.Read())
             {
                 string temp_userID = sqlreader["USERID"].ToString();
-                temp += temp_userID + "|";
+                data.Add(temp_userID);
             }
-            return temp;
+            return data;
         }
         public void get_infor_group(string userid, ref List<Group> groupname_members)
         {
@@ -261,18 +261,16 @@ namespace WindowsFormsApp1.Model
                 sqlConnection.Close();
             }
         }
-        public void get_friends(string userID, ref string[] list)
+        public void get_friends(string userID, ref List<string> list)
         {
             string query = $"select USERID_1, USERNAME from Friends, Users where Friends.USERID_2 = Users.USERID and USERID_2 = '{userID}'";
             string query1 = $"select USERID_2, USERNAME from Friends, Users where Friends.USERID_1 = Users.USERID and USERID_1 = '{userID}'";
             sqlCommand = new SqlCommand(query, sqlConnection);
             sqlreader = sqlCommand.ExecuteReader();
-            int i = 0;
             while (sqlreader.Read())
             {
                 string id = sqlreader["USERID_1"].ToString();
-                list[i] = id;
-                i++;
+                list.Add(id);
             }
             sqlConnection.Close();
 
@@ -282,29 +280,26 @@ namespace WindowsFormsApp1.Model
             while (sqlreader.Read())
             {
                 string id = sqlreader["USERID_2"].ToString();
-                list[i] = id;
-                i++;
+                list.Add(id);    
             }
         }
-        public void get_notificaiton(string user_id, ref string[] list)
+        public void get_notificaiton(string user_id, ref List<string> list)
         {
             string query = $"select USERID_RECEIVE, USERID_SEND from Notifications where USERID_RECEIVE = '{user_id}' or USERID_SEND = '{user_id}'";
             sqlCommand = new SqlCommand(query, sqlConnection);  
             sqlreader = sqlCommand.ExecuteReader();
-            int i = 0;
             while (sqlreader.Read())
             {
                 string id1 = sqlreader["USERID_RECEIVE"].ToString();
                 string id2 = sqlreader["USERID_SEND"].ToString();
                 if (id1 == user_id)
                 {
-                    list[i] = id2;
+                    list.Add(id2);
                 }
                 else if (id2 == user_id)
                 {
-                    list[i] = id1;
+                    list.Add(id1);
                 }
-                i++;
             }
         }
         public void add_Notification(User user1, User user2, ref bool success)

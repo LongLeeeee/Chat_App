@@ -11,6 +11,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading;
@@ -23,7 +24,7 @@ namespace App_Chat.View
 {
     public partial class Chat : Form
     {
-        public Chat(TcpClient tcpClient, TcpClient tcpClient1 ,User user, string avatar)
+        public Chat(TcpClient tcpClient, TcpClient tcpClient1, User user, string avatar)
         {
             InitializeComponent();
             this.your_account_name = user;
@@ -47,17 +48,17 @@ namespace App_Chat.View
             writer.WriteLine("List User");
 
             string users = reader.ReadLine();
-            user_list = users.Split('|');
+            user_list = JsonConvert.DeserializeObject<List<string>>(users);
 
             writer.WriteLine("Friend List");
 
             string friends = reader.ReadLine();
-            friend_list = friends.Split('|');
+            friend_list = JsonConvert.DeserializeObject<List<string>>(friends);
 
             writer.WriteLine("Notifications");
 
             string notificaitons = reader.ReadLine();
-            noti_list = notificaitons.Split('|');
+            noti_list = JsonConvert.DeserializeObject<List<string>>(notificaitons);
 
             writer.WriteLine("Load Group");
 
@@ -65,13 +66,73 @@ namespace App_Chat.View
             groups = JsonConvert.DeserializeObject<List<Group>>(data);
 
             groups_members = new Dictionary<string, Group>();
+
+        }
+        private void CountupTimer()
+        {
+            calling_time = 0;
+            timer2 = new System.Windows.Forms.Timer();
+            timer2.Interval = 1000;
+            timer2.Tick += Timer_tick2;
+            timer2.Start();
+        }
+        private void Timer_tick2(object sender, EventArgs e)
+        {
+            calling_time++;
+            string s = "00";
+            if (calling_time < 10)
+            {
+                s = $"0{calling_time}";
+            }
+            else if (calling_time >= 10 && calling_time < 60)
+            {
+                s = calling_time.ToString();
+            }
+            else if (calling_time > 60 && m < 10)
+            {
+                m++;
+                s = "00";
+                calling_time -= 60;
+                bunifuLabel2.Text = $"0{m}:{s}";
+            }
+            if (m < 10)
+            {
+                bunifuLabel2.Text = $"0{m}:{s}";
+            }
+            else
+            {
+                bunifuLabel2.Text = $"{m}:{s}";
+            }
+        }
+        private void CountdownTimer1()
+        {
+            remaining_time = 30;
+            timer = new System.Windows.Forms.Timer();
+            timer.Interval = 1000;
+            timer.Tick += Timer_tick1;
+            timer.Start();
+        }
+        
+        private void Timer_tick1(object sender, EventArgs e)
+        {
+            remaining_time--;
+
+            if (remaining_time <= 0)
+            {
+                timer.Stop();
+                writer_1.WriteLine("Sender hang up");
+                writer_1.WriteLine(bunifuLabel1.Text);
+                bunifuGradientPanel2.Visible = false;
+            }
         }
         static AutoResetEvent autoResetEvent = new AutoResetEvent(false);
         Thread receiveThread;
+        Thread receiveThread2;
+        Thread call_thread;
 
         private Dictionary<BoxChat, FlowLayoutPanel> user_boardChat;
         private Dictionary<string, FlowLayoutPanel> receiver_boardChat;
-        private Dictionary<string,Group> groups_members; 
+        private Dictionary<string, Group> groups_members;
         private List<NewFriend> Users;
         private List<BoxChat> boxchats;
         private List<string> box_chat = new List<string>();
@@ -84,11 +145,18 @@ namespace App_Chat.View
         private User your_account_name;
         private bool isRunning = false;
 
-        private string[] user_list;
-        private string[] friend_list;
-        private string[] noti_list;
+        private List<string> user_list;
+        private List<string> friend_list;
+        private List<string> noti_list;
         List<Group> groups;
         Image new_avatar;
+
+        private System.Windows.Forms.Timer timer;
+        private int remaining_time;
+
+        private System.Windows.Forms.Timer timer2;
+        private int calling_time;
+        int m = 0;
 
         private void btn_find_msg_Click(object sender, EventArgs e)
         {
@@ -165,7 +233,7 @@ namespace App_Chat.View
         }
         private void bunifuPictureBox2_MouseLeave(object sender, EventArgs e)
         {
-            bunifuPictureBox2.BackColor= SystemColors.Window;
+            bunifuPictureBox2.BackColor = SystemColors.Window;
         }
         private void btn_display_box_chat_MouseEnter(object sender, EventArgs e)
         {
@@ -182,7 +250,7 @@ namespace App_Chat.View
 
         private void btn_display_list_user_MouseLeave(object sender, EventArgs e)
         {
-            btn_display_list_user.BackColor= SystemColors.Window;
+            btn_display_list_user.BackColor = SystemColors.Window;
         }
 
         private void add_MouseEnter(object sender, EventArgs e)
@@ -192,7 +260,7 @@ namespace App_Chat.View
 
         private void add_MouseLeave(object sender, EventArgs e)
         {
-            add.BackColor= SystemColors.Control;
+            add.BackColor = SystemColors.Control;
         }
         private FlowLayoutPanel createFlowLayoutPanel()
         {
@@ -704,7 +772,7 @@ namespace App_Chat.View
                                 Invoke(new Action(() =>
                                 {
                                     ReceiveMessage receiveMessage = new ReceiveMessage();
-                                    receiveMessage.set_filename(messageFileForFriend.filename,messageFileForFriend.userSend.userID);
+                                    receiveMessage.set_filename(messageFileForFriend.filename, messageFileForFriend.userSend.userID);
                                     receiver_boardChat[messageFileForFriend.userSend.userID].Controls.Add(receiveMessage);
                                 }));
                             }
@@ -731,7 +799,7 @@ namespace App_Chat.View
                                 Invoke(new Action(() =>
                                 {
                                     ReceiveMessage receiveMessage = new ReceiveMessage();
-                                    receiveMessage.set_filename(messageFileForGroup.filename,messageFileForGroup.userSend.userID);
+                                    receiveMessage.set_filename(messageFileForGroup.filename, messageFileForGroup.userSend.userID);
                                     receiver_boardChat[messageFileForGroup.groupName].Controls.Add(receiveMessage);
                                 }));
                             }
@@ -742,7 +810,7 @@ namespace App_Chat.View
                         string result = reader.ReadLine();
                         if (result == "Changed Username Successfully")
                         {
-                            string new_username = reader.ReadLine(); 
+                            string new_username = reader.ReadLine();
                             lb_name.Text = new_username;
                         }
                         else
@@ -802,6 +870,10 @@ namespace App_Chat.View
             receiveThread = new Thread(receive);
             receiveThread.Start();
             receiveThread.IsBackground = true;
+
+            receiveThread2 = new Thread(receive2);
+            receiveThread2.Start();
+            receiveThread2.IsBackground = true;
         }
 
         private void btn_exit_Click(object sender, EventArgs e)
@@ -835,7 +907,7 @@ namespace App_Chat.View
         {
             if (receiver_boardChat.ContainsKey(lb_remote_name.Text.Trim()))
             {
-                foreach(Control control in receiver_boardChat[lb_remote_name.Text].Controls)
+                foreach (Control control in receiver_boardChat[lb_remote_name.Text].Controls)
                 {
                     if (control is ReceiveMessage re && re.getLabel().Contains(tb_find_message.Text))
                     {
@@ -958,7 +1030,7 @@ namespace App_Chat.View
                                 writer.WriteLine(lb_remote_name.Text);
                                 writer.WriteLine(data);
                             }
-                            
+
                         }
                         catch (Exception ex)
                         {
@@ -1022,7 +1094,8 @@ namespace App_Chat.View
                 {
                     try
                     {
-                        if (friend_list.Contains(lb_remote_name.Text)) {
+                        if (friend_list.Contains(lb_remote_name.Text))
+                        {
 
                             FileInfo fileInfo = new FileInfo(filepath);
                             string file_name = fileInfo.Name;
@@ -1110,8 +1183,11 @@ namespace App_Chat.View
 
         private void btn_change_name_Click(object sender, EventArgs e)
         {
-            ChangeName changeName = new ChangeName(your_account_name, writer,bunifuPictureBox1.Image);
-            changeName.Show();
+            Invoke(new Action(() =>
+            {
+                ChangeName changeName = new ChangeName(your_account_name, writer, bunifuPictureBox1.Image);
+                changeName.Show();
+            }));
         }
 
         private void btn_change_avatar_Click(object sender, EventArgs e)
@@ -1143,6 +1219,107 @@ namespace App_Chat.View
                     btn_send.Enabled = true;
                 }));
             }
+        }
+
+        private void bunifuImageButton18_Click(object sender, EventArgs e)
+        {
+            if (timer2 != null) { timer2.Stop(); }
+            this.m = 0;
+            this.calling_time = 0;
+            btn_pick_up.Visible = false;
+            writer_1.WriteLine("Incomming Call");
+            writer_1.WriteLine(lb_remote_name.Text);
+            bunifuGradientPanel2.Visible = true;
+            btn_hang_up.Visible = true;
+            bunifuLabel1.Text = lb_remote_name.Text;
+            bunifuLabel2.Text = "Đang gọi . . .";
+            CountdownTimer1();
+        }
+        private void receive2()
+        {
+            try
+            {
+                while (isRunning)
+                {
+                    string rs_from_server = reader_1.ReadLine();
+                    if (rs_from_server == "Incomming Call")
+                    {
+                        string sender_id = reader_1.ReadLine();
+                        if (friend_list.Contains(sender_id))
+                        {
+
+                            Invoke(new Action(() =>
+                            {
+                                timer2.Stop();
+                                bunifuGradientPanel2.Visible = true;
+                                btn_hang_up.Visible = true;
+                                btn_pick_up.Visible = true;
+                                bunifuLabel1.Text = sender_id;
+                                bunifuLabel2.Text = "Cuộc gọi đến";
+                            }));
+
+                        }
+                    }
+                    else if (rs_from_server == "Receiver hang up")
+                    {
+                        Invoke(new Action(() =>
+                        {
+                            bunifuGradientPanel2.Visible = false;
+                            btn_hang_up.Visible = false;
+                            btn_pick_up.Visible = false;    
+                        }));
+                    }
+                    else if (rs_from_server == "Sender hang up")
+                    {
+                        Invoke(new Action(() =>
+                        {
+                            bunifuGradientPanel2.Visible = false;
+                            btn_hang_up.Visible = false;
+                            btn_pick_up.Visible = false;
+                        }));
+                    }
+                    else if (rs_from_server == "Pick up")
+                    {
+                        timer.Stop();
+                        Invoke(new Action(() =>
+                        {
+                            this.m = 0;
+                            this.calling_time = 0;
+                            CountupTimer();
+                        }));
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void btn_hang_up_Click(object sender, EventArgs e)
+        {
+            if (btn_pick_up.Visible)
+            {
+                bunifuGradientPanel2.Visible = false;
+                writer_1.WriteLine("Receiver hang up");
+                writer_1.WriteLine(bunifuLabel1.Text);
+                timer2.Stop();
+            }
+            else
+            {
+                bunifuGradientPanel2.Visible = false;
+                writer_1.WriteLine("Sender hang up");
+                writer_1.WriteLine(bunifuLabel1.Text);
+                timer2.Stop();
+            }
+        }
+
+        private void btn_pick_up_Click(object sender, EventArgs e)
+        {
+            writer_1.WriteLine("Pick up");
+            writer_1.WriteLine(bunifuLabel1.Text);
+            btn_pick_up.Visible = false;
+            CountupTimer();
         }
     }
 }
