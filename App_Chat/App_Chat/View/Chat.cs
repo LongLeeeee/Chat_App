@@ -1,6 +1,7 @@
 ﻿using App_Chat.Model;
 using App_Chat.UserControls;
 using Bunifu.UI.WinForms;
+using NAudio.Wave;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -44,6 +45,7 @@ namespace App_Chat.View
             writer_1 = new StreamWriter(tcpClient1.GetStream());
             reader_1 = new StreamReader(tcpClient1.GetStream());
             writer_1.AutoFlush = true;
+            stream = tcpClient1.GetStream();
 
             writer.WriteLine("List User");
 
@@ -158,6 +160,35 @@ namespace App_Chat.View
         private int calling_time;
         int m = 0;
 
+        private WaveInEvent waveIn;
+        private WaveOutEvent waveOut;
+        private BufferedWaveProvider bufferedWaveProvider;
+        private NetworkStream stream;
+        private bool iscalling = false;
+
+        private void StartRecording()
+        {
+            waveIn = new WaveInEvent();
+            waveIn.WaveFormat = new WaveFormat(44100, 1);
+            waveIn.BufferMilliseconds = 50;
+            waveIn.DataAvailable += OnDataAvailable;
+
+            waveIn.StartRecording();
+        }
+        private void StartPlaying()
+        {
+            bufferedWaveProvider = new BufferedWaveProvider(new WaveFormat(44100, 1));
+            waveOut = new WaveOutEvent();
+            waveOut.Init(bufferedWaveProvider);
+            waveOut.Play();
+        }
+        private void OnDataAvailable(object sender, WaveInEventArgs e)
+        {
+            if (stream != null && stream.CanWrite)
+            {
+                stream.Write(e.Buffer, 0, e.BytesRecorded);
+            }
+        }
         private void btn_find_msg_Click(object sender, EventArgs e)
         {
             if (panel8.Visible == false)
@@ -1237,63 +1268,88 @@ namespace App_Chat.View
         }
         private void receive2()
         {
-            try
+            while (isRunning)
             {
-                while (isRunning)
+                string rs_from_server = reader_1.ReadLine();
+                if (rs_from_server == "Incomming Call")
                 {
-                    string rs_from_server = reader_1.ReadLine();
-                    if (rs_from_server == "Incomming Call")
+                    string sender_id = reader_1.ReadLine();
+                    if (friend_list.Contains(sender_id))
                     {
-                        string sender_id = reader_1.ReadLine();
-                        if (friend_list.Contains(sender_id))
+                        Invoke(new Action(() =>
                         {
+                            bunifuGradientPanel2.Visible = true;
+                            btn_hang_up.Visible = true;
+                            btn_pick_up.Visible = true;
+                            bunifuLabel1.Text = sender_id;
+                            bunifuLabel2.Text = "Cuộc gọi đến";
+                        }));
 
-                            Invoke(new Action(() =>
-                            {
-                                timer2.Stop();
-                                bunifuGradientPanel2.Visible = true;
-                                btn_hang_up.Visible = true;
-                                btn_pick_up.Visible = true;
-                                bunifuLabel1.Text = sender_id;
-                                bunifuLabel2.Text = "Cuộc gọi đến";
-                            }));
+                    }
+                }
+                else if (rs_from_server == "Receiver hang up")
+                {
+                    Invoke(new Action(() =>
+                    {
+                        bunifuGradientPanel2.Visible = false;
+                        btn_hang_up.Visible = false;
+                        btn_pick_up.Visible = false;
+                    }));
+                    if (iscalling)
+                    {
+                        stop_calling();
+                    }
+                }
+                else if (rs_from_server == "Sender hang up")
+                {
+                    Invoke(new Action(() =>
+                    {
+                        bunifuGradientPanel2.Visible = false;
+                        btn_hang_up.Visible = false;
+                        btn_pick_up.Visible = false;
+                    }));
+                    if (iscalling)
+                    {
+                        stop_calling();
+                    }
+                }
+                else if (rs_from_server == "Pick up")
+                {
+                    timer.Stop();
+                    iscalling = true;
+                    Invoke(new Action(() =>
+                    {
+                        this.m = 0;
+                        this.calling_time = 0;
+                        CountupTimer();
+                    }));
+                    start_Calling();
 
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+
+                    while (iscalling)
+                    {
+                        bytesRead = stream.Read(buffer, 0, buffer.Length);
+                        string rq = Encoding.UTF8.GetString(buffer);
+                        if (rq == "End Call")
+                        {
+                            stop_calling();
+                            MessageBox.Show(rq);
+                            byte[] bytes = Encoding.UTF8.GetBytes(rq);
+                            NetworkStream ns = tcpClient1.GetStream();
+                            ns.Write(bytes, 0, bytes.Length);
+                            iscalling = false;
+                            break;
                         }
-                    }
-                    else if (rs_from_server == "Receiver hang up")
-                    {
-                        Invoke(new Action(() =>
+                        else
                         {
-                            bunifuGradientPanel2.Visible = false;
-                            btn_hang_up.Visible = false;
-                            btn_pick_up.Visible = false;    
-                        }));
-                    }
-                    else if (rs_from_server == "Sender hang up")
-                    {
-                        Invoke(new Action(() =>
-                        {
-                            bunifuGradientPanel2.Visible = false;
-                            btn_hang_up.Visible = false;
-                            btn_pick_up.Visible = false;
-                        }));
-                    }
-                    else if (rs_from_server == "Pick up")
-                    {
-                        timer.Stop();
-                        Invoke(new Action(() =>
-                        {
-                            this.m = 0;
-                            this.calling_time = 0;
-                            CountupTimer();
-                        }));
+                            bufferedWaveProvider.AddSamples(buffer, 0, bytesRead);
+                        }
                     }
                 }
             }
-            catch
-            {
 
-            }
         }
 
         private void btn_hang_up_Click(object sender, EventArgs e)
@@ -1303,23 +1359,47 @@ namespace App_Chat.View
                 bunifuGradientPanel2.Visible = false;
                 writer_1.WriteLine("Receiver hang up");
                 writer_1.WriteLine(bunifuLabel1.Text);
-                timer2.Stop();
             }
             else
             {
                 bunifuGradientPanel2.Visible = false;
                 writer_1.WriteLine("Sender hang up");
                 writer_1.WriteLine(bunifuLabel1.Text);
-                timer2.Stop();
+            }
+            if (iscalling)
+            {
+                stop_calling();
+                string rq = "End Call";
+                byte[] bytes = Encoding.UTF8.GetBytes(rq);
+                NetworkStream ns = tcpClient1.GetStream();
+                ns.Write(bytes, 0, bytes.Length);
             }
         }
+        private void start_Calling()
+        {
+            writer_1.WriteLine("Calling");
+            writer_1.WriteLine(bunifuLabel1.Text);
 
+            StartRecording();
+            StartPlaying();
+        }
+        private void stop_calling()
+        {
+            waveIn.StopRecording();
+            waveIn.Dispose();
+            waveOut.Stop();
+            waveOut.Dispose();
+            iscalling = true;
+        }
         private void btn_pick_up_Click(object sender, EventArgs e)
         {
             writer_1.WriteLine("Pick up");
             writer_1.WriteLine(bunifuLabel1.Text);
+            iscalling = true;
+
             btn_pick_up.Visible = false;
             CountupTimer();
+            start_Calling();
         }
     }
 }

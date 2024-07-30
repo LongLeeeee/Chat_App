@@ -16,6 +16,7 @@ using WindowsFormsApp1.Model;
 using Newtonsoft.Json;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using System.Net.NetworkInformation;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace WindowsFormsApp1
 {
@@ -767,6 +768,35 @@ namespace WindowsFormsApp1
                     {
                         tcpclients_2.Remove(userID);
                         client.Close();
+                    }
+                    else if (rq_from_client == "Calling")
+                    {
+                        string userid = reader.ReadLine();
+
+                        NetworkStream stream1 = client.GetStream();
+                        byte[] buffer = new byte[1024];
+                        int bytesRead;
+                        bool iscalling = true;
+
+                        while (iscalling)
+                        {
+                            bytesRead = stream1.Read(buffer, 0, buffer.Length);
+                            string signal = Encoding.UTF8.GetString(buffer);
+                            if (signal == "End Call")
+                            {
+                                Invoke(new Action(() =>
+                                {
+                                    richTextBox1.AppendText(userID + " vừa tắt cuộc gọi.\r\n");
+                                }));
+                                iscalling = false;
+                                break;
+                            }
+                            else
+                            {
+                                NetworkStream networkStream2 = tcpclients_2[userid].GetStream();
+                                networkStream2.Write(buffer, 0, buffer.Length);
+                            }
+                        }
                     }
                 }
                 catch
