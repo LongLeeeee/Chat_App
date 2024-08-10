@@ -94,8 +94,8 @@ namespace WindowsFormsApp1
                             checkDB.get_data_user(ref login_user_data);
                             checkDB.get_avatar(login_user_data, ref avatar);
                             string response = "Login successfully";
-                            writer.WriteLine(response);
                             login_data_from_client = JsonConvert.SerializeObject(login_user_data);
+                            writer.WriteLine(response);
                             writer.WriteLine(login_data_from_client);
                             writer.WriteLine(avatar);
                             Invoke(new Action(() =>
@@ -689,121 +689,7 @@ namespace WindowsFormsApp1
         }
         private void recievedDataFromClient1(string userID)
         {
-            TcpClient client = tcpclients_2[userID];
-            StreamReader reader = new StreamReader(client.GetStream());
-            StreamWriter writer = new StreamWriter(client.GetStream());
-            writer.AutoFlush = true;
-            while (client.Connected)
-            {
-                try
-                {
-                    string rq_from_client = reader.ReadLine();
-                    if (rq_from_client == "Incomming Call")
-                    {
-                        string userid = reader.ReadLine();
-                        Invoke(new Action(() =>
-                        {
-                            richTextBox1.AppendText(userID + " đang gọi đến " + userid + ".\r\n");
-                        }));
-                        if (tcpclients_2.ContainsKey(userid))
-                        {
-                            StreamWriter writer1 = new StreamWriter(tcpclients_2[userid].GetStream());
-                            writer1.WriteLine("Incomming Call");
-                            writer1.WriteLine(userID);
-                            writer1.Flush();
-                        }
-                        else
-                        {
-                            Invoke(new Action(() =>
-                            {
-                                richTextBox1.AppendText(userid + " không bắt máy.\r\n");
-                            }));
-                        }
-                    }
-                    else if (rq_from_client == "Pick up")
-                    {
-                        string userid = reader.ReadLine();
-
-                        Invoke(new Action(() =>
-                        {
-                            richTextBox1.AppendText(userID + " vừa nghe cuộc gọi của " + userid + ".\r\n");
-                        }));
-                        StreamWriter writer1 = new StreamWriter(tcpclients_2[userid].GetStream());
-                        writer1.WriteLine("Pick up");
-                        writer1.Flush();
-                    }
-                    else if (rq_from_client == "Sender hang up")
-                    {
-                        string userid = reader.ReadLine();
-                        Invoke(new Action(() =>
-                        {
-                            richTextBox1.AppendText(userID + " vừa tắt.\r\n");
-                        }));
-                        if (tcpclients_2.ContainsKey(userid))
-                        {
-                            StreamWriter writer1 = new StreamWriter(tcpclients_2[userid].GetStream());
-                            writer1.AutoFlush = true;
-                            writer1.WriteLine("Sender hang up");
-                        }
-                        else
-                        {
-                            Invoke(new Action(() =>
-                            {
-                                richTextBox1.AppendText(userID + " tắt máy.\r\n");
-                            }));
-                        }
-                    }
-                    else if (rq_from_client == "Receiver hang up")
-                    {
-                        string userid = reader.ReadLine();
-                        Invoke(new Action(() =>
-                        {
-                            richTextBox1.AppendText(userID + " vừa tắt.\r\n");
-                        }));
-                        StreamWriter writer1 = new StreamWriter(tcpclients_2[userid].GetStream());
-                        writer1.AutoFlush = true;
-                        writer1.WriteLine("Receiver hang up");
-                    }
-                    else if (rq_from_client == "Quit")
-                    {
-                        tcpclients_2.Remove(userID);
-                        client.Close();
-                    }
-                    else if (rq_from_client == "Calling")
-                    {
-                        string userid = reader.ReadLine();
-
-                        NetworkStream stream1 = client.GetStream();
-                        byte[] buffer = new byte[1024];
-                        int bytesRead;
-                        bool iscalling = true;
-
-                        while (iscalling)
-                        {
-                            bytesRead = stream1.Read(buffer, 0, buffer.Length);
-                            string signal = Encoding.UTF8.GetString(buffer);
-                            if (signal == "End Call")
-                            {
-                                Invoke(new Action(() =>
-                                {
-                                    richTextBox1.AppendText(userID + " vừa tắt cuộc gọi.\r\n");
-                                }));
-                                iscalling = false;
-                                break;
-                            }
-                            else
-                            {
-                                NetworkStream networkStream2 = tcpclients_2[userid].GetStream();
-                                networkStream2.Write(buffer, 0, buffer.Length);
-                            }
-                        }
-                    }
-                }
-                catch
-                {
-
-                }
-            }
+            
         }
     }
 }

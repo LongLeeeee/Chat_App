@@ -64,10 +64,8 @@ namespace WindowsFormsApp1.Model
             sqlreader = sqlCommand.ExecuteReader();
             while (sqlreader.Read())
             {
-                //user.userID = sqlreader["USERID"].ToString();
                 user.userName = sqlreader["USERNAME"].ToString();
                 user.email = sqlreader["EMAIL"].ToString();
-                //user.pwd = sqlreader["PWD"].ToString();
             }
             sqlConnection.Close();
         }

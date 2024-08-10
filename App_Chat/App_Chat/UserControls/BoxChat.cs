@@ -32,7 +32,14 @@ namespace App_Chat
         {
             lb_user_id.Text = text;
         }
-
+        public void set_avatar(Image image)
+        {
+            bunifuPictureBox1.Image = image;   
+        }
+        public Image get_avatar()
+        {
+            return bunifuPictureBox1.Image;
+        }
         private void BoxChat_MouseEnter(object sender, EventArgs e)
         {
             this.BackColor = SystemColors.Control;
