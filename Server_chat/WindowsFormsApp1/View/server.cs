@@ -17,6 +17,7 @@ using Newtonsoft.Json;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices.ComTypes;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace WindowsFormsApp1
 {
@@ -210,6 +211,7 @@ namespace WindowsFormsApp1
         }
         private void recievedDataFromClient(string userID)
         {
+            CheckForIllegalCrossThreadCalls = false;
             TcpClient client = tcpclients[userID];
             StreamReader reader = new StreamReader(client.GetStream());
             StreamWriter writer = new StreamWriter(client.GetStream());
@@ -358,6 +360,7 @@ namespace WindowsFormsApp1
                                 }));
                             }
                         }
+                        noti_list.Rows.Add(user.userID, user1.userID, DateTime.Now, "Add Friend");
                     }
                     else if (rq_from_client == "Cancel AddFriend")
                     {
@@ -371,32 +374,24 @@ namespace WindowsFormsApp1
                             writer1.AutoFlush = true;
                             writer1.WriteLine("Cancel AddFriend");
                             writer1.WriteLine(data_sender);
+                        }
+                        Database del = new Database();
+                        bool is_success = false;
+                        del.connectToDB();
+                        del.Del_Notification(user1, user, ref is_success);
+                        del.DisconnectToDB();
+                        if (is_success)
+                        {
                             Invoke(new Action(() =>
                             {
-                                richTextBox1.AppendText($"{user.userID} không chấp nhận lời mời kết bạn đên {user1.userID}\r\n");
+                                richTextBox1.AppendText($"{user.userID} hủy lời mời kết bạn đên {user1.userID}\r\n");
                             }));
                             writer.WriteLine("Cancel AddFriend");
                             writer.WriteLine(data_receiver);
                         }
-                        else
-                        {
-                            Database del = new Database();
-                            bool is_success = false;
-                            del.connectToDB();
-                            del.Del_Notification(user1, user, ref is_success);
-                            del.DisconnectToDB();
-                            MessageBox.Show(is_success.ToString());
-                            if (is_success)
-                            {
-                                MessageBox.Show(is_success.ToString());
-                                Invoke(new Action(() =>
-                                {
-                                    richTextBox1.AppendText($"{user.userID} không chấp nhận lời mời kết bạn đên {user1.userID}\r\n");
-                                }));
-                                writer.WriteLine("Cancel AddFriend");
-                                writer.WriteLine(data_receiver);
-                            }
-                        }
+
+                        noti_list.Rows.Clear();
+                        load_notifications();
                     }
                     else if (rq_from_client == "Accepted")
                     {
@@ -690,6 +685,87 @@ namespace WindowsFormsApp1
         private void recievedDataFromClient1(string userID)
         {
             
+        }
+        private List<User> user_data = new List<User>();
+        private List<Notification> notifications;
+        private List<Group> group_data;
+        private void load_user()
+        {
+            Database db = new Database();
+            db.get_data_user1(ref user_data);
+
+            Thread display_Thread = new Thread(() =>
+            {
+                System.Drawing.Image image = System.Drawing.Image.FromFile("Status\\offline.png");
+                foreach (var item in user_data)
+                {
+                    Invoke(new Action(() =>
+                    {
+                        user_list.Rows.Add(item.userID, item.userName, image, item.email, item.pwd);
+                    }));
+                }
+            });
+            display_Thread.Start();
+            display_Thread.IsBackground = true;
+        }
+        private void load_notifications()
+        {
+            notifications = new List<Notification>();
+            Database db = new Database();
+            db.get_notificaiton1(ref notifications);
+
+            Thread display_thread = new Thread(() =>
+            {
+                foreach (var item in notifications)
+                {
+                    Invoke(new Action(() =>
+                    {
+                        noti_list.Rows.Add(item.sender.userID, item.receiver.userID, item.sendDate, item.content);
+                    }));
+                }
+            });
+            display_thread.Start();
+            display_thread.IsBackground = true;
+        }
+        private void load_groups()
+        {
+            group_data = new List<Group>();
+            Database db = new Database();
+            db.get_infor_group1(ref group_data);
+
+            Thread display_thread = new Thread(() =>
+            {
+                foreach (var item in group_data)
+                {
+                    string members1 = "";
+                    foreach (string item1 in item.members_userid)
+                    {
+                        members1 += $"{item1}, ";
+                    }
+                    members1 = members1.Remove(members1.Length - 2);
+                    Invoke(new Action(() =>
+                    {
+                        group_list_display.Rows.Add(item.groupName, item.creator.userID, item.creationDate, members1.Trim());
+                    }));
+                }
+            });
+            display_thread.Start();
+            display_thread.IsBackground = true;
+        }
+        private void server_Load(object sender, EventArgs e)
+        {
+            CheckForIllegalCrossThreadCalls = false;
+            Thread load_user_thread = new Thread(load_user);
+            load_user_thread.Start();
+            load_user_thread.IsBackground = true;
+
+            Thread load_noti_thread = new Thread(load_notifications);
+            load_noti_thread.Start();
+            load_noti_thread.IsBackground = true;
+
+            Thread load_groups_thread = new Thread(load_groups);
+            load_groups_thread.Start();
+            load_groups_thread.IsBackground = true;
         }
     }
 }

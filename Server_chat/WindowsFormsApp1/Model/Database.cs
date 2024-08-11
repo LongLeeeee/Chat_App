@@ -56,6 +56,82 @@ namespace WindowsFormsApp1.Model
                 }
             }
         }
+
+        public void get_data_user1(ref List<User> users)
+        {
+            connectToDB();
+            string query = $"select * from Users";
+            sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlreader = sqlCommand.ExecuteReader();
+            while (sqlreader.Read())
+            {
+                User temp = new User();
+                temp.userID = sqlreader["USERID"].ToString();
+                temp.userName = sqlreader["USERNAME"].ToString();
+                temp.email = sqlreader["EMAIL"].ToString();
+                temp.pwd = sqlreader["PWD"].ToString();
+
+                users.Add(temp);
+            }
+            sqlConnection.Close();
+        }
+        public void get_notificaiton1(ref List<Notification> list)
+        {
+            connectToDB();
+            string query = $"select * from Notifications";
+            sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlreader = sqlCommand.ExecuteReader();
+            while (sqlreader.Read())
+            {
+                Notification temp = new Notification();
+                temp.sender = new User();
+                temp.receiver = new User(); 
+                temp.sender.userID = sqlreader["USERID_SEND"].ToString();
+                temp.receiver.userID = sqlreader["USERID_RECEIVE"].ToString();
+                temp.content = sqlreader["CONTENT"].ToString();
+                string date = sqlreader["CREATIONDATE"].ToString();
+                temp.sendDate = DateTime.Parse(date);
+
+                list.Add(temp);
+            }
+            sqlConnection.Close();
+        }
+        public void get_infor_group1(ref List<Group> groupname_members)
+        {
+            connectToDB();
+            List<string> group_names = new List<string>();
+            string query = $"select GROUPNAME from List_Group";
+            sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlreader = sqlCommand.ExecuteReader();
+            while (sqlreader.Read())
+            {
+                string temp = sqlreader["GROUPNAME"].ToString();
+                group_names.Add(temp);
+            }
+            sqlConnection.Close();
+            foreach (var item in group_names)
+            {
+                connectToDB();
+                List<string> temp1 = new List<string>();
+                query = $"select * from List_Group, List_User_A_Group where List_Group.GROUPNAME = List_User_A_Group.GROUPNAME and List_Group.GROUPNAME = '{item}'";
+                sqlCommand = new SqlCommand(query, sqlConnection);
+                sqlreader = sqlCommand.ExecuteReader();
+                Group group = new Group();
+                while (sqlreader.Read())
+                {
+                    group = new Group();
+                    group.creator = new User();
+                    group.groupName = sqlreader["GROUPNAME"].ToString();
+                    group.creator.userID = sqlreader["USERID_CREATION"].ToString();
+                    group.creationDate = DateTime.Parse(sqlreader["CREATIONDATE"].ToString());
+                    string temp = sqlreader["USERID"].ToString();
+                    temp1.Add(temp);
+                }
+                group.members_userid = temp1;
+                groupname_members.Add(group);
+                sqlConnection.Close();
+            }
+        }
         public void get_data_user(ref User user)
         {
             connectToDB();
@@ -328,7 +404,7 @@ namespace WindowsFormsApp1.Model
             {
                 connectToDB();
                 DateTime dateTime = DateTime.Now;
-                string content = $"{user2.userID} đã gửi lời mời kết bạn đến {user1.userID}";
+                string content = "Add Friend";
                 query = $"insert into Notifications(USERID_RECEIVE, USERID_SEND, CREATIONDATE, CONTENT) values ('{user1.userID}','{user2.userID}','{dateTime}','{content}')";
                 sqlCommand = new SqlCommand(query, sqlConnection);
                 sqlCommand.Parameters.AddWithValue("USERID_RECEIVE", user1.userID);

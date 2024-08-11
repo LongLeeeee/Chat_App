@@ -58,3 +58,5 @@ create table Avatar
 	USERID varchar(30) references Users(USERID),
 	avatar varchar(max),
 )
+
+alter table Notifications alter column CONTENT ntext;
