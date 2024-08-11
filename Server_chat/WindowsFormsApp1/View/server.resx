@@ -172,4 +172,32 @@
   <metadata name="Members.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <data name="btn_show_pwd.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAGIAAAAgCAYAAADpNa1pAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHJSURBVGhD7Zu/SgNBEIe3tLS0uL1L6SNYWlpaWtr4FhY+
+        gLh3wd4HEOwEK8EqZQp7IUUaJZigREjIrDN3KxIzkYjJssVv4Kt2bwPz3f7J3ZxZFsWV38pKOsorus1L
+        6tqSXvLSe7A6Tc6omzu6t84fF85vh/SuFllFBzzAgAcaaT8A/o519Mb5fGUpJyHNy0OM8Qy4sRVfoAwG
+        /o8t/ZBv8k5x6XdC2udDJLC1XuZmE20AsF74Zu9xzlsh/d8hMwESYkPdkP4mZE/AchQfW87ebeXPagly
+        OpKNWesIYkCDou13jRyrZEfXO4FNw7NiyjKckTOu1gHEgyfCk2Ebfa0RxIP/X0xFxFhrBHFhEXoDiAtE
+        JAJEJAJEJAJEJAJEJAJEJAJEJAJEJAJEJIKR5xxaA4iLiEB1RgLw0kQdrQHEhPomb9OprehD7wBiUJR0
+        LdUbrbreRukAojDMnD+s31tbR+d4XRqfpmqG7moJEnUBgaNHrTPYHLwSPS+UYUolAU5Q8eB9YcAS9kP6
+        56OoaC9U+2Hz3hDZxWwSZoIu4StkmbJtavPahQ18zbCAEef1YWE5+i3EmByrmov1gcGq0Fg+b5DPHEJ6
+        f4Qxn2gr3kQYZ+WpAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="btn_edit.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAGIAAAAgCAYAAADpNa1pAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHJSURBVGhD7Zu/SgNBEIe3tLS0uL1L6SNYWlpaWtr4FhY+
+        gLh3wd4HEOwEK8EqZQp7IUUaJZigREjIrDN3KxIzkYjJssVv4Kt2bwPz3f7J3ZxZFsWV38pKOsorus1L
+        6tqSXvLSe7A6Tc6omzu6t84fF85vh/SuFllFBzzAgAcaaT8A/o519Mb5fGUpJyHNy0OM8Qy4sRVfoAwG
+        /o8t/ZBv8k5x6XdC2udDJLC1XuZmE20AsF74Zu9xzlsh/d8hMwESYkPdkP4mZE/AchQfW87ebeXPagly
+        OpKNWesIYkCDou13jRyrZEfXO4FNw7NiyjKckTOu1gHEgyfCk2Ebfa0RxIP/X0xFxFhrBHFhEXoDiAtE
+        JAJEJAJEJAJEJAJEJAJEJAJEJAJEJAJEJIKR5xxaA4iLiEB1RgLw0kQdrQHEhPomb9OprehD7wBiUJR0
+        LdUbrbreRukAojDMnD+s31tbR+d4XRqfpmqG7moJEnUBgaNHrTPYHLwSPS+UYUolAU5Q8eB9YcAS9kP6
+        56OoaC9U+2Hz3hDZxWwSZoIu4StkmbJtavPahQ18zbCAEef1YWE5+i3EmByrmov1gcGq0Fg+b5DPHEJ6
+        f4Qxn2gr3kQYZ+WpAAAAAElFTkSuQmCC
+</value>
+  </data>
 </root>

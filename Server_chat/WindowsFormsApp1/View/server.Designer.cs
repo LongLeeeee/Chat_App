@@ -32,6 +32,9 @@
             Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges borderEdges1 = new Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges borderEdges2 = new Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges();
+            Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges borderEdges3 = new Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderEdges();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.btn_start = new Bunifu.UI.WinForms.BunifuButton.BunifuButton();
             this.display = new System.Windows.Forms.TabControl();
@@ -39,7 +42,7 @@
             this.user_list = new System.Windows.Forms.DataGridView();
             this.User_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Status = new System.Windows.Forms.DataGridViewImageColumn();
+            this.Status = new System.Windows.Forms.DataGridViewButtonColumn();
             this.Email = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Password = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.noti = new System.Windows.Forms.TabPage();
@@ -49,12 +52,14 @@
             this.Send_Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Content = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groups = new System.Windows.Forms.TabPage();
-            this.group_list = new System.Windows.Forms.ListView();
             this.group_list_display = new System.Windows.Forms.DataGridView();
             this.Group_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.User_ID_Created = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Creation_Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Members = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.group_list = new System.Windows.Forms.ListView();
+            this.btn_show_pwd = new Bunifu.UI.WinForms.BunifuButton.BunifuButton();
+            this.btn_edit = new Bunifu.UI.WinForms.BunifuButton.BunifuButton();
             this.display.SuspendLayout();
             this.users.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.user_list)).BeginInit();
@@ -86,7 +91,7 @@
             this.btn_start.BackColor1 = System.Drawing.Color.DodgerBlue;
             this.btn_start.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_start.BackgroundImage")));
             this.btn_start.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
-            this.btn_start.ButtonText = "Bắt đầu";
+            this.btn_start.ButtonText = "Run";
             this.btn_start.ButtonTextMarginLeft = 0;
             this.btn_start.ColorContrastOnClick = 45;
             this.btn_start.ColorContrastOnHover = 45;
@@ -201,6 +206,7 @@
             this.user_list.GridColor = System.Drawing.Color.Gainsboro;
             this.user_list.Location = new System.Drawing.Point(3, 3);
             this.user_list.Name = "user_list";
+            this.user_list.ReadOnly = true;
             this.user_list.Size = new System.Drawing.Size(893, 728);
             this.user_list.TabIndex = 1;
             // 
@@ -211,15 +217,20 @@
             this.User_ID.FillWeight = 70F;
             this.User_ID.HeaderText = "User_ID";
             this.User_ID.Name = "User_ID";
+            this.User_ID.ReadOnly = true;
             // 
             // Name
             // 
             this.Name.FillWeight = 70F;
             this.Name.HeaderText = "Name";
             this.Name.Name = "Name";
+            this.Name.ReadOnly = true;
             // 
             // Status
             // 
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Red;
+            this.Status.DefaultCellStyle = dataGridViewCellStyle2;
             this.Status.FillWeight = 50F;
             this.Status.HeaderText = "Status";
             this.Status.Name = "Status";
@@ -232,14 +243,17 @@
             this.Email.FillWeight = 200F;
             this.Email.HeaderText = "Email";
             this.Email.Name = "Email";
+            this.Email.ReadOnly = true;
             // 
             // Password
             // 
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
-            this.Password.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.WhiteSmoke;
+            this.Password.DefaultCellStyle = dataGridViewCellStyle3;
             this.Password.FillWeight = 200F;
             this.Password.HeaderText = "Password";
             this.Password.Name = "Password";
+            this.Password.ReadOnly = true;
             // 
             // noti
             // 
@@ -254,6 +268,8 @@
             // 
             // noti_list
             // 
+            this.noti_list.AllowUserToAddRows = false;
+            this.noti_list.AllowUserToDeleteRows = false;
             this.noti_list.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.noti_list.BackgroundColor = System.Drawing.Color.White;
             this.noti_list.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -306,18 +322,9 @@
             this.groups.Text = "Groups";
             this.groups.UseVisualStyleBackColor = true;
             // 
-            // group_list
-            // 
-            this.group_list.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.group_list.HideSelection = false;
-            this.group_list.Location = new System.Drawing.Point(3, 3);
-            this.group_list.Name = "group_list";
-            this.group_list.Size = new System.Drawing.Size(893, 728);
-            this.group_list.TabIndex = 0;
-            this.group_list.UseCompatibleStateImageBehavior = false;
-            // 
             // group_list_display
             // 
+            this.group_list_display.AllowUserToAddRows = false;
             this.group_list_display.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.group_list_display.BackgroundColor = System.Drawing.Color.White;
             this.group_list_display.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -330,6 +337,7 @@
             this.group_list_display.GridColor = System.Drawing.Color.WhiteSmoke;
             this.group_list_display.Location = new System.Drawing.Point(3, 3);
             this.group_list_display.Name = "group_list_display";
+            this.group_list_display.ReadOnly = true;
             this.group_list_display.Size = new System.Drawing.Size(893, 728);
             this.group_list_display.TabIndex = 1;
             // 
@@ -357,11 +365,203 @@
             this.Members.Name = "Members";
             this.Members.ReadOnly = true;
             // 
+            // group_list
+            // 
+            this.group_list.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.group_list.HideSelection = false;
+            this.group_list.Location = new System.Drawing.Point(3, 3);
+            this.group_list.Name = "group_list";
+            this.group_list.Size = new System.Drawing.Size(893, 728);
+            this.group_list.TabIndex = 0;
+            this.group_list.UseCompatibleStateImageBehavior = false;
+            // 
+            // btn_show_pwd
+            // 
+            this.btn_show_pwd.AllowAnimations = true;
+            this.btn_show_pwd.AllowMouseEffects = true;
+            this.btn_show_pwd.AllowToggling = false;
+            this.btn_show_pwd.AnimationSpeed = 200;
+            this.btn_show_pwd.AutoGenerateColors = false;
+            this.btn_show_pwd.AutoRoundBorders = false;
+            this.btn_show_pwd.AutoSizeLeftIcon = true;
+            this.btn_show_pwd.AutoSizeRightIcon = true;
+            this.btn_show_pwd.BackColor = System.Drawing.Color.Transparent;
+            this.btn_show_pwd.BackColor1 = System.Drawing.Color.DodgerBlue;
+            this.btn_show_pwd.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_show_pwd.BackgroundImage")));
+            this.btn_show_pwd.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
+            this.btn_show_pwd.ButtonText = "Show Password";
+            this.btn_show_pwd.ButtonTextMarginLeft = 0;
+            this.btn_show_pwd.ColorContrastOnClick = 45;
+            this.btn_show_pwd.ColorContrastOnHover = 45;
+            this.btn_show_pwd.Cursor = System.Windows.Forms.Cursors.Default;
+            borderEdges2.BottomLeft = true;
+            borderEdges2.BottomRight = true;
+            borderEdges2.TopLeft = true;
+            borderEdges2.TopRight = true;
+            this.btn_show_pwd.CustomizableEdges = borderEdges2;
+            this.btn_show_pwd.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.btn_show_pwd.DisabledBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(191)))), ((int)(((byte)(191)))));
+            this.btn_show_pwd.DisabledFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.btn_show_pwd.DisabledForecolor = System.Drawing.Color.FromArgb(((int)(((byte)(168)))), ((int)(((byte)(160)))), ((int)(((byte)(168)))));
+            this.btn_show_pwd.FocusState = Bunifu.UI.WinForms.BunifuButton.BunifuButton.ButtonStates.Pressed;
+            this.btn_show_pwd.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btn_show_pwd.ForeColor = System.Drawing.Color.White;
+            this.btn_show_pwd.IconLeftAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btn_show_pwd.IconLeftCursor = System.Windows.Forms.Cursors.Default;
+            this.btn_show_pwd.IconLeftPadding = new System.Windows.Forms.Padding(11, 3, 3, 3);
+            this.btn_show_pwd.IconMarginLeft = 11;
+            this.btn_show_pwd.IconPadding = 10;
+            this.btn_show_pwd.IconRightAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btn_show_pwd.IconRightCursor = System.Windows.Forms.Cursors.Default;
+            this.btn_show_pwd.IconRightPadding = new System.Windows.Forms.Padding(3, 3, 7, 3);
+            this.btn_show_pwd.IconSize = 25;
+            this.btn_show_pwd.IdleBorderColor = System.Drawing.Color.DodgerBlue;
+            this.btn_show_pwd.IdleBorderRadius = 20;
+            this.btn_show_pwd.IdleBorderThickness = 1;
+            this.btn_show_pwd.IdleFillColor = System.Drawing.Color.DodgerBlue;
+            this.btn_show_pwd.IdleIconLeftImage = null;
+            this.btn_show_pwd.IdleIconRightImage = null;
+            this.btn_show_pwd.IndicateFocus = false;
+            this.btn_show_pwd.Location = new System.Drawing.Point(17, 21);
+            this.btn_show_pwd.Name = "btn_show_pwd";
+            this.btn_show_pwd.OnDisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(191)))), ((int)(((byte)(191)))));
+            this.btn_show_pwd.OnDisabledState.BorderRadius = 20;
+            this.btn_show_pwd.OnDisabledState.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
+            this.btn_show_pwd.OnDisabledState.BorderThickness = 1;
+            this.btn_show_pwd.OnDisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.btn_show_pwd.OnDisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(168)))), ((int)(((byte)(160)))), ((int)(((byte)(168)))));
+            this.btn_show_pwd.OnDisabledState.IconLeftImage = null;
+            this.btn_show_pwd.OnDisabledState.IconRightImage = null;
+            this.btn_show_pwd.onHoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(105)))), ((int)(((byte)(181)))), ((int)(((byte)(255)))));
+            this.btn_show_pwd.onHoverState.BorderRadius = 20;
+            this.btn_show_pwd.onHoverState.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
+            this.btn_show_pwd.onHoverState.BorderThickness = 1;
+            this.btn_show_pwd.onHoverState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(105)))), ((int)(((byte)(181)))), ((int)(((byte)(255)))));
+            this.btn_show_pwd.onHoverState.ForeColor = System.Drawing.Color.White;
+            this.btn_show_pwd.onHoverState.IconLeftImage = null;
+            this.btn_show_pwd.onHoverState.IconRightImage = null;
+            this.btn_show_pwd.OnIdleState.BorderColor = System.Drawing.Color.DodgerBlue;
+            this.btn_show_pwd.OnIdleState.BorderRadius = 20;
+            this.btn_show_pwd.OnIdleState.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
+            this.btn_show_pwd.OnIdleState.BorderThickness = 1;
+            this.btn_show_pwd.OnIdleState.FillColor = System.Drawing.Color.DodgerBlue;
+            this.btn_show_pwd.OnIdleState.ForeColor = System.Drawing.Color.White;
+            this.btn_show_pwd.OnIdleState.IconLeftImage = null;
+            this.btn_show_pwd.OnIdleState.IconRightImage = null;
+            this.btn_show_pwd.OnPressedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(96)))), ((int)(((byte)(144)))));
+            this.btn_show_pwd.OnPressedState.BorderRadius = 20;
+            this.btn_show_pwd.OnPressedState.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
+            this.btn_show_pwd.OnPressedState.BorderThickness = 1;
+            this.btn_show_pwd.OnPressedState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(96)))), ((int)(((byte)(144)))));
+            this.btn_show_pwd.OnPressedState.ForeColor = System.Drawing.Color.White;
+            this.btn_show_pwd.OnPressedState.IconLeftImage = null;
+            this.btn_show_pwd.OnPressedState.IconRightImage = null;
+            this.btn_show_pwd.Size = new System.Drawing.Size(98, 32);
+            this.btn_show_pwd.TabIndex = 4;
+            this.btn_show_pwd.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btn_show_pwd.TextAlignment = System.Windows.Forms.HorizontalAlignment.Center;
+            this.btn_show_pwd.TextMarginLeft = 0;
+            this.btn_show_pwd.TextPadding = new System.Windows.Forms.Padding(0);
+            this.btn_show_pwd.UseDefaultRadiusAndThickness = true;
+            this.btn_show_pwd.Click += new System.EventHandler(this.btn_show_pwd_Click);
+            // 
+            // btn_edit
+            // 
+            this.btn_edit.AllowAnimations = true;
+            this.btn_edit.AllowMouseEffects = true;
+            this.btn_edit.AllowToggling = false;
+            this.btn_edit.AnimationSpeed = 200;
+            this.btn_edit.AutoGenerateColors = false;
+            this.btn_edit.AutoRoundBorders = false;
+            this.btn_edit.AutoSizeLeftIcon = true;
+            this.btn_edit.AutoSizeRightIcon = true;
+            this.btn_edit.BackColor = System.Drawing.Color.Transparent;
+            this.btn_edit.BackColor1 = System.Drawing.Color.DodgerBlue;
+            this.btn_edit.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_edit.BackgroundImage")));
+            this.btn_edit.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
+            this.btn_edit.ButtonText = "Log out";
+            this.btn_edit.ButtonTextMarginLeft = 0;
+            this.btn_edit.ColorContrastOnClick = 45;
+            this.btn_edit.ColorContrastOnHover = 45;
+            this.btn_edit.Cursor = System.Windows.Forms.Cursors.Default;
+            borderEdges3.BottomLeft = true;
+            borderEdges3.BottomRight = true;
+            borderEdges3.TopLeft = true;
+            borderEdges3.TopRight = true;
+            this.btn_edit.CustomizableEdges = borderEdges3;
+            this.btn_edit.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.btn_edit.DisabledBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(191)))), ((int)(((byte)(191)))));
+            this.btn_edit.DisabledFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.btn_edit.DisabledForecolor = System.Drawing.Color.FromArgb(((int)(((byte)(168)))), ((int)(((byte)(160)))), ((int)(((byte)(168)))));
+            this.btn_edit.FocusState = Bunifu.UI.WinForms.BunifuButton.BunifuButton.ButtonStates.Pressed;
+            this.btn_edit.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btn_edit.ForeColor = System.Drawing.Color.White;
+            this.btn_edit.IconLeftAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btn_edit.IconLeftCursor = System.Windows.Forms.Cursors.Default;
+            this.btn_edit.IconLeftPadding = new System.Windows.Forms.Padding(11, 3, 3, 3);
+            this.btn_edit.IconMarginLeft = 11;
+            this.btn_edit.IconPadding = 10;
+            this.btn_edit.IconRightAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btn_edit.IconRightCursor = System.Windows.Forms.Cursors.Default;
+            this.btn_edit.IconRightPadding = new System.Windows.Forms.Padding(3, 3, 7, 3);
+            this.btn_edit.IconSize = 25;
+            this.btn_edit.IdleBorderColor = System.Drawing.Color.DodgerBlue;
+            this.btn_edit.IdleBorderRadius = 20;
+            this.btn_edit.IdleBorderThickness = 1;
+            this.btn_edit.IdleFillColor = System.Drawing.Color.DodgerBlue;
+            this.btn_edit.IdleIconLeftImage = null;
+            this.btn_edit.IdleIconRightImage = null;
+            this.btn_edit.IndicateFocus = false;
+            this.btn_edit.Location = new System.Drawing.Point(136, 21);
+            this.btn_edit.Name = "btn_edit";
+            this.btn_edit.OnDisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(191)))), ((int)(((byte)(191)))));
+            this.btn_edit.OnDisabledState.BorderRadius = 20;
+            this.btn_edit.OnDisabledState.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
+            this.btn_edit.OnDisabledState.BorderThickness = 1;
+            this.btn_edit.OnDisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.btn_edit.OnDisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(168)))), ((int)(((byte)(160)))), ((int)(((byte)(168)))));
+            this.btn_edit.OnDisabledState.IconLeftImage = null;
+            this.btn_edit.OnDisabledState.IconRightImage = null;
+            this.btn_edit.onHoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(105)))), ((int)(((byte)(181)))), ((int)(((byte)(255)))));
+            this.btn_edit.onHoverState.BorderRadius = 20;
+            this.btn_edit.onHoverState.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
+            this.btn_edit.onHoverState.BorderThickness = 1;
+            this.btn_edit.onHoverState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(105)))), ((int)(((byte)(181)))), ((int)(((byte)(255)))));
+            this.btn_edit.onHoverState.ForeColor = System.Drawing.Color.White;
+            this.btn_edit.onHoverState.IconLeftImage = null;
+            this.btn_edit.onHoverState.IconRightImage = null;
+            this.btn_edit.OnIdleState.BorderColor = System.Drawing.Color.DodgerBlue;
+            this.btn_edit.OnIdleState.BorderRadius = 20;
+            this.btn_edit.OnIdleState.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
+            this.btn_edit.OnIdleState.BorderThickness = 1;
+            this.btn_edit.OnIdleState.FillColor = System.Drawing.Color.DodgerBlue;
+            this.btn_edit.OnIdleState.ForeColor = System.Drawing.Color.White;
+            this.btn_edit.OnIdleState.IconLeftImage = null;
+            this.btn_edit.OnIdleState.IconRightImage = null;
+            this.btn_edit.OnPressedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(96)))), ((int)(((byte)(144)))));
+            this.btn_edit.OnPressedState.BorderRadius = 20;
+            this.btn_edit.OnPressedState.BorderStyle = Bunifu.UI.WinForms.BunifuButton.BunifuButton.BorderStyles.Solid;
+            this.btn_edit.OnPressedState.BorderThickness = 1;
+            this.btn_edit.OnPressedState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(96)))), ((int)(((byte)(144)))));
+            this.btn_edit.OnPressedState.ForeColor = System.Drawing.Color.White;
+            this.btn_edit.OnPressedState.IconLeftImage = null;
+            this.btn_edit.OnPressedState.IconRightImage = null;
+            this.btn_edit.Size = new System.Drawing.Size(98, 32);
+            this.btn_edit.TabIndex = 5;
+            this.btn_edit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btn_edit.TextAlignment = System.Windows.Forms.HorizontalAlignment.Center;
+            this.btn_edit.TextMarginLeft = 0;
+            this.btn_edit.TextPadding = new System.Windows.Forms.Padding(0);
+            this.btn_edit.UseDefaultRadiusAndThickness = true;
+            this.btn_edit.Click += new System.EventHandler(this.btn_edit_Click);
+            // 
             // server
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1298, 846);
+            this.Controls.Add(this.btn_edit);
+            this.Controls.Add(this.btn_show_pwd);
             this.Controls.Add(this.display);
             this.Controls.Add(this.btn_start);
             this.Controls.Add(this.richTextBox1);
@@ -388,11 +588,6 @@
         private System.Windows.Forms.TabPage groups;
         private System.Windows.Forms.ListView group_list;
         private System.Windows.Forms.DataGridView user_list;
-        private System.Windows.Forms.DataGridViewTextBoxColumn User_ID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Name;
-        private System.Windows.Forms.DataGridViewImageColumn Status;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Email;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Password;
         private System.Windows.Forms.DataGridView noti_list;
         private System.Windows.Forms.DataGridViewTextBoxColumn Sender;
         private System.Windows.Forms.DataGridViewTextBoxColumn Reciever;
@@ -403,5 +598,12 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn User_ID_Created;
         private System.Windows.Forms.DataGridViewTextBoxColumn Creation_Date;
         private System.Windows.Forms.DataGridViewTextBoxColumn Members;
+        private Bunifu.UI.WinForms.BunifuButton.BunifuButton btn_show_pwd;
+        private Bunifu.UI.WinForms.BunifuButton.BunifuButton btn_edit;
+        private System.Windows.Forms.DataGridViewTextBoxColumn User_ID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Name;
+        private System.Windows.Forms.DataGridViewButtonColumn Status;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Email;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Password;
     }
 }

@@ -58,7 +58,7 @@ namespace WindowsFormsApp1
                 {
                     richTextBox1.AppendText($"{DateTime.Now} : Server is listening on port 8080.\r\n");
                 }));
-                btn_start.Text = "Stop";
+                btn_start.Text = "Dừng";
             }
         }
         private void listen()
@@ -103,6 +103,15 @@ namespace WindowsFormsApp1
                             {
                                 richTextBox1.AppendText(login_user_data.userID + " vừa đăng nhập.\r\n");
                             }));
+                            foreach (DataGridViewRow item in user_list.Rows)
+                            {
+                                if (login_user_data.userID == item.Cells["User_ID"].Value.ToString())
+                                {
+                                    item.Cells["Status"].Value = "Online";
+                                    item.Cells["Status"].Style.BackColor = Color.Green;
+                                }
+                            }
+
                             Thread receiveThread = new Thread(() => recievedDataFromClient(login_user_data.userID));
                             receiveThread.Start();
                             receiveThread.IsBackground = true;
@@ -150,6 +159,15 @@ namespace WindowsFormsApp1
                             {
                                 richTextBox1.AppendText(register_user_data.userID + " vừa đăng kí.\r\n");
                             }));
+                            user_list.Rows.Add(register_user_data.userID, register_user_data.userName,"Online",register_user_data.email, register_user_data.pwd);
+                            foreach (DataGridViewRow item in user_list.Rows)
+                            {
+                                if (register_user_data.userID == item.Cells["User_ID"].Value.ToString())
+                                {
+                                    item.Cells["Status"].Value = "Online";
+                                    item.Cells["Status"].Style.BackColor = Color.Green;
+                                }
+                            }
                             Thread receiveThread = new Thread(() => recievedDataFromClient(register_user_data.userID));
                             receiveThread.Start();
                             receiveThread.IsBackground = true;
@@ -673,7 +691,20 @@ namespace WindowsFormsApp1
                     else if (rq_from_client == "Quit")
                     {
                         tcpclients.Remove(userID);
+                        tcpclients_2.Remove(userID);
                         client.Close();
+                        Invoke(new Action(() =>
+                        {
+                            richTextBox1.AppendText(userID + " vừa đăng xuất.\r\n");
+                        }));
+                        foreach (DataGridViewRow item in user_list.Rows)
+                        {
+                            if (userID == item.Cells["User_ID"].Value.ToString())
+                            {
+                                item.Cells["Status"].Value = "Offine";
+                                item.Cells["Status"].Style.BackColor = Color.Red;
+                            }
+                        }
                     }
                 }
                 catch
@@ -701,7 +732,7 @@ namespace WindowsFormsApp1
                 {
                     Invoke(new Action(() =>
                     {
-                        user_list.Rows.Add(item.userID, item.userName, image, item.email, item.pwd);
+                        user_list.Rows.Add(item.userID, item.userName,"Offline", item.email, item.pwd);
                     }));
                 }
             });
@@ -766,6 +797,53 @@ namespace WindowsFormsApp1
             Thread load_groups_thread = new Thread(load_groups);
             load_groups_thread.Start();
             load_groups_thread.IsBackground = true;
+        }
+
+        private void btn_show_pwd_Click(object sender, EventArgs e)
+        {
+            DataGridViewColumn column = user_list.Columns["Password"];
+
+            if (btn_show_pwd.Text == "Show Password")
+            {
+                column.DefaultCellStyle.ForeColor = Color.Black;
+                btn_show_pwd.Text = "Hidden Password";
+            }
+            else
+            {
+                column.DefaultCellStyle.ForeColor = Color.White;
+                btn_show_pwd.Text = "Show Password";
+            }
+        }
+
+        private void btn_edit_Click(object sender, EventArgs e)
+        {
+            if (btn_edit.Text == "Log out")
+            {
+                user_list.CellContentClick += log_out_click;
+                btn_edit.Text = "Cancel";
+            }
+            else
+            {
+                user_list.CellContentClick += null;
+                btn_edit.Text = "Log out";
+            }
+        }
+        private void log_out_click(object sender, DataGridViewCellEventArgs e)
+        {
+            if (user_list.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0 && btn_edit.Text == "Cancel")
+            {
+                MessageBox.Show("Are you sure to log out of this account?","Confirm", MessageBoxButtons.OKCancel);
+
+                DataGridViewCell cell = user_list.Rows[e.RowIndex].Cells["User_ID"];
+                DataGridViewCell cell_status = user_list.Rows[e.RowIndex].Cells["Status"];
+                cell_status.Value = "Offline";
+                cell_status.Style.BackColor = Color.Red;
+                string user_log_out = cell.Value.ToString().Trim();
+
+                StreamWriter writer = new StreamWriter(tcpclients[user_log_out].GetStream());
+                writer.AutoFlush = true;
+                writer.WriteLine("Ask Logout");
+            }
         }
     }
 }

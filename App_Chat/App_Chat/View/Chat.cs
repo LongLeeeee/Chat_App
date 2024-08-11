@@ -810,6 +810,17 @@ namespace App_Chat.View
                         bunifuPictureBox1.Image = new_avatar;
                         bunifuPictureBox2.Image = new_avatar;
                     }
+                    else if (rs_from_server == "Ask Logout")
+                    {
+                        writer.WriteLine("Quit");
+                        writer_1.WriteLine("Quit");
+                        tcpClient.Close();
+                        tcpClient1.Close();
+                        Thread LGThread = new Thread(() => Application.Run(new Login()));
+                        LGThread.ApartmentState = ApartmentState.STA;
+                        LGThread.Start();
+                        this.Close();
+                    }
                 }
             }
             catch
