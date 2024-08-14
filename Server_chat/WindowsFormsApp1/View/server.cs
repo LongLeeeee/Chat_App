@@ -688,6 +688,30 @@ namespace WindowsFormsApp1
                         checkDB.set_avatar(userID, avatar_data);
                         writer.WriteLine("Updated Avatar");
                     }
+                    else if (rq_from_client == "Delete Conversation")
+                    {
+                        string roomkey = reader.ReadLine();
+                        //string userid1 = reader.ReadLine();
+                        string userid2 = reader.ReadLine(); 
+                        bool is_success = false;
+                        //checkDB.del_friend(userid1, userid2, ref is_success2);
+                        checkDB.del_conversation(roomkey, ref is_success);
+                        writer.WriteLine("Delete Conversation");
+                        if (is_success)
+                        {
+                            writer.WriteLine("Successfully");
+                        }
+                        else
+                        {
+                            writer.WriteLine("Unsuccessfully");
+                        }
+                        if (tcpclients.ContainsKey(userid2))
+                        {
+                            StreamWriter writer1 = new StreamWriter(tcpclients[userid2].GetStream());
+                            writer1.WriteLine("Delete Conversation");
+                            writer1.WriteLine("Successfully");
+                        }
+                    }
                     else if (rq_from_client == "Quit")
                     {
                         tcpclients.Remove(userID);
@@ -704,6 +728,40 @@ namespace WindowsFormsApp1
                                 item.Cells["Status"].Value = "Offine";
                                 item.Cells["Status"].Style.BackColor = Color.Red;
                             }
+                        }
+                    }
+                    else if (rq_from_client == "Unfriend")
+                    {
+                        string userid2 = reader.ReadLine();
+                        checkDB.del_friend(userID, userid2);
+                        string roomkey = "";
+                        if (userID.CompareTo(userid2) > 0)
+                        {
+                            roomkey = userid2 + "_" + userID;
+                        }
+                        else
+                        {
+                            roomkey = userID + "_" + userid2;
+                        }
+                        bool is_success = false;
+                        checkDB.del_conversation(roomkey, ref is_success);
+                        writer.WriteLine("Unfriend");
+                        if (is_success) 
+                        {
+                            writer.WriteLine("Successfully");
+                            writer.WriteLine(userid2);
+                        }
+                        else
+                        {
+                            writer.WriteLine("Unsuccessfully");
+                        }
+                        if (tcpclients.ContainsKey(userid2))
+                        {
+                            StreamWriter writer1 = new StreamWriter(tcpclients[userid2].GetStream());
+                            writer1.AutoFlush = true;
+                            writer1.WriteLine("Unfriend");
+                            writer1.WriteLine("Successfully");
+                            writer1.WriteLine(userID);
                         }
                     }
                 }

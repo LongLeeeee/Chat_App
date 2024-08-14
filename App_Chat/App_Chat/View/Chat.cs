@@ -247,7 +247,6 @@ namespace App_Chat.View
                 }
             }
         }
-
         private FlowLayoutPanel createFlowLayoutPanel()
         {
             FlowLayoutPanel flowLayoutPanel = new FlowLayoutPanel();
@@ -514,6 +513,7 @@ namespace App_Chat.View
         {
             try
             {
+                CheckForIllegalCrossThreadCalls = false;
                 while (isRunning)
                 {
                     string rs_from_server = this.reader.ReadLine();
@@ -628,6 +628,7 @@ namespace App_Chat.View
                                         boxChat.Click += show_panel_click;
                                         boxChat.setName(temp);
 
+                                        boxchats.Add(boxChat);
                                         FlowLayoutPanel flowLayoutPanel = createFlowLayoutPanel();
                                         user_boardChat.Add(boxChat, flowLayoutPanel);
                                         receiver_boardChat.Add(temp, flowLayoutPanel);
@@ -820,6 +821,62 @@ namespace App_Chat.View
                         LGThread.ApartmentState = ApartmentState.STA;
                         LGThread.Start();
                         this.Close();
+                    }
+                    else if (rs_from_server == "Delete Conversation")
+                    {
+                        string result = reader.ReadLine();
+                        if (result == "Successfully")
+                        {
+                            MessageBox.Show("Xóa kết bạn thành công!");
+                            receiver_boardChat[lb_remote_name.Text].Controls.Clear();
+                        }
+                    }
+                    else if (rs_from_server == "Unfriend")
+                    {
+                        string result = reader.ReadLine();
+                        if (result == "Successfully")
+                        {
+                            string userid = reader.ReadLine();
+                            MessageBox.Show("Xóa kết bạn thành công!");
+                            receiver_boardChat[userid].Controls.Clear();
+                            BoxChat temp = new BoxChat();
+                            Invoke(new Action(() =>
+                            {
+                                for (int i = 0; i < boxchats.Count; i++)
+                                {
+                                    if (boxchats[i].getName() == userid)
+                                    {
+                                        temp = boxchats[i];
+                                        boxchats[i] = null;
+                                        break;
+                                    }
+                                }
+                                foreach (Control control in panel_box_chat.Controls)
+                                {
+                                    if (control is BoxChat bc)
+                                    {
+                                        if (bc.getName() == temp.getName())
+                                        {
+                                            Invoke(new Action(() =>
+                                            {
+                                                panel_box_chat.Controls.Remove(bc);
+                                            }));
+                                        }
+                                    }
+                                }
+                                panel21.Visible = false;
+                                panel7.Visible = false;
+                                panel6.Visible = false;
+                                panel14.Visible = false;
+                                bunifuLabel3.Text = "bunifuLabel3";
+                                receiver_boardChat.Remove(lb_remote_name.Text);
+
+                                NewFriend newFriend = new NewFriend(tcpClient, your_account_name);
+                                Users.Add(newFriend);
+                                newFriend.setLabel(userid);
+                                fpn_show_users.Controls.Add(newFriend);
+                            }));
+                        }
                     }
                 }
             }
@@ -1170,6 +1227,29 @@ namespace App_Chat.View
                 
             }
 
+        }
+
+        private void btn_unfriend_Click(object sender, EventArgs e)
+        {
+            writer.WriteLine("Unfriend");
+            writer.WriteLine(lb_remote_name.Text);
+        }
+
+        private void btn_del_conversation_Click(object sender, EventArgs e)
+        {
+            writer.WriteLine("Delete Conversation");
+            string ROOMKEY = "";
+            if (your_account_name.userID.CompareTo(lb_remote_name.Text) > 0)
+            {
+                ROOMKEY = lb_remote_name.Text + "_" + your_account_name.userID;
+            }
+            else
+            {
+                ROOMKEY = your_account_name.userID + "_" + lb_remote_name.Text;
+            }
+            writer.WriteLine(ROOMKEY);
+            //writer.WriteLine(your_account_name.userID);
+            writer.WriteLine(lb_remote_name.Text);
         }
     }
 }

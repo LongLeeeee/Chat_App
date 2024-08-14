@@ -3689,7 +3689,7 @@
         nzzq+0kGg3EeQ37wVxKCzw+eGQDAMef+Aei1M4siXVT0AAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="bunifuButton4.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="btn_unfriend.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAQkAAAAzCAYAAACE/v0bAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADNSURBVHhe7dRBDcJAAADB80GK5guGEIKM/q+kfZawCuYx
@@ -3699,17 +3699,7 @@
         AAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="bunifuButton5.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAAQkAAAAzCAYAAACE/v0bAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADNSURBVHhe7dRBDcJAAADB80GK5guGEIKM/q+kfZawCuYx
-        ySrY8Xitz3MeB8Dd+YdxxngD/Lr+YBLAPyYBJJMAkkkAySSAZBJAMgkgmQSQTAJIJgEkkwCSSQDJJIBk
-        EkAyCSCZBJBMAkgmASSTAJJJAMkkgGQSQDIJIJkEkEwCSCYBJJMAkkkAySSAZBJAMgkgmQSQTAJIJgEk
-        kwCSSQDJJIBkEkAyCSCZBJBMAkgmASSTAJJJAMkkgGQSQDIJIJkEkK4/bHPtZwDcbXPtXzvzbjQCXcf2
-        AAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="bunifuButton6.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="btn_del_conversation.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAQkAAAAzCAYAAACE/v0bAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADNSURBVHhe7dRBDcJAAADB80GK5guGEIKM/q+kfZawCuYx
@@ -3720,7 +3710,7 @@
 </value>
   </data>
   <data name="bunifuLabel3.BaseStylesheet" xml:space="preserve">
-    <value>#bunifu-label { padding: 0px; margin: auto; padding-top: -2px;font-family: 'Segoe UI'; font-size: 14.25pt; width: 100%; height: 100%; font-style: normal; font-weight: normal; text-decoration: none; color: rgb(0, 0, 0); text-align: center; }</value>
+    <value>#bunifu-label { padding: 0px; margin: auto; padding-top: -1px;font-family: 'Segoe UI'; font-size: 14.25pt; width: 100%; height: 100%; font-style: normal; font-weight: normal; text-decoration: none; color: rgb(0, 0, 0); text-align: center; }</value>
   </data>
   <data name="bunifuPictureBox4.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace WindowsFormsApp1.Model
 {
@@ -176,6 +177,53 @@ namespace WindowsFormsApp1.Model
             sqlCommand.Parameters.AddWithValue("EMAIL", user.email);
             sqlCommand.Parameters.AddWithValue("PWD", user.pwd);
             sqlCommand.ExecuteNonQuery();
+        }
+        public void del_friend(string user1, string user2)
+        {
+            connectToDB();
+            string query = $"select USERID_1, USERID_2 from Friends where USERID_1 = '{user1}' and USERID_2 = '{user2}'";
+            string query1 = $"select USERID_1, USERID_2 from Friends where USERID_1 = '{user2}' and USERID_2 = '{user1}'";
+            string query2 = $"delete from Friends where USERID_1 = '{user1}' and USERID_2 = '{user2}'";
+            string query3 = $"delete from Friends where USERID_1 = '{user2}' and USERID_2 = '{user1}'";
+            sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlreader = sqlCommand.ExecuteReader();
+            if (sqlreader.Read())
+            {
+                sqlConnection.Close();
+                connectToDB();
+                sqlCommand = new SqlCommand(query2, sqlConnection);
+                sqlCommand.Parameters.AddWithValue("USERID_1", user1);
+                sqlCommand.Parameters.AddWithValue("USERID_2", user2);
+                sqlCommand.ExecuteNonQuery();
+                sqlConnection.Close();
+            }
+            else
+            {
+                sqlConnection.Close();
+                connectToDB();
+                sqlCommand = new SqlCommand(query1, sqlConnection);
+                sqlreader = sqlCommand.ExecuteReader();
+                if (sqlreader.Read())
+                {
+                    sqlConnection.Close();
+                    connectToDB();
+                    sqlCommand = new SqlCommand(query3, sqlConnection);
+                    sqlCommand.Parameters.AddWithValue("USERID_1", user2);
+                    sqlCommand.Parameters.AddWithValue("USERID_2", user1);
+                    sqlCommand.ExecuteNonQuery();
+                }
+                sqlConnection.Close();
+            }
+        }
+        public void del_conversation(string roomkey, ref bool issuccess)
+        {
+            connectToDB();
+            string query = $"delete from Messages_Friend where ROOMKEY = '{roomkey}'";
+            sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlCommand.Parameters.AddWithValue("ROOMKEY", roomkey);
+            sqlCommand.ExecuteNonQuery();
+            sqlConnection.Close();
+            issuccess = true;
         }
         public void save_message(User receiver, User sender, string content)
         {
