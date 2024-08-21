@@ -96,12 +96,12 @@ namespace App_Chat.View
                 MailMessage mail = new MailMessage();
                 SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
 
-                mail.From = new MailAddress("22520813@gm.uit.edu.vn", "Ứng dụng trò chuyện trực tuyến thông qua mạng LAN");
+                mail.From = new MailAddress("Email", "Ứng dụng trò chuyện trực tuyến thông qua mạng LAN");
                 mail.To.Add(mailTo);
                 mail.Subject = "OTP";
                 mail.Body = $"Xin chào,\n\nMã đặt lại mật khẩu của bạn là: {code}";
                 SmtpServer.Port = 587;
-                SmtpServer.Credentials = new NetworkCredential("22520813@gm.uit.edu.vn", "1419743210");
+                SmtpServer.Credentials = new NetworkCredential("Email", "Mật khẩu");
                 SmtpServer.EnableSsl = true;
 
                 SmtpServer.Send(mail);
